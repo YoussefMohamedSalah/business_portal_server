@@ -1,6 +1,6 @@
-
+import { Project } from "./Project";
+import { Supplier } from "./Supplier";
+import { User } from "./User";
 import { Customer } from "./Customer";
 
-import { Owner } from "./Owner";
-
-export const entities = [Comment, Customer, Owner];
+export const entities = [User, Project, Supplier, Customer];

@@ -43,3 +43,12 @@ export enum Role {
 	Associate = 'associate',
 }
 
+export enum CustomerType {
+	Company = 'company',
+	Person = 'person',
+}
+
+export enum SupplierType {
+	Company = 'company',
+	Person = 'person',
+}

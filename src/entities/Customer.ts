@@ -1,43 +1,78 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity, ManyToOne } from 'typeorm';
-
-import { Role } from '../enums/enums';
-import { Owner } from './Owner';
+import { CustomerType } from '../enums/enums';
 
 // this is our customers
 @Entity({ name: 'customer' })
 export class Customer extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  name: string;
-
-  @Column()
-  email: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({
-    default: null,
-    select: false
+    type: 'enum',
+    enum: CustomerType,
+    default: CustomerType.Company
   })
-  password: string;
+  supplier_type: CustomerType;
 
   @Column({
     default: null
   })
-  string_password: string;
-
-  @Column()
-  phone: string;
+  company_name: string;
 
   @Column({
-    type: 'enum',
-    enum: Role,
-    default: Role.Associate
+    default: null
   })
-  role: Role;
+  vat_on: string;
 
-  @ManyToOne(type => Owner, owner => owner.associates)
-  owner: Owner;
+  @Column({
+    default: null
+  })
+  Representative: string;
+
+  @Column({
+    default: null
+  })
+  name: string;
+
+  @Column({
+    default: null
+  })
+  phone_number: string;
+
+  @Column({
+    default: null
+  })
+  email: string;
+
+  @Column({
+    default: null
+  })
+  country: string;
+
+  @Column({
+    default: null
+  })
+  city: string;
+
+  @Column({
+    default: null
+  })
+  area: string;
+
+  @Column({
+    default: null
+  })
+  street: string;
+
+  @Column({
+    default: null
+  })
+  building_number: number;
+
+  @Column({
+    default: null
+  })
+  postal_code: number;
 
   @Column({
     type: 'timestamp',
