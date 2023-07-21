@@ -52,3 +52,8 @@ export enum SupplierType {
 	Company = 'company',
 	Person = 'person',
 }
+
+export enum InventoryType {
+	Master = 'master_inventory',
+	project = 'project_inventory',
+}
