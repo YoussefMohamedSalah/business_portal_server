@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne } from 'typeorm';
 import { SupplierType } from '../enums/enums';
+import { Company } from './Company';
 
 @Entity({ name: 'supplier' })
 export class Supplier extends BaseEntity {
@@ -72,6 +73,12 @@ export class Supplier extends BaseEntity {
 		default: null
 	})
 	postal_code: number;
+
+	// Relations
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@ManyToOne(() => Company, company => company.suppliers, { onDelete: 'CASCADE' })
+	company: Company;
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({
 		type: 'timestamp',

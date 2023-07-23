@@ -1,5 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity, ManyToOne } from 'typeorm';
 import { CustomerType } from '../enums/enums';
+import { Company } from './Company';
+import { Project } from './Project';
 
 // this is our customers
 @Entity({ name: 'customer' })
@@ -73,6 +75,15 @@ export class Customer extends BaseEntity {
     default: null
   })
   postal_code: number;
+
+  // Relations
+  // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+  @ManyToOne(() => Company, company => company.customers, { onDelete: 'CASCADE' })
+  company: Company;
+
+  @OneToMany(() => Project, project => project.customer, { cascade: true, onDelete: 'CASCADE' })
+  projects: Project[];
+  // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
   @Column({
     type: 'timestamp',

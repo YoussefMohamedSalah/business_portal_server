@@ -1,15 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany } from 'typeorm';
+import { User } from './User';
+import { Project } from './Project';
+import { Customer } from './Customer';
+import { Supplier } from './Supplier';
+import { Inventory } from './Inventory';
+import { Department } from './Department';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
-	@PrimaryGeneratedColumn('uuid')
-	id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     // company_name: string;
-    // users: User[];
-    // projects: Project[];
-    // customers: Customer[];
-    // suppliers: Supplier[];
     // inventory types: 
 
     @Column({
@@ -17,35 +19,36 @@ export class Company extends BaseEntity {
     })
     name: string;
 
-    @Column({
-        default: null
-    })
-    users: string;
+    // Relations
+    // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+    @OneToMany(() => Project, project => project.company, { cascade: true, onDelete: 'CASCADE' })
+    projects: Project[];
+
+    @OneToMany(() => Department, department => department.company, { cascade: true, onDelete: 'CASCADE' })
+    departments: Department[];
+
+    @OneToMany(() => User, user => user.company, { cascade: true, onDelete: 'CASCADE' })
+    users: User[];
+
+    @OneToMany(() => Customer, customer => customer.company, { cascade: true, onDelete: 'CASCADE' })
+    customers: Customer[];
+
+    @OneToMany(() => Supplier, supplier => supplier.company, { cascade: true, onDelete: 'CASCADE' })
+    suppliers: Supplier[];
+
+    @OneToMany(() => Inventory, inventory => inventory.company, { cascade: true, onDelete: 'CASCADE' })
+    inventory_list: Inventory[];
+    // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
     @Column({
-        default: null
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP'
     })
-    projects: string;
+    createdAt: Date;
 
     @Column({
-        default: null
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP'
     })
-    customers: string;
-
-    @Column({
-        default: null
-    })
-    suppliers: string;
-
-	@Column({
-		type: 'timestamp',
-		default: () => 'CURRENT_TIMESTAMP'
-	})
-	createdAt: Date;
-
-	@Column({
-		type: 'timestamp',
-		default: () => 'CURRENT_TIMESTAMP'
-	})
-	updatedAt: Date;
+    updatedAt: Date;
 }

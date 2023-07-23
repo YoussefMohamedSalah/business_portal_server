@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { Role } from '../enums/enums';
-import { Customer } from './Customer';
+import { Company } from './Company';
+import { Project } from './Project';
+import { Department } from './Department';
 
 @Entity({ name: 'user' })
 export class User extends BaseEntity {
@@ -103,6 +105,20 @@ export class User extends BaseEntity {
 		default: null
 	})
 	file: string;
+
+	// Relations
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@ManyToOne(() => Company, company => company.users, { onDelete: 'CASCADE' })
+	company: Company;
+
+	@ManyToMany(() => Department, department => department.users)
+	@JoinTable({ name: 'user_department' })
+	departments: Department[];
+
+	@ManyToMany(() => Project, project => project.users)
+	@JoinTable({ name: 'user_project' })
+	projects: Project[];
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({
 		type: 'timestamp',

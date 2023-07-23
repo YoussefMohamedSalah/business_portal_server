@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne } from 'typeorm';
 import { InventoryType } from '../enums/enums';
+import { Company } from './Company';
 
 // this will be connected with company entity -- yes
 // also this will be connected with project entity -- yes
@@ -24,6 +25,12 @@ export class Inventory extends BaseEntity {
 
 	@Column()
 	items: string;
+
+	// Relations
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@ManyToOne(() => Company, company => company.inventory_list, { onDelete: 'CASCADE' })
+	company: Company;
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({
 		type: 'timestamp',

@@ -8,12 +8,23 @@ import { Supplier } from "./Supplier";
 import { Inventory } from "./Inventory";
 import { InventoryItem } from "./InventoryItem";
 
+import { Department } from "./Department";
+import { Role } from "./Role";
+
+// JoiningTables
+import { UserDepartment } from "./joiningTables/UserDepartment";
+import { UserProject } from "./joiningTables/UserProject";
+
 export const entities = [
-    User
-    , Project
-    , Supplier
-    , Customer
-    , Inventory
-    , InventoryItem
-    , Company
+	User,
+	Department,
+	Role,
+	Project,
+	Supplier,
+	Customer,
+	Inventory,
+	InventoryItem,
+	Company,
+	UserDepartment,
+	UserProject
 ];

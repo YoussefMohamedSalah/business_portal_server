@@ -1,5 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
-
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { Company } from './Company';
+import { Customer } from './Customer';
+import { User } from './User';
 @Entity({ name: 'project' })
 export class Project extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
@@ -53,12 +55,9 @@ export class Project extends BaseEntity {
 	@Column()
 	project_manager: string;
 
+	// to be deleted
 	@Column()
 	customer_name: string;
-
-	// todo: add customer entity
-	@Column()
-	customer: string;
 
 	@Column()
 	sites_count: string;
@@ -68,6 +67,18 @@ export class Project extends BaseEntity {
 
 	@Column()
 	floors_count: string;
+
+	// Relations
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@ManyToOne(() => Company, company => company.projects, { onDelete: 'CASCADE' })
+	company: Company;
+
+	@ManyToOne(() => Customer, customer => customer.projects, { onDelete: 'CASCADE' })
+	customer: Customer;
+
+	@ManyToMany(() => User, user => user.projects)
+	users: User[];
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({
 		type: 'timestamp',
