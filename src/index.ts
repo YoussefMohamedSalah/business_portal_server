@@ -5,12 +5,13 @@ import { errorHandler } from "./middleware/errorMiddleware";
 import { entities } from './entities';
 import { connectToDataBase } from './config/db';
 import { AuthRouter } from './routes/Auth/Auth';
-import { CustomerRouter } from './routes/customer';
+// import { CustomerRouter } from './routes/customer';
+
 // constants
 dotenv.config();
 const app = express();
 
-// Middlewares
+// Middleware
 app.use(Cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,9 +24,9 @@ try {
 
   connectToDataBase(entities);
 
-  // Routes Declaration
+  // Routes
   app.use('/auth', AuthRouter);
-  app.use('/customer', CustomerRouter)
+  // app.use('/customer', CustomerRouter)
 
   // Server Running
 } catch (error) {

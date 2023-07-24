@@ -25,6 +25,6 @@ export const entities = [
 	Inventory,
 	InventoryItem,
 	Company,
-	UserDepartment,
-	UserProject
+	// UserDepartment,
+	// UserProject
 ];

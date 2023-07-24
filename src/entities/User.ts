@@ -22,12 +22,12 @@ export class User extends BaseEntity {
 	@Column({
 		default: null
 	})
-	user_name: string;
+	email: string;
 
 	@Column({
 		default: null
 	})
-	email: string;
+	password: string;
 
 	@Column({
 		default: null
@@ -78,11 +78,6 @@ export class User extends BaseEntity {
 		default: null
 	})
 	salary_per_hour: string;
-
-	@Column({
-		default: null
-	})
-	password: string;
 
 	@Column({
 		type: 'enum',

@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne } from 'typeorm';
 import { User } from '../User';
 import { Department } from '../Department';
-import { DepartmentType, NyType } from '../../enums/enums';
+import { NyType } from '../../enums/enums';
 
 @Entity({ name: 'user_department' })
 export class UserDepartment extends BaseEntity {
@@ -19,26 +19,26 @@ export class UserDepartment extends BaseEntity {
         enum: NyType,
         default: NyType.NO
     })
-    can_read: string;
+    can_read: NyType;
 
     @Column({
         type: 'enum',
         enum: NyType,
         default: NyType.NO
     })
-    can_write: string;
+    can_write: NyType;
 
     @Column({
         type: 'enum',
         enum: NyType,
         default: NyType.NO
     })
-    can_update: string;
+    can_update: NyType;
 
     @Column({
         type: 'enum',
         enum: NyType,
         default: NyType.NO
     })
-    can_delete: string;
+    can_delete: NyType;
 }

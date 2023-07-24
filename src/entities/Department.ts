@@ -5,7 +5,7 @@ import { User } from './User';
 
 @Entity({ name: 'department' })
 export class Department extends BaseEntity {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
