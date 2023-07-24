@@ -9,7 +9,7 @@ dotenv.config();
 const router = Router();
 const secretHash = process.env.SECRET_HASH;
 
-export const signIn = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	// Check if the owner exists
 	const userRepository = getRepository(User);
@@ -40,7 +40,7 @@ export const signIn = async (req: Request, res: Response) => {
 	return res.json({ accessToken, userInfo: user });
 };
 
-export const signUp = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
 	try {
 		const {
 			email,
@@ -91,7 +91,7 @@ export const signUp = async (req: Request, res: Response) => {
 	}
 };
 
-router.route("/auth/login").post(signIn);
-router.route("/auth/signup").post(signUp);
+router.route("/login").post(login);
+router.route("/register").post(register);
 
 export { router as AuthRouter };
