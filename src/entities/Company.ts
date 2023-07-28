@@ -11,9 +11,6 @@ export class Company extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    // company_name: string;
-    // inventory types: 
-
     @Column({
         default: null
     })

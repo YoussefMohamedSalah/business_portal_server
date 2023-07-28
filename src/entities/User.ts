@@ -46,7 +46,7 @@ export class User extends BaseEntity {
 
 	@Column({
 		type: 'timestamp',
-		default: () => 'CURRENT_TIMESTAMP'
+		default: () => 'CURRENT_TIMESTAMP',
 	})
 	contract_date: Date;
 
@@ -62,16 +62,24 @@ export class User extends BaseEntity {
 	})
 	renewal_of_residence: Date;
 
-	@Column()
+	@Column({
+		nullable: true
+	})
 	project: string;
 
-	@Column()
+	@Column({
+		nullable: true
+	})
 	id_number: string;
 
-	@Column()
+	@Column({
+		nullable: true
+	})
 	id_ex_date: string;
 
-	@Column()
+	@Column({
+		nullable: true
+	})
 	salary_per_month: string;
 
 	@Column({
@@ -80,11 +88,9 @@ export class User extends BaseEntity {
 	salary_per_hour: string;
 
 	@Column({
-		type: 'enum',
-		enum: Role,
-		default: Role.Owner
+		default: 'user'
 	})
-	role: Role;
+	role: string;
 
 	@Column({
 		default: null
@@ -127,3 +133,6 @@ export class User extends BaseEntity {
 	})
 	updatedAt: Date;
 }
+
+// all column will be provided
+// if type is owner, just register
