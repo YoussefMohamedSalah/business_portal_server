@@ -10,6 +10,7 @@ import { InventoryItem } from "./InventoryItem";
 
 import { Department } from "./Department";
 import { Role } from "./Role";
+import { Permission } from "./Permission";
 
 // JoiningTables
 import { UserDepartment } from "./joiningTables/UserDepartment";
@@ -25,6 +26,6 @@ export const entities = [
 	Inventory,
 	InventoryItem,
 	Company,
+	Permission
 	// UserDepartment,
-	// UserProject
 ];

@@ -10,6 +10,7 @@ import { createCompany } from "../../repositories/CompanyRepository";
 import { CreateUserInfo } from "../../types/user/CreateUserInfo";
 import { createUser } from "../../repositories/UserRepository";
 import { Company } from "../../entities/Company";
+import { addInitialData } from "../../repositories/InitialDataRepository";
 
 dotenv.config();
 const router = Router();
@@ -69,7 +70,8 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // this is for any user wants to register to our services
-// add company under the name of test company....
+// add company under the name of Company Name...
+// add our departments inside CreateCompany function to the company newly created...
 export const register = async (req: Request, res: Response) => {
 	try {
 		const {
@@ -129,12 +131,13 @@ export const register = async (req: Request, res: Response) => {
 		// first check if is owner or is user
 		if (role && role === "owner") {
 			// add new company under the name of 'Company Name'
+			// inside CreateCompany i will create the departments as well
 			const company = await createCompany("Company Name");
 			if (!company)
 				return res
 					.status(404)
 					.json({ msg: "Error occurred during initialization your Company" });
-			// Now Create The user With The company Newly Created
+			// Now Create The user With The company Newly Created...
 			const user = await createUser({ ...paramsData, company: company });
 			if (!user) return res
 				.status(400)

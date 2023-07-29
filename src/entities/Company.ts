@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { User } from './User';
 import { Project } from './Project';
 import { Customer } from './Customer';
@@ -21,7 +21,7 @@ export class Company extends BaseEntity {
     @OneToMany(() => Project, project => project.company, { cascade: true, onDelete: 'CASCADE' })
     projects: Project[];
 
-    @OneToMany(() => Department, department => department.company, { cascade: true, onDelete: 'CASCADE' })
+    @ManyToMany(() => Department, department => department.company, { cascade: true, onDelete: 'CASCADE' })
     departments: Department[];
 
     @OneToMany(() => User, user => user.company, { cascade: true, onDelete: 'CASCADE' })

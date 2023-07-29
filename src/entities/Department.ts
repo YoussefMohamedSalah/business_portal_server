@@ -1,29 +1,30 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
-import { DepartmentType } from '../enums/enums';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Company } from './Company';
 import { User } from './User';
+import { Permission } from './Permission';
 
 @Entity({ name: 'department' })
 export class Department extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
-    @Column()
-    name: string;
+	@Column({
+		nullable: false,
+		default: ''
+	})
+	name: string;
 
-    @Column({
-        type: 'enum',
-        enum: DepartmentType,
-        default: DepartmentType.Construction
-    })
-    department: string;
+	// Relations
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@ManyToMany(() => Company, company => company.departments, { onDelete: 'CASCADE' })
+	@JoinTable({ name: 'company_department' })
+	company: Company;
 
-    // Relations
-    // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-    @ManyToOne(() => Company, company => company.departments, { onDelete: 'CASCADE' })
-    company: Company;
+	@ManyToMany(() => User, user => user.departments)
+	@JoinTable({ name: 'user_department' })
+	users: User[];
 
-    @ManyToMany(() => User, user => user.departments)
-    users: User[];
-    // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@OneToMany(() => Permission, permission => permission.department)
+	permissions: Permission[];
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 }

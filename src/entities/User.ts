@@ -1,13 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
-import { Role } from '../enums/enums';
-import { Company } from './Company';
-import { Project } from './Project';
-import { Department } from './Department';
+import {
+	Entity,
+	Column,
+	PrimaryGeneratedColumn,
+	BaseEntity,
+	ManyToOne,
+	ManyToMany,
+	JoinTable,
+	ColumnType
+} from "typeorm";
+import { Company } from "./Company";
+import { Project } from "./Project";
+import { Department } from "./Department";
 
-@Entity({ name: 'user' })
+@Entity({ name: "user" })
 export class User extends BaseEntity {
-	@PrimaryGeneratedColumn('uuid')
-	id: string;
+	@PrimaryGeneratedColumn("uuid") id: string;
 
 	@Column({
 		default: null
@@ -45,20 +52,20 @@ export class User extends BaseEntity {
 	working_hours: string;
 
 	@Column({
-		type: 'timestamp',
-		default: () => 'CURRENT_TIMESTAMP',
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP"
 	})
 	contract_date: Date;
 
 	@Column({
-		type: 'timestamp',
-		default: () => 'CURRENT_TIMESTAMP'
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP"
 	})
 	contract_ex: Date;
 
 	@Column({
-		type: 'timestamp',
-		default: () => 'CURRENT_TIMESTAMP'
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP"
 	})
 	renewal_of_residence: Date;
 
@@ -88,7 +95,7 @@ export class User extends BaseEntity {
 	salary_per_hour: string;
 
 	@Column({
-		default: 'user'
+		default: "user"
 	})
 	role: string;
 
@@ -107,32 +114,34 @@ export class User extends BaseEntity {
 	})
 	file: string;
 
+	@Column({
+		type: 'json',
+		nullable: true
+	})
+	permissions: string[];
+
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-	@ManyToOne(() => Company, company => company.users, { onDelete: 'CASCADE' })
+	@ManyToOne(() => Company, company => company.users, { onDelete: "CASCADE" })
 	company: Company;
 
 	@ManyToMany(() => Department, department => department.users)
-	@JoinTable({ name: 'user_department' })
 	departments: Department[];
 
 	@ManyToMany(() => Project, project => project.users)
-	@JoinTable({ name: 'user_project' })
+	@JoinTable({ name: "user_project" })
 	projects: Project[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({
-		type: 'timestamp',
-		default: () => 'CURRENT_TIMESTAMP'
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP"
 	})
 	createdAt: Date;
 
 	@Column({
-		type: 'timestamp',
-		default: () => 'CURRENT_TIMESTAMP'
+		type: "timestamp",
+		default: () => "CURRENT_TIMESTAMP"
 	})
 	updatedAt: Date;
 }
-
-// all column will be provided
-// if type is owner, just register
