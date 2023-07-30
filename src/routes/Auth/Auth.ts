@@ -29,16 +29,17 @@ export const login = async (req: Request, res: Response) => {
 	// Generate an access token with user data
 	const accessToken = jwt.sign(
 		{
-			userId: user.id,
+			id: user.id,
 			email: user.email
 		},
 		secretHash as string,
 		{ expiresIn: "30d" }
 	);
 
+
 	const refreshToken = jwt.sign(
 		{
-			userId: user.id,
+			id: user.id,
 			email: user.email
 		},
 		secretHash as string,
@@ -164,8 +165,8 @@ export const register = async (req: Request, res: Response) => {
 					last_name: user.last_name,
 					email: user.email,
 					phone_number: user.phone_number,
-					picture: "",
-					role: user.role
+					role: user.role,
+					picture: ""
 				}
 			});
 
@@ -219,7 +220,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 		);
 
 		// Return the new access token
-		return res.json({ access });
+		return res.json(access);
 	} catch (err) {
 		return res.status(401).json({ message: "Invalid refresh token" });
 	}
