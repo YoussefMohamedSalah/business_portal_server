@@ -63,7 +63,7 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	const userRepository = getRepository(User);
 	const user = new User();
 	user.email = email;
-	user.password = await bcrypt.hash(password, 10);
+	user.password = password;
 	user.first_name = first_name;
 	user.last_name = last_name;
 	user.phone_number = phone_number;

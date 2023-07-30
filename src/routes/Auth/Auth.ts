@@ -3,14 +3,12 @@ import { getRepository } from "typeorm";
 import { User } from "../../entities/User";
 import jwt, { JwtPayload } from "jsonwebtoken";
 // import { verify, JwtPayload } from 'jsonwebtoken';
-
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { createCompany } from "../../repositories/CompanyRepository";
 import { CreateUserInfo } from "../../types/user/CreateUserInfo";
 import { createUser } from "../../repositories/UserRepository";
 import { Company } from "../../entities/Company";
-import { addInitialData } from "../../repositories/InitialDataRepository";
 
 dotenv.config();
 const router = Router();
@@ -19,13 +17,7 @@ const secretHash = process.env.SECRET_HASH;
 export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	// Check if the owner exists
-	const userRepository = getRepository(User);
-	const user = await userRepository
-		.createQueryBuilder("user")
-		.addSelect("user.password")
-		// .leftJoinAndSelect("user.permissionsCategories", "permissionsCategories")
-		.where({ email })
-		.getOne();
+	const user = await User.findOne({ where: { email } });
 	if (!user) {
 		return res.status(401).json({ message: "Invalid email or password" });
 	}
