@@ -5,6 +5,7 @@ import { errorHandler } from "./middleware/errorMiddleware";
 import { entities } from './entities';
 import { connectToDataBase } from './config/db';
 import { AuthRouter } from './routes/Auth/Auth';
+import { NotificationRouter } from './routes/notification';
 // import { CustomerRouter } from './routes/customer';
 
 // constants
@@ -26,6 +27,7 @@ try {
 
   // Routes
   app.use('/auth', AuthRouter);
+  app.use('/notification', NotificationRouter);
   // app.use('/customer', CustomerRouter)
 
   // Server Running

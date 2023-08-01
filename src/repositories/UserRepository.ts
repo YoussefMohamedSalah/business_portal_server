@@ -13,28 +13,6 @@ import { getRoleFromString } from "../utils/getRoleFromString";
 
 // *New* - This is a new method that we are adding to the repository
 
-export const getAllStoreCustomers = async (storeId: number) => {
-	const customerRepository = getRepository(Customer);
-	const customers = await customerRepository
-		.createQueryBuilder("customer")
-		.where("customer.store = :storeId", { storeId: storeId })
-		.getMany();
-	return customers;
-};
-
-export const getAllCustomersForOwner = async (ownerId: number) => {
-	const customerRepository = getRepository(Customer);
-	const customers = await customerRepository
-		.createQueryBuilder("customer")
-		.where("customer.owner = :ownerId", { ownerId: ownerId })
-		.leftJoinAndSelect(
-			"customer.permissionsCategories",
-			"permissionsCategories"
-		)
-		.getMany();
-	return customers;
-};
-
 export const createUser = async (paramsData: CreateUserInfo) => {
 	const {
 		email,
@@ -86,13 +64,40 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	return user;
 };
 
-export const getById = async (id: number) => {
-	const customerRepository = getRepository(Customer);
-	const customer = await customerRepository
-		.createQueryBuilder("customer")
-		.where("customer.id = :id", { id: id })
+export const getById = async (id: string) => {
+	const userRepository = getRepository(User);
+	const user = await userRepository
+		.createQueryBuilder("user")
+		.where("user.id = :id", { id: id })
 		.getOne();
-	return customer;
+	return user;
+};
+
+
+
+
+
+
+export const getAllStoreCustomers = async (storeId: number) => {
+	const customerRepository = getRepository(Customer);
+	const customers = await customerRepository
+		.createQueryBuilder("customer")
+		.where("customer.store = :storeId", { storeId: storeId })
+		.getMany();
+	return customers;
+};
+
+export const getAllCustomersForOwner = async (ownerId: number) => {
+	const customerRepository = getRepository(Customer);
+	const customers = await customerRepository
+		.createQueryBuilder("customer")
+		.where("customer.owner = :ownerId", { ownerId: ownerId })
+		.leftJoinAndSelect(
+			"customer.permissionsCategories",
+			"permissionsCategories"
+		)
+		.getMany();
+	return customers;
 };
 
 export const getByEmail = async (email: string) => {

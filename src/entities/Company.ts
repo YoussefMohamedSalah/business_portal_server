@@ -16,6 +16,36 @@ export class Company extends BaseEntity {
     })
     name: string;
 
+    @Column({
+        default: null
+    })
+    address: string;
+
+    @Column({
+        default: null
+    })
+    size: string;
+
+    @Column({
+        default: null
+    })
+    logo: string;
+
+    @Column({
+        default: false
+    })
+    is_verified: boolean;
+
+    @Column({
+		default: false
+	})
+	stepper_state: boolean;
+
+	@Column({
+		default: 0
+	})
+	stepper_step: number;
+
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     @OneToMany(() => Project, project => project.company, { cascade: true, onDelete: 'CASCADE' })

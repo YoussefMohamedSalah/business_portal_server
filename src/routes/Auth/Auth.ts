@@ -141,7 +141,7 @@ export const register = async (req: Request, res: Response) => {
 				{
 					id: user.id,
 					email: user.email
-				},
+				}, 
 				secretHash as string,
 				{ expiresIn: "30d" }
 			);

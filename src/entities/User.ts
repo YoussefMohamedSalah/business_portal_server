@@ -29,6 +29,11 @@ export class User extends BaseEntity {
 	@Column({
 		default: null
 	})
+	business_title: string;
+
+	@Column({
+		default: null
+	})
 	email: string;
 
 	@Column({
@@ -119,6 +124,11 @@ export class User extends BaseEntity {
 		nullable: true
 	})
 	permissions: string[];
+
+	@Column({
+		default: false
+	})
+	is_verified: boolean;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
