@@ -1,0 +1,22 @@
+user maybe is employee...
+update + delete + getAllCompanyUsers + 
+getAllDepartmentUsers + 
+
+add User Controller and user user Repository.....
+create *( create new user with password and department )* - update - delete - *( getAll = getAllCompanyUsers )* - getAllDepartmentUsers - user permissions.
+
+-- first step get all permissions and permissions value ** save it in front end.
+-- second step get user permissions and find it's value from data saved in front end.
+-- third step allow routes from the side nav, that fet users permissions.
+-- fourth step add all routes that the user don't have permission to into our guard function.
+
+add Permissions Controller and Repository
+get all permission *( that would include department + permission id + type )*.
+
+........ less important ........
+
+-- send otp from 6 digits to the user's Email. from backend. verify the otp saved in backend, then response with true or false.
+-- after the stepper is completed make sure to update the stepper_status to true and navigate to dashboard.
+-- try again with notifications.
+
+

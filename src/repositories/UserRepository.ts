@@ -73,11 +73,6 @@ export const getById = async (id: string) => {
 	return user;
 };
 
-
-
-
-
-
 export const getAllStoreCustomers = async (storeId: number) => {
 	const customerRepository = getRepository(Customer);
 	const customers = await customerRepository
