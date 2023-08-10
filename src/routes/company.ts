@@ -8,4 +8,4 @@ router.route("/:id").get(getCompanyById).put(updateCompany).delete(deleteCompany
 
 
 
-export { router as StoreRouter };
+export { router as CompanyRouter };

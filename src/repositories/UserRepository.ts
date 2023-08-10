@@ -64,6 +64,30 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	return user;
 };
 
+// export const getAllCustomersForOwner = async (ownerId: number) => {
+// 	const customerRepository = getRepository(Customer);
+// 	const customers = await customerRepository
+// 		.createQueryBuilder("customer")
+// 		.where("customer.owner = :ownerId", { ownerId: ownerId })
+// 		.leftJoinAndSelect(
+// 			"customer.permissionsCategories",
+// 			"permissionsCategories"
+// 		)
+// 		.getMany();
+// 	return customers;
+// };
+
+// export const getByEmail = async (email: string) => {
+// 	const userRepository = getRepository(User);
+// 	const user = await userRepository
+// 		.createQueryBuilder("user")
+// 		.where("user.email = :email", { email: email })
+// 		.getOne();
+// 	return user;
+// };
+
+
+
 export const getById = async (id: string) => {
 	const userRepository = getRepository(User);
 	const user = await userRepository
@@ -73,35 +97,21 @@ export const getById = async (id: string) => {
 	return user;
 };
 
-export const getAllStoreCustomers = async (storeId: number) => {
-	const customerRepository = getRepository(Customer);
-	const customers = await customerRepository
-		.createQueryBuilder("customer")
-		.where("customer.store = :storeId", { storeId: storeId })
-		.getMany();
-	return customers;
-};
-
-export const getAllCustomersForOwner = async (ownerId: number) => {
-	const customerRepository = getRepository(Customer);
-	const customers = await customerRepository
-		.createQueryBuilder("customer")
-		.where("customer.owner = :ownerId", { ownerId: ownerId })
-		.leftJoinAndSelect(
-			"customer.permissionsCategories",
-			"permissionsCategories"
-		)
-		.getMany();
-	return customers;
-};
-
-export const getByEmail = async (email: string) => {
+// DONE
+export const getAllCompanyUsers = async (companyId: string) => {
 	const userRepository = getRepository(User);
-	const user = await userRepository
+	const users = await userRepository
 		.createQueryBuilder("user")
-		.where("user.email = :email", { email: email })
-		.getOne();
-	return user;
+		.where("user.company = :companyId", { companyId: companyId })
+		.getMany();
+	return users;
 };
 
-
+export const getAllDepartmentUsers = async (departmentId: string) => {
+	const userRepository = getRepository(User);
+	const users = await userRepository
+		.createQueryBuilder("user")
+		.where("user.department = :departmentId", { departmentId: departmentId })
+		.getMany();
+	return users;
+};

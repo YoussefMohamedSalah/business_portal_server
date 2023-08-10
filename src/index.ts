@@ -6,6 +6,9 @@ import { entities } from './entities';
 import { connectToDataBase } from './config/db';
 import { AuthRouter } from './routes/Auth/Auth';
 import { NotificationRouter } from './routes/notification';
+import { CompanyRouter } from './routes/company';
+import { UserRouter } from './routes/user';
+import { StepperRouter } from './routes/stepper';
 // import { CustomerRouter } from './routes/customer';
 
 // constants
@@ -25,8 +28,12 @@ try {
 
   connectToDataBase(entities);
 
+  
   // Routes
   app.use('/auth', AuthRouter);
+  app.use('/company', CompanyRouter);
+  app.use('/user', UserRouter);
+  app.use('/stepper', StepperRouter);
   app.use('/notification', NotificationRouter);
   // app.use('/customer', CustomerRouter)
 

@@ -1,6 +1,8 @@
 user maybe is employee...
-update + delete + getAllCompanyUsers + 
-getAllDepartmentUsers + 
+update + (DONE)
+delete + (DONE)
+getAllCompanyUsers +  (DONE)
+getAllDepartmentUsers + (DONE) 
 
 add User Controller and user user Repository.....
 create *( create new user with password and department )* - update - delete - *( getAll = getAllCompanyUsers )* - getAllDepartmentUsers - user permissions.

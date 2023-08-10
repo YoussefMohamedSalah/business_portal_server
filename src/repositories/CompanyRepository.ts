@@ -17,7 +17,7 @@ export const createCompany = async (
     return company;
 };
 
-export const getById = async (id: number) => {
+export const getById = async (id: string) => {
     const companyRepository = getRepository(Company);
     const company = await companyRepository
         .createQueryBuilder("company")
