@@ -38,8 +38,6 @@ import bcrypt from "bcrypt";
 // };
 
 
-
-
 // DONE
 export const getUserById = async (req: Request, res: Response) => {
 	const { id } = req.params;
@@ -116,6 +114,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 	await user.remove();
 	return res.json({ msg: "User deleted" });
 };
+
 // DONE
 // all users for single company
 export const getCompanyUsers = async (req: Request, res: Response) => {

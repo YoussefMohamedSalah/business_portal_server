@@ -77,14 +77,18 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 // 	return customers;
 // };
 
-// export const getByEmail = async (email: string) => {
-// 	const userRepository = getRepository(User);
-// 	const user = await userRepository
-// 		.createQueryBuilder("user")
-// 		.where("user.email = :email", { email: email })
-// 		.getOne();
-// 	return user;
-// };
+export const getByEmail = async (email: string) => {
+	const userRepository = getRepository(User);
+	const user = await userRepository
+		.createQueryBuilder("user")
+		.where("user.email = :email", { email: email })
+		.leftJoinAndSelect(
+			"user.company",
+			"company"
+		)
+		.getOne();
+	return user;
+};
 
 
 

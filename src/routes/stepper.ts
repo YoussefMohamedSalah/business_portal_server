@@ -13,7 +13,7 @@ router.route("/otp/:token").post(verifyOtp);
 router.route("/otp").post(sendOtp);
 
 // this is for company info.. in stepper
-router.route("/company/:id").post(updateCompany);
+router.route("/company/:id").put(updateCompany);
 
 
 

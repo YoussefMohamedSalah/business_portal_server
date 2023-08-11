@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { createCompany } from "../../repositories/CompanyRepository";
 import { CreateUserInfo } from "../../types/user/CreateUserInfo";
-import { createUser } from "../../repositories/UserRepository";
+import { createUser, getByEmail } from "../../repositories/UserRepository";
 import { Company } from "../../entities/Company";
 
 dotenv.config();
@@ -17,7 +17,8 @@ const secretHash = process.env.SECRET_HASH;
 export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	// Check if the owner exists
-	const user = await User.findOne({ where: { email } });
+	// const user = await User.findOne({ where: { email } });
+	const user = await getByEmail(email)
 	if (!user) {
 		return res.status(401).json({ message: "Invalid email or password" });
 	}
@@ -58,7 +59,8 @@ export const login = async (req: Request, res: Response) => {
 			phone_number: user.phone_number,
 			role: user.role,
 			picture: "",
-		}
+		},
+		company: user.company
 	});
 };
 
@@ -141,7 +143,7 @@ export const register = async (req: Request, res: Response) => {
 				{
 					id: user.id,
 					email: user.email
-				}, 
+				},
 				secretHash as string,
 				{ expiresIn: "30d" }
 			);
@@ -167,7 +169,8 @@ export const register = async (req: Request, res: Response) => {
 					phone_number: user.phone_number,
 					role: user.role,
 					picture: ""
-				}
+				},
+				company: user.company
 			});
 
 		} else if (role && role !== 'owner') {

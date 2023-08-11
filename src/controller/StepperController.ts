@@ -87,7 +87,9 @@ export const updateUserPosition = async (req: Request, res: Response) => {
     }
     company.stepper_step = 1;
     await company.save();
-    return res.json(user);
+    return res.json({
+        msg: 'success'
+    });
 };
 
 // DONE **
