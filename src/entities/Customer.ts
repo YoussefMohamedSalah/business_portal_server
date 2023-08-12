@@ -14,7 +14,7 @@ export class Customer extends BaseEntity {
     enum: CustomerType,
     default: CustomerType.Company
   })
-  supplier_type: CustomerType;
+  supplier_type: string;
 
   @Column({
     default: null
@@ -67,14 +67,16 @@ export class Customer extends BaseEntity {
   street: string;
 
   @Column({
-    default: null
+    default: null,
+    nullable: true
   })
-  building_number: number;
+  building_number: number | null;
 
   @Column({
-    default: null
+    default: null,
+    nullable: true
   })
-  postal_code: number;
+  postal_code: number | null;
 
   // Relations
   // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
