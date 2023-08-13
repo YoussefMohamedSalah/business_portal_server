@@ -37,14 +37,14 @@ export class Company extends BaseEntity {
     is_verified: boolean;
 
     @Column({
-		default: false
-	})
-	stepper_state: boolean;
+        default: false
+    })
+    stepper_state: boolean;
 
-	@Column({
-		default: 0
-	})
-	stepper_step: number;
+    @Column({
+        default: 0
+    })
+    stepper_step: number;
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

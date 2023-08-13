@@ -11,6 +11,9 @@ import { UserRouter } from './routes/user';
 import { StepperRouter } from './routes/stepper';
 import { CustomerRouter } from './routes/customer';
 import { InventoryRouter } from './routes/inventory';
+import { ProjectRouter } from './routes/project';
+import { SupplierRouter } from './routes/supplier';
+import { InventoryItemRouter } from './routes/inventoryItem';
 
 // constants
 dotenv.config();
@@ -37,6 +40,9 @@ try {
   app.use('/stepper', StepperRouter);
   app.use('/customer', CustomerRouter);
   app.use('/inventory', InventoryRouter);
+  app.use('/inventory_item', InventoryItemRouter);
+  app.use('/project', ProjectRouter);
+  app.use('/supplier', SupplierRouter);
   app.use('/notification', NotificationRouter);
 
   // Server Running

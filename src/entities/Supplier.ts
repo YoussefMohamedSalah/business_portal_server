@@ -12,7 +12,7 @@ export class Supplier extends BaseEntity {
 		enum: SupplierType,
 		default: SupplierType.Company
 	})
-	supplier_type: SupplierType;
+	supplier_type: string;
 
 	@Column({
 		default: null
@@ -67,12 +67,12 @@ export class Supplier extends BaseEntity {
 	@Column({
 		default: null
 	})
-	building_number: number;
+	building_number: string;
 
 	@Column({
 		default: null
 	})
-	postal_code: number;
+	postal_code: string;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne } from 'typeorm';
+import { Inventory } from './Inventory';
 
 
 // this will be connected with inventory entity -- yes
@@ -12,13 +13,19 @@ export class InventoryItem extends BaseEntity {
 	name: string;
 
 	@Column()
-	price: number;  
+	price: number;
 
 	@Column()
-	count: number;  
+	count: number;
 
 	@Column()
 	thumbnail: string;
+
+	// Relations
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@ManyToOne(() => Inventory, inventory => inventory.inventory_items, { onDelete: 'CASCADE' })
+	inventory: Inventory;
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({
 		type: 'timestamp',

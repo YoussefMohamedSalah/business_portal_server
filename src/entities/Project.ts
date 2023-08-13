@@ -55,9 +55,9 @@ export class Project extends BaseEntity {
 	@Column()
 	project_manager: string;
 
-	// to be deleted
-	@Column()
-	customer_name: string;
+	// // to be deleted
+	// @Column()
+	// customer_name: string;
 
 	@Column()
 	sites_count: string;

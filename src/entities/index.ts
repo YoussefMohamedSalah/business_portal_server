@@ -13,10 +13,6 @@ import { Role } from "./Role";
 import { Permission } from "./Permission";
 import { Notification } from './Notification'
 
-// JoiningTables
-import { UserDepartment } from "./joiningTables/UserDepartment";
-import { UserProject } from "./joiningTables/UserProject";
-
 export const entities = [
 	User,
 	Department,
