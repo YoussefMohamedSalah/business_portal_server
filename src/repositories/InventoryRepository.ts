@@ -1,10 +1,8 @@
 import { getRepository } from "typeorm";
-import { Customer } from "../entities/Customer";
-import { CreateCustomerInfo } from "src/types/CreateCustomerInfo";
-import { Company } from "src/entities/Company";
+import { Company } from "../entities/Company";
 import { CreateInventoryInfo } from "src/types/CreateInventory";
-import { Inventory } from "src/entities/Inventory";
-import { InventoryType } from "src/enums/enums";
+import { Inventory } from "../entities/Inventory";
+import { InventoryType } from "../enums/enums";
 
 // DONE
 export const createInventory = async (

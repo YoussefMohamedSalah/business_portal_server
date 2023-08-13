@@ -27,8 +27,8 @@ export const createCustomer = async (
     customer.city = city ? city : '';
     customer.area = area ? area : '';
     customer.street = street ? street : '';
-    customer.building_number = building_number ? building_number : null;
-    customer.postal_code = postal_code ? postal_code : null;
+    customer.building_number = building_number ? building_number : '';
+    customer.postal_code = postal_code ? postal_code : '';
     customer.company = company;
     await customerRepository.save(customer);
     return customer;

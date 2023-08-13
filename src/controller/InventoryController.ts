@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { CreateInventoryInfo } from 'src/types/CreateInventory';
-import { createInventory, getAllByCompanyId, getById } from 'src/repositories/InventoryRepository';
+import { createInventory, getAllByCompanyId, getById } from '../repositories/InventoryRepository';
 
 // DONE
 export const addInventory = async (req: Request, res: Response) => {

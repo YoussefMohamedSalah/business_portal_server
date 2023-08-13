@@ -6,7 +6,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { createCompany } from "../../repositories/CompanyRepository";
-import { CreateUserInfo } from "../../types/user/CreateUserInfo";
+import { CreateUserInfo } from "../../types/CreateUserInfo";
 import { createUser, getByEmail } from "../../repositories/UserRepository";
 import { Company } from "../../entities/Company";
 

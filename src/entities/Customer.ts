@@ -70,13 +70,13 @@ export class Customer extends BaseEntity {
     default: null,
     nullable: true
   })
-  building_number: number | null;
+  building_number: string;
 
   @Column({
     default: null,
     nullable: true
   })
-  postal_code: number | null;
+  postal_code: string;
 
   // Relations
   // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

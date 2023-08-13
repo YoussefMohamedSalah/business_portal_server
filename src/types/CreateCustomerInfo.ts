@@ -10,6 +10,6 @@ export type CreateCustomerInfo = {
     city?: string;
     area?: string;
     street?: string;
-    building_number?: number;
-    postal_code?: number;
+    building_number?: string;
+    postal_code?: string;
 };
