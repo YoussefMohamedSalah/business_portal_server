@@ -4,7 +4,7 @@ import { Role } from "../enums/enums";
 import { User } from "../entities/User";
 
 import bcrypt from "bcrypt";
-import { CreateUserInfo } from "../types/user/CreateUserInfo";
+import { CreateUserInfo } from "../types/CreateUserInfo";
 import { getRoleFromString } from "../utils/getRoleFromString";
 // import dotenv from "dotenv";
 

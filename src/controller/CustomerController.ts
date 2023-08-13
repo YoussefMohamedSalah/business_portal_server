@@ -1,53 +1,74 @@
 import { Request, Response } from 'express';
 import { createCustomer, getById } from '../repositories/CustomerRepository';
+import { CreateCustomerInfo } from 'src/types/CreateCustomerInfo';
+import { getById as getCompanyById } from '../repositories/CompanyRepository';
 
-// 
+// DONE
 export const addCustomer = async (req: Request, res: Response) => {
+    const { companyId } = req.params;
+    const createData: CreateCustomerInfo = req.body;
+    // first get company by id
+    if (companyId) return res.status(400).json({ msg: "Company id is required" });
+    const company = await getCompanyById(companyId);
+    if (!company) return res.status(404).json({ msg: "Company not found" });
+    // then create customer
+    const customer = await createCustomer(createData, company);
+    if (!customer) return res.status(409).json({ msg: "Customer already exists" });
+    else return res.json(customer);
+};
+
+// DONE
+export const getCustomerById = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const customer = await getById(id);
+    if (customer) {
+        return res.json(customer);
+    }
+    return res.status(404).json({ msg: "Customer not found" });
+};
+
+// DONE
+export const updateCustomer = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const customer = await getById(id);
+    if (!customer) {
+        return res.status(404).json({ msg: "Customer not found" });
+    }
     const { name, supplier_type, company_name, vat_on, Representative, phone_number, email, country, city, area, street, building_number, postal_code } = req.body;
-        const createData = req.body;
-    
-    const company = await createCustomer(createData);
-    if (!company) return res.status(409).json({ msg: "User with same email already exists" });
-    else return res.json(company);
+    customer.name = name ? name : customer.name;
+    customer.supplier_type = supplier_type ? supplier_type : customer.supplier_type;
+    customer.company_name = company_name ? company_name : customer.company_name;
+    customer.vat_on = vat_on ? vat_on : customer.vat_on;
+    customer.Representative = Representative ? Representative : customer.Representative;
+    customer.phone_number = phone_number ? phone_number : customer.phone_number;
+    customer.email = email ? email : customer.email;
+    customer.country = country ? country : customer.country;
+    customer.city = city ? city : customer.city;
+    customer.area = area ? area : customer.area;
+    customer.street = street ? street : customer.street;
+    customer.building_number = building_number ? building_number : customer.building_number;
+    customer.postal_code = postal_code ? postal_code : customer.postal_code;
+    await customer.save();
+    return res.json(customer);
 };
 
-// 
-export const getCompanyById = async (req: Request, res: Response) => {
+// DONE
+export const deleteCustomer = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const company = await getById(id);
-    if (company) {
-        return res.json(company);
+    const customer = await getById(id);
+    if (!customer) {
+        return res.status(404).json({ msg: "Customer not found" });
     }
-    return res.status(404).json({ msg: "company not found" });
-};
-
-// 
-export const updateCompany = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const company = await getById(id);
-    if (!company) {
-        return res.status(404).json({ msg: "Company not found" });
-    }
-    const { name, address, logo, size, is_verified, stepper_state, stepper_step } = req.body;
-    company.name = name ? name : company.name;
-    company.address = address ? address : company.address;
-    company.logo = logo ? logo : company.logo;
-    company.size = size ? size : company.size;
-    company.is_verified = is_verified ? is_verified : company.is_verified;
-    company.stepper_state = stepper_state ? stepper_state : company.stepper_state;
-    company.stepper_step = stepper_step ? stepper_step : company.stepper_step;
-    await company.save();
-    return res.json(company);
-};
-
-// 
-export const deleteCompany = async (req: Request, res: Response) => {
-    const { id } = req.params;
-
-    const company = await getById(id);
-    if (!company) {
-        return res.status(404).json({ msg: "Company not found" });
-    }
-    await company.remove();
-    return res.json({ msg: "Company deleted" });
+    await customer.remove();
+    return res.json({ msg: "Customer deleted" });
 }
+
+export const getAllCompanyCustomers = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const company = await getCompanyById(id);
+    if (!company) {
+        return res.status(404).json({ msg: "Company not found" });
+    }
+    const customers = company.customers;
+    return res.json(customers);
+};

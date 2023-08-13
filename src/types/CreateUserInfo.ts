@@ -1,5 +1,3 @@
-import { Role } from "../../entities/Role";
-
 export type CreateUserInfo = {
 	email: string;
 	password: string;
