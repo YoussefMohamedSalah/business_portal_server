@@ -124,7 +124,7 @@ export const register = async (req: Request, res: Response) => {
 		};
 
 		// first check if is owner or is user
-		if (role && role === "owner") {
+		if (role && role === "superuser") {
 			// add new company under the name of 'Company Name'
 			// inside CreateCompany i will create the departments as well
 			const company = await createCompany("Company Name");
