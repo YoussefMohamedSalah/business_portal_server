@@ -39,7 +39,7 @@ export const updateSupplier = async (req: Request, res: Response) => {
         supplier_type,
         company_name,
         vat_on,
-        Representative,
+        representative,
         phone_number,
         email,
         country,
@@ -53,7 +53,7 @@ export const updateSupplier = async (req: Request, res: Response) => {
     supplier.supplier_type = supplier_type ? supplier_type : supplier.supplier_type;
     supplier.company_name = company_name ? company_name : supplier.company_name;
     supplier.vat_on = vat_on ? vat_on : supplier.vat_on;
-    supplier.Representative = Representative ? Representative : supplier.Representative;
+    supplier.representative = representative ? representative : supplier.representative;
     supplier.phone_number = phone_number ? phone_number : supplier.phone_number;
     supplier.email = email ? email : supplier.email;
     supplier.country = country ? country : supplier.country;

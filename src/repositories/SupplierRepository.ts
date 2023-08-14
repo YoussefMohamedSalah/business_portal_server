@@ -8,7 +8,7 @@ export const createSupplier = async (
     createData: CreateSupplierInfo,
     company: Company
 ) => {
-    const { name, supplier_type, company_name, vat_on, Representative, phone_number, email, country, city, area, street, building_number, postal_code } = createData;
+    const { name, supplier_type, company_name, vat_on, representative, phone_number, email, country, city, area, street, building_number, postal_code } = createData;
     // create Project
     const projectRepository = getRepository(Supplier);
     const project = new Supplier();
@@ -16,7 +16,7 @@ export const createSupplier = async (
     project.supplier_type = supplier_type;
     project.company_name = company_name;
     project.vat_on = vat_on;
-    project.Representative = Representative;
+    project.representative = representative;
     project.phone_number = phone_number;
     project.email = email;
     project.country = country;

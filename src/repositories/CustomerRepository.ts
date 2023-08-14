@@ -8,7 +8,7 @@ export const createCustomer = async (
     createData: CreateCustomerInfo,
     company: Company
 ) => {
-    const { name, supplier_type, company_name, vat_on, Representative, phone_number, email, country, city, area, street, building_number, postal_code } = createData;
+    const { name, customer_type, company_name, vat_on, representative, phone_number, email, country, city, area, street, building_number, postal_code } = createData;
     // check if customer already exists
     if (!email) return null;
     const existingCustomer = await getByEmail(email);
@@ -17,10 +17,10 @@ export const createCustomer = async (
     const customerRepository = getRepository(Customer);
     const customer = new Customer();
     customer.name = name ? name : '';
-    customer.supplier_type = supplier_type ? supplier_type : '';
+    customer.customer_type = customer_type ? customer_type : '';
     customer.company_name = company_name ? company_name : '';
     customer.vat_on = vat_on ? vat_on : '';
-    customer.Representative = Representative ? Representative : '';
+    customer.representative = representative ? representative : '';
     customer.phone_number = phone_number ? phone_number : '';
     customer.email = email ? email : '';
     customer.country = country ? country : '';

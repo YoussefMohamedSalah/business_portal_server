@@ -5,7 +5,7 @@ export type CreateProjectInfo = {
     log: string;
     bid_value: string;
     duration: string;
-    delivery_date: Date;
+    delivery_date: string;
     contract_number: string;
     contract_date: string;
     po_budget: string;

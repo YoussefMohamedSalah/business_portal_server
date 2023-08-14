@@ -1,9 +1,9 @@
 export type CreateCustomerInfo = {
     name: string;
-    supplier_type?: string;
+    customer_type?: string;
     company_name?: string;
     vat_on?: string;
-    Representative?: string;
+    representative?: string;
     phone_number?: string;
     email?: string;
     country?: string;

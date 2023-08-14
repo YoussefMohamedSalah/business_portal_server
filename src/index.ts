@@ -38,12 +38,18 @@ try {
   app.use('/company', CompanyRouter);
   app.use('/user', UserRouter);
   app.use('/stepper', StepperRouter);
+  // done
+  app.use('/supplier', SupplierRouter);
   app.use('/customer', CustomerRouter);
   app.use('/inventory', InventoryRouter);
   app.use('/inventory_item', InventoryItemRouter);
+  
+  // exists
   app.use('/project', ProjectRouter);
-  app.use('/supplier', SupplierRouter);
+  
   app.use('/notification', NotificationRouter);
+
+
 
   // Server Running
 } catch (error) {

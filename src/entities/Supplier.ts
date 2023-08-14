@@ -27,7 +27,7 @@ export class Supplier extends BaseEntity {
 	@Column({
 		default: null
 	})
-	Representative: string;
+	representative: string;
 
 	@Column({
 		default: null

@@ -14,7 +14,7 @@ export class Customer extends BaseEntity {
     enum: CustomerType,
     default: CustomerType.Company
   })
-  supplier_type: string;
+  customer_type: string;
 
   @Column({
     default: null
@@ -29,7 +29,7 @@ export class Customer extends BaseEntity {
   @Column({
     default: null
   })
-  Representative: string;
+  representative: string;
 
   @Column({
     default: null

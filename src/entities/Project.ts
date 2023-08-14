@@ -26,7 +26,7 @@ export class Project extends BaseEntity {
 		type: 'timestamp',
 		default: () => 'CURRENT_TIMESTAMP'
 	})
-	delivery_date: Date;
+	delivery_date: string;
 
 	@Column()
 	contract_number: string;

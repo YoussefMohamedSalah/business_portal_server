@@ -34,12 +34,12 @@ export const updateCustomer = async (req: Request, res: Response) => {
     if (!customer) {
         return res.status(404).json({ msg: "Customer not found" });
     }
-    const { name, supplier_type, company_name, vat_on, Representative, phone_number, email, country, city, area, street, building_number, postal_code } = req.body;
+    const { name, customer_type, company_name, vat_on, representative, phone_number, email, country, city, area, street, building_number, postal_code } = req.body;
     customer.name = name ? name : customer.name;
-    customer.supplier_type = supplier_type ? supplier_type : customer.supplier_type;
+    customer.customer_type = customer_type ? customer_type : customer.customer_type;
     customer.company_name = company_name ? company_name : customer.company_name;
     customer.vat_on = vat_on ? vat_on : customer.vat_on;
-    customer.Representative = Representative ? Representative : customer.Representative;
+    customer.representative = representative ? representative : customer.representative;
     customer.phone_number = phone_number ? phone_number : customer.phone_number;
     customer.email = email ? email : customer.email;
     customer.country = country ? country : customer.country;

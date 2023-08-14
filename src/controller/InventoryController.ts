@@ -34,7 +34,7 @@ export const getInventoryById = async (req: Request, res: Response) => {
 //     if (!inventory) {
 //         return res.status(404).json({ msg: "Inventory not found" });
 //     }
-//     const { name, supplier_type, company_name, vat_on, Representative, phone_number, email, country, city, area, street, building_number, postal_code } = req.body;
+//     const { name, supplier_type, company_name, vat_on, representative, phone_number, email, country, city, area, street, building_number, postal_code } = req.body;
 //     customer.name = name ? name : customer.name;
 //     await customer.save();
 //     return res.json(customer);

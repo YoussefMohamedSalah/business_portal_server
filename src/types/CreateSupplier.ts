@@ -3,7 +3,7 @@ export type CreateSupplierInfo = {
     supplier_type: string;
     company_name: string;
     vat_on: string;
-    Representative: string;
+    representative: string;
     name: string;
     phone_number: string;
     email: string;

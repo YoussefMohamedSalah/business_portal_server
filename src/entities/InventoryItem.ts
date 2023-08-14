@@ -1,9 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne } from 'typeorm';
 import { Inventory } from './Inventory';
 
-
-// this will be connected with inventory entity -- yes
-
 @Entity({ name: 'inventory_item' })
 export class InventoryItem extends BaseEntity {
 	@PrimaryGeneratedColumn('increment')
