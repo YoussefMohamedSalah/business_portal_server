@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { addInventory, getInventoryById, deleteInventory } from "../controller/InventoryController";
-import { allInventoryItems } from "src/controller/InventoryItemController";
+import { allInventoryItems } from "../controller/InventoryItemController";
 
 const router = Router();
 
