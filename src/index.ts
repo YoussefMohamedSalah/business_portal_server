@@ -14,6 +14,8 @@ import { InventoryRouter } from './routes/inventory';
 import { ProjectRouter } from './routes/project';
 import { SupplierRouter } from './routes/supplier';
 import { InventoryItemRouter } from './routes/inventoryItem';
+import { DashboardRouter } from './routes/dashboard';
+import { AttendanceRouter } from './routes/attendance';
 
 // constants
 dotenv.config();
@@ -35,6 +37,11 @@ try {
 
   // Routes
   app.use('/auth', AuthRouter);
+  app.use('/dashboard', DashboardRouter);
+  app.use('/attendance', AttendanceRouter);
+  // Javascript
+
+
   app.use('/company', CompanyRouter);
   app.use('/user', UserRouter);
   app.use('/stepper', StepperRouter);

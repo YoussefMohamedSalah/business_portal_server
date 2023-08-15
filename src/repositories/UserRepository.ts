@@ -92,6 +92,18 @@ export const getByEmail = async (email: string) => {
 
 
 
+export const getUserAndCompanyById = async (id: string) => {
+	const userRepository = getRepository(User);
+	const user = await userRepository
+		.createQueryBuilder("user")
+		.where("user.id = :id", { id: id })
+		.leftJoinAndSelect(
+			"user.company",
+			"company"
+		)
+		.getOne();
+	return user;
+};
 export const getById = async (id: string) => {
 	const userRepository = getRepository(User);
 	const user = await userRepository

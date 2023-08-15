@@ -5,6 +5,7 @@ import { Customer } from './Customer';
 import { Supplier } from './Supplier';
 import { Inventory } from './Inventory';
 import { Department } from './Department';
+import { Attendance } from './Attendance';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
@@ -62,6 +63,9 @@ export class Company extends BaseEntity {
 
     @OneToMany(() => Supplier, supplier => supplier.company, { cascade: true, onDelete: 'CASCADE' })
     suppliers: Supplier[];
+
+    @OneToMany(() => Attendance, attendance => attendance.company, { cascade: true, onDelete: 'CASCADE' })
+    attendances: Attendance[];
 
     @OneToMany(() => Inventory, inventory => inventory.company, { cascade: true, onDelete: 'CASCADE' })
     inventory_list: Inventory[];

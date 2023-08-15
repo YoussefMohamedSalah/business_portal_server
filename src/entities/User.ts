@@ -6,11 +6,13 @@ import {
 	ManyToOne,
 	ManyToMany,
 	JoinTable,
-	ColumnType
+	ColumnType,
+	OneToMany
 } from "typeorm";
 import { Company } from "./Company";
 import { Project } from "./Project";
 import { Department } from "./Department";
+import { Attendance } from "./Attendance";
 
 @Entity({ name: "user" })
 export class User extends BaseEntity {
@@ -135,6 +137,16 @@ export class User extends BaseEntity {
 	})
 	is_verified: boolean;
 
+	@Column({
+		default: null
+	})
+	shift_start: string; // 06:00
+
+	@Column({
+		default: null
+	})
+	shift_end: string; // 14:00
+
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@ManyToOne(() => Company, company => company.users, { onDelete: "CASCADE" })
@@ -142,6 +154,9 @@ export class User extends BaseEntity {
 
 	@ManyToMany(() => Department, department => department.users)
 	departments: Department[];
+
+	@OneToMany(() => Attendance, attendance => attendance.user)
+	attendances: Attendance[];
 
 	@ManyToMany(() => Project, project => project.users)
 	@JoinTable({ name: "user_project" })

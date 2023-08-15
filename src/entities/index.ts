@@ -12,6 +12,7 @@ import { Department } from "./Department";
 import { Role } from "./Role";
 import { Permission } from "./Permission";
 import { Notification } from './Notification'
+import { Attendance } from './Attendance'
 
 export const entities = [
 	User,
@@ -24,6 +25,7 @@ export const entities = [
 	InventoryItem,
 	Company,
 	Permission,
-	Notification
+	Notification,
+	Attendance
 	// UserDepartment,
 ];
