@@ -81,49 +81,47 @@ export const addEndAttendance = async (req: Request, res: Response) => {
     return res.json(attendance);
 };
 
-
+// DONE
 // this function is to work every 24 hour to get all users attendance and reset it
 // every user that does not add attendance today, will add it as absent.
 export const dailyAutoResetAttendance = async () => {
     // this Function Is Wrapped With SetInterval To Run Every 24 Hour
-    setInterval(async () => {
-        const date = new Date();
-        const today = date.toISOString().slice(0, 10); // 2021-08-01
-        const yesterdayDate = new Date(date.setDate(date.getDate() - 1));
-        const yesterday = yesterdayDate.toISOString().slice(0, 10); // 2021-08-01
+    const date = new Date();
+    const today = date.toISOString().slice(0, 10); // 2021-08-01
+    const yesterdayDate = new Date(date.setDate(date.getDate() - 1));
+    const yesterday = yesterdayDate.toISOString().slice(0, 10); // 2021-08-01
 
-        // !Important
-        // SetTimeout to make sure that all users are added to database and server is Ready To Handle Requests
-        setTimeout(async () => {
-            const usersList = await getAllUsers();
-            if (!usersList) return;
-            // now loop throw all users and check if he has attendance yesterday
-            usersList.forEach(async (user) => {
-                let userJoiningDate = user.contract_date.toISOString().slice(0, 10);
-                // if user is new, or there is no shift start or end data saved, then skip him
-                if (userJoiningDate === today || !user.shift_start || !user.shift_end) return;
-                // get user yesterdays attendance
-                const attendance = await getByUserId(user.id, yesterday);
-                // if user has attendance yesterday then skip him
-                // if Not then add attendance as absent
-                if (!attendance) {
-                    const CreateStartAttendanceData = {
-                        user,
-                        company: user.company,
-                        late: null,
-                        early: null,
-                        absent: true,
-                        userLogInTime: null,
-                        shift_start: user.shift_start,
-                        shift_end: user.shift_end,
-                        lateTime: null,
-                        earlyTime: null,
-                        lateReason: '',
-                        date: yesterday
-                    }
-                    await createStartAttendance(CreateStartAttendanceData)
+    // !Important
+    // SetTimeout to make sure that all users are added to database and server is Ready To Handle Requests
+    setTimeout(async () => {
+        const usersList = await getAllUsers();
+        if (!usersList) return;
+        // now loop throw all users and check if he has attendance yesterday
+        usersList.forEach(async (user) => {
+            let userJoiningDate = user.contract_date.toISOString().slice(0, 10);
+            // if user is new, or there is no shift start or end data saved, then skip him
+            if (userJoiningDate === today || !user.shift_start || !user.shift_end) return;
+            // get user yesterdays attendance
+            const attendance = await getByUserId(user.id, yesterday);
+            // if user has attendance yesterday then skip him
+            // if Not then add attendance as absent
+            if (!attendance) {
+                const CreateStartAttendanceData = {
+                    user,
+                    company: user.company,
+                    late: null,
+                    early: null,
+                    absent: true,
+                    userLogInTime: null,
+                    shift_start: user.shift_start,
+                    shift_end: user.shift_end,
+                    lateTime: null,
+                    earlyTime: null,
+                    lateReason: '',
+                    date: yesterday
                 }
-            })
-        }, 5000)
-    }, 1000 * 60 * 60 * 24);
+                await createStartAttendance(CreateStartAttendanceData)
+            }
+        })
+    }, 5000)
 }
