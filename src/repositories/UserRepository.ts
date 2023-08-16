@@ -77,6 +77,7 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 // 	return customers;
 // };
 
+// DONE
 export const getByEmail = async (email: string) => {
 	const userRepository = getRepository(User);
 	const user = await userRepository
@@ -90,8 +91,7 @@ export const getByEmail = async (email: string) => {
 	return user;
 };
 
-
-
+// DONE
 export const getUserAndCompanyById = async (id: string) => {
 	const userRepository = getRepository(User);
 	const user = await userRepository
@@ -104,6 +104,8 @@ export const getUserAndCompanyById = async (id: string) => {
 		.getOne();
 	return user;
 };
+
+// DONE
 export const getById = async (id: string) => {
 	const userRepository = getRepository(User);
 	const user = await userRepository
@@ -123,6 +125,7 @@ export const getAllCompanyUsers = async (companyId: string) => {
 	return users;
 };
 
+// DONE
 export const getAllDepartmentUsers = async (departmentId: string) => {
 	const userRepository = getRepository(User);
 	const users = await userRepository
@@ -131,3 +134,17 @@ export const getAllDepartmentUsers = async (departmentId: string) => {
 		.getMany();
 	return users;
 };
+
+
+export const getAllUsers = async () => {
+	const userRepository = getRepository(User);
+	const users = await userRepository
+		.createQueryBuilder("user")
+		.where("user.role = :role", { role: Role.USER })
+		.leftJoinAndSelect(
+			"user.company",
+			"company"
+		)
+		.getMany();
+	return users;
+}

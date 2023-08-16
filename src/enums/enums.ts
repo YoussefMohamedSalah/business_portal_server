@@ -14,9 +14,9 @@ export enum FuncType {
 }
 
 export enum Role {
-	Owner = 'owner',
-	Admin = 'admin',
-	user = 'user',
+	OWNER = 'owner',
+	ADMIN = 'admin',
+	USER = 'user',
 }
 
 export enum CustomerType {

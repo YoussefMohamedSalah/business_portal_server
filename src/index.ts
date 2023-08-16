@@ -16,6 +16,7 @@ import { SupplierRouter } from './routes/supplier';
 import { InventoryItemRouter } from './routes/inventoryItem';
 import { DashboardRouter } from './routes/dashboard';
 import { AttendanceRouter } from './routes/attendance';
+import { dailyAutoResetAttendance } from './controller/AttendanceController';
 
 // constants
 dotenv.config();
@@ -54,7 +55,8 @@ try {
 
   app.use('/notification', NotificationRouter);
 
-
+  // eventListeners 
+  dailyAutoResetAttendance()
 
   // Server Running
 } catch (error) {
