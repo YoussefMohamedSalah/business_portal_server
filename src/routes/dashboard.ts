@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { dashboardAttendance } from "../controller/DashboardController";
+import { checkAuth } from "../middleware/checkAuth";
 
 const router = Router();
 // **************************************************
-router.route("/attendance/:companyId").get(dashboardAttendance);
+router.route("/attendance").get(checkAuth, dashboardAttendance);
 
 
 

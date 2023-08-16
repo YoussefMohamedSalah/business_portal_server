@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { addSupplier, getSupplierById, updateSupplier, deleteSupplier } from "../controller/SupplierController";
+import { checkAuth } from "../middleware/checkAuth";
 
 const router = Router();
 
-router.route("/:companyId").post(addSupplier);
-router.route("/:id").get(getSupplierById).put(updateSupplier).delete(deleteSupplier);
+router.route("/").post(checkAuth, addSupplier);
+router.route("/:id").get(checkAuth, getSupplierById).put(checkAuth, updateSupplier).delete(checkAuth, deleteSupplier);
 
 export { router as SupplierRouter };
 

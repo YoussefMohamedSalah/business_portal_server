@@ -5,7 +5,7 @@ import { createProject, getAllByCompanyId, getById } from '../repositories/Proje
 
 // DONE
 export const addProject = async (req: Request, res: Response) => {
-    const { companyId } = req.params;
+    const { companyId } = req.userData!;
     const createData: CreateProjectInfo = req.body;
     // first get company by id
     if (companyId) return res.status(400).json({ msg: "Company id is required" });
@@ -74,7 +74,7 @@ export const deleteProject = async (req: Request, res: Response) => {
 
 // DONE
 export const allCompanyProjects = async (req: Request, res: Response) => {
-    const { companyId } = req.params;
+    const { companyId } = req.userData!;
     const projects = await getAllByCompanyId(companyId);
     if (!projects) {
         return res.status(404).json({ msg: "Projects not found" });

@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
@@ -5,10 +6,21 @@ import dotenv from "dotenv";
 dotenv.config();
 const secretHash = process.env.SECRET_HASH;
 
-const checkAuth = async (req: any, res: any, next: any) => {
-	// const header = req.header("Authorization");
-	const { Authorization } = req.headers;
-	if (!Authorization) {
+
+// Extend the Request interface to include the `userData` property
+declare global {
+	namespace Express {
+		interface Request {
+			userData?: {
+				userId: string;
+				companyId: string;
+			};
+		}
+	}
+}
+const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
+	const { authorization } = req.headers;
+	if (!authorization) {
 		return res.status(400).json({
 			errors: [
 				{
@@ -17,7 +29,7 @@ const checkAuth = async (req: any, res: any, next: any) => {
 			],
 		});
 	}
-	const token = Authorization.split(" ")[1];
+	const token = authorization.split(" ")[1];
 
 	if (!token) {
 		return res.status(400).json({
@@ -30,8 +42,9 @@ const checkAuth = async (req: any, res: any, next: any) => {
 	}
 
 	try {
-		const user: any = await jwt.verify(token, `${secretHash}`);
-		req.userData = { userId: user.userId };
+		const user: any = jwt.verify(token, `${secretHash}`);
+		const { userId, companyId } = user;
+		req.userData = { userId, companyId };
 		next();
 	} catch (error) {
 		return res.status(400).json({
@@ -42,6 +55,7 @@ const checkAuth = async (req: any, res: any, next: any) => {
 			],
 		});
 	}
+	return;
 };
 
 export { checkAuth };

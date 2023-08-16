@@ -5,7 +5,7 @@ import { getById as getCompanyById } from '../repositories/CompanyRepository';
 
 // DONE
 export const addCustomer = async (req: Request, res: Response) => {
-    const { companyId } = req.params;
+    const { companyId } = req.userData!;
     const createData: CreateCustomerInfo = req.body;
     // first get company by id
     if (companyId) return res.status(400).json({ msg: "Company id is required" });
@@ -64,8 +64,8 @@ export const deleteCustomer = async (req: Request, res: Response) => {
 }
 
 export const getAllCompanyCustomers = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const company = await getCompanyById(id);
+    const { companyId } = req.userData!;
+    const company = await getCompanyById(companyId);
     if (!company) {
         return res.status(404).json({ msg: "Company not found" });
     }

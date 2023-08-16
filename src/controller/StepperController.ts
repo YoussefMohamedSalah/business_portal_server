@@ -72,12 +72,12 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
 // DONE **
 export const updateUserPosition = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const user = await getUserById(id);
+    const { userId, companyId } = req.userData!;
+    const { business_title } = req.body;
+    const user = await getUserById(userId);
     if (!user) {
         return res.status(404).json({ msg: "User not found" });
     }
-    const { business_title, companyId } = req.body;
     user.business_title = business_title ? business_title : user.business_title;
     await user.save();
 
@@ -94,8 +94,8 @@ export const updateUserPosition = async (req: Request, res: Response) => {
 
 // DONE **
 export const updateCompany = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const company = await getCompanyById(id);
+    const { companyId } = req.userData!;
+    const company = await getCompanyById(companyId);
     if (!company) {
         return res.status(404).json({ msg: "Company not found" });
     }

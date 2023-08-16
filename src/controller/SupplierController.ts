@@ -5,7 +5,7 @@ import { createSupplier, getAllByCompanyId, getById } from '../repositories/Supp
 
 // DONE
 export const addSupplier = async (req: Request, res: Response) => {
-    const { companyId } = req.params;
+    const { companyId } = req.userData!;
     const createData: CreateSupplierInfo = req.body;
     // first get company by id
     if (companyId) return res.status(400).json({ msg: "Company id is required" });
@@ -79,7 +79,7 @@ export const deleteSupplier = async (req: Request, res: Response) => {
 
 // DONE
 export const allCompanySuppliers = async (req: Request, res: Response) => {
-    const { companyId } = req.params;
+    const { companyId } = req.userData!;
     const suppliers = await getAllByCompanyId(companyId);
     if (!suppliers) {
         return res.status(404).json({ msg: "No suppliers Exists" });

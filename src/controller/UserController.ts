@@ -118,7 +118,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 // DONE
 // all users for single company
 export const getCompanyUsers = async (req: Request, res: Response) => {
-	const { companyId } = req.params;
+    const { companyId } = req.userData!;
 	const users = await getAllCompanyUsers(companyId);
 	return res.json(users);
 };

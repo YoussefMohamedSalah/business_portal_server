@@ -11,8 +11,8 @@ export const addCompany = async (req: Request, res: Response) => {
 
 // DONE
 export const getCompanyById = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const company = await getById(id);
+    const { companyId } = req.userData!;
+    const company = await getById(companyId);
     if (company) {
         return res.json(company);
     }
@@ -21,8 +21,8 @@ export const getCompanyById = async (req: Request, res: Response) => {
 
 // DONE
 export const updateCompany = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const company = await getById(id);
+    const { companyId } = req.userData!;
+    const company = await getById(companyId);
     if (!company) {
         return res.status(404).json({ msg: "Company not found" });
     }
@@ -40,9 +40,8 @@ export const updateCompany = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteCompany = async (req: Request, res: Response) => {
-    const { id } = req.params;
-
-    const company = await getById(id);
+    const { companyId } = req.userData!;
+    const company = await getById(companyId);
     if (!company) {
         return res.status(404).json({ msg: "Company not found" });
     }

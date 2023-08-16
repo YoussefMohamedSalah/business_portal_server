@@ -5,7 +5,7 @@ import { createInventory, getAllByCompanyId, getById } from '../repositories/Inv
 
 // DONE
 export const addInventory = async (req: Request, res: Response) => {
-    const { companyId } = req.params;
+    const { companyId } = req.userData!;
     const createData: CreateInventoryInfo = req.body;
     // first get company by id
     if (companyId) return res.status(400).json({ msg: "Company id is required" });
@@ -53,7 +53,7 @@ export const deleteInventory = async (req: Request, res: Response) => {
 
 // DONE
 export const allCompanyInventories = async (req: Request, res: Response) => {
-    const { companyId } = req.params;
+    const { companyId } = req.userData!;
     const inventories = await getAllByCompanyId(companyId);
     if (!inventories) {
         return res.status(404).json({ msg: "Inventories not found" });

@@ -4,15 +4,16 @@ import { allCompanyInventories } from "../controller/InventoryController";
 import { allCompanySuppliers } from "../controller/SupplierController";
 import { getAllCompanyCustomers } from "../controller/CustomerController";
 import { allCompanyProjects } from "../controller/ProjectController";
+import { checkAuth } from "../middleware/checkAuth";
 
 const router = Router();
-router.route("/").post(addCompany);
-router.route("/:id").get(getCompanyById).put(updateCompany).delete(deleteCompany);
+router.route("/").post(checkAuth,addCompany);
+router.route("/").get(checkAuth,getCompanyById).put(checkAuth,updateCompany).delete(checkAuth,deleteCompany);
 // **************************************************
-router.route("/customer/:companyId").get(getAllCompanyCustomers);
-router.route("/inventory/:companyId").get(allCompanyInventories);
-router.route("/supplier/:companyId").get(allCompanySuppliers);
-router.route("/project/:companyId").get(allCompanyProjects);
+router.route("/customer").get(checkAuth, getAllCompanyCustomers);
+router.route("/inventory").get(checkAuth, allCompanyInventories);
+router.route("/supplier").get(checkAuth, allCompanySuppliers);
+router.route("/project").get(checkAuth, allCompanyProjects);
 
 
 

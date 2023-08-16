@@ -30,7 +30,8 @@ export const login = async (req: Request, res: Response) => {
 	// Generate an access token with user data
 	const accessToken = jwt.sign(
 		{
-			id: user.id,
+			userId: user.id,
+			companyId: user.company.id,
 			email: user.email
 		},
 		secretHash as string,
@@ -41,6 +42,7 @@ export const login = async (req: Request, res: Response) => {
 	const refreshToken = jwt.sign(
 		{
 			id: user.id,
+			companyId: user.company.id,
 			email: user.email
 		},
 		secretHash as string,
@@ -141,7 +143,8 @@ export const register = async (req: Request, res: Response) => {
 			// Generate an access token with user data
 			const accessToken = jwt.sign(
 				{
-					id: user.id,
+					userId: user.id,
+					companyId: company.id,
 					email: user.email
 				},
 				secretHash as string,
@@ -150,7 +153,8 @@ export const register = async (req: Request, res: Response) => {
 
 			const refreshToken = jwt.sign(
 				{
-					id: user.id,
+					userId: user.id,
+					companyId: company.id,
 					email: user.email
 				},
 				secretHash as string,
@@ -173,7 +177,7 @@ export const register = async (req: Request, res: Response) => {
 				company: user.company
 			});
 
-		} else if (role && role !== 'owner') {
+		} else if (role && role !== 'superuser') {
 			// first get company by id, then add it to the newly created user
 			const company = await Company.findOne({ where: { id: companyId } });
 			if (!company) {
@@ -206,6 +210,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 		const user = await userRepository
 			.createQueryBuilder("user")
 			.where("user.id = :id", { id: decoded.id })
+			.leftJoinAndSelect("user.company", "company")
 			.getOne();
 
 		if (!user) {
@@ -216,6 +221,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 		const access = jwt.sign(
 			{
 				id: user.id,
+				companyId: user.company.id,
 				email: user.email
 			},
 			secretHash as string,

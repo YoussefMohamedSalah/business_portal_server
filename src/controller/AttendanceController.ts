@@ -5,8 +5,8 @@ import { createStartAttendance, getAllToReset, getByUserId } from '../repositori
 
 // DONE
 export const addStartAttendance = async (req: Request, res: Response) => {
-    const { id } = req.params;
     const { lateReason } = req.body;
+    const { userId } = req.userData!;
     const date = new Date();
     const stringDate = new Date().toISOString().slice(0, 10) // 2021-08-01
 
@@ -17,13 +17,13 @@ export const addStartAttendance = async (req: Request, res: Response) => {
     if (date.getMinutes() < 10) loginMinute = `0${loginMinute}`;
     const userLogInTime = loginHour + ':' + loginMinute;
     // check if user exist
-    const user = await getUserAndCompanyById(id);
+    const user = await getUserAndCompanyById(userId);
     if (!user) return res.status(404).json({ msg: "User not found" });
     // check if user has shift and What is it
     const { shift_start, shift_end } = user
     if (!shift_start || !shift_end) return res.status(404).json({ msg: "You'r Shift not found" });
     // now check if user already done attendance today
-    const existingAttendance = await getByUserId(id, stringDate);
+    const existingAttendance = await getByUserId(userId, stringDate);
     if (existingAttendance) return res.status(409).json({ msg: "You Already Start Attendance Today" });
     // now check if user is late or early or absent
     const data = handleStartWork(shift_start, userLogInTime)
@@ -50,7 +50,7 @@ export const addStartAttendance = async (req: Request, res: Response) => {
 
 // DONE
 export const addEndAttendance = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { userId } = req.userData!;
     const { dailyReport } = req.body;
     const date = new Date();
     const stringDate = new Date().toISOString().slice(0, 10) // 2021-08-01
@@ -61,7 +61,7 @@ export const addEndAttendance = async (req: Request, res: Response) => {
     if (date.getMinutes() < 10) logoutMinute = `0${logoutMinute}`;
     const userLogOutTime = logoutHour + ':' + logoutMinute;
     // Now get the attendance of this user today
-    const attendance = await getByUserId(id, stringDate);
+    const attendance = await getByUserId(userId, stringDate);
     if (!attendance) return res.status(404).json({ msg: "User Attendance not found" });
     const { shift_start, shift_end, enter_time, leave_time } = attendance
     // check if user already done attendance today
