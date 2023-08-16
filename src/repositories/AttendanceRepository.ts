@@ -14,15 +14,17 @@ export const createStartAttendance = async (
         early: boolean;
         lateTime: string;
         earlyTime: string;
+        lateReason: string;
     }
 ) => {
-    const { user, late, early, absent, userLogInTime, shift_start, shift_end, lateTime, earlyTime } = CreateStartAttendanceData;
+    const { user, late, early, absent, userLogInTime, shift_start, shift_end, lateTime, earlyTime, lateReason } = CreateStartAttendanceData;
     const attendanceRepository = getRepository(Attendance);
     const attendance = new Attendance();
     attendance.absent = absent;
     attendance.enter_time = userLogInTime;
     attendance.late = late;
     if (late) attendance.late_by = lateTime;
+    if (late && lateReason !== '') attendance.late_reason = lateReason;
     attendance.early = early;
     if (early) attendance.early_by = earlyTime;
     attendance.shift_start = shift_start;

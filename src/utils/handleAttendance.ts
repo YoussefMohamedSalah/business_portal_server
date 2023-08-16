@@ -10,7 +10,6 @@ export const handleStartWork = (userShiftStart: string, userLogInTime: string,) 
 
 	// Calculate lateness/earliness
 	const minutesLateOrEarly = calculateMinutesLateOrEarly(shiftStartTime, logInTime);
-
 	// Determine if the user is late, early, or on time
 	let userStatus;
 	let late: boolean;
@@ -36,13 +35,12 @@ export const handleStartWork = (userShiftStart: string, userLogInTime: string,) 
 		early = false;
 		absent = false;
 	}
-	console.log(lateTime, earlyTime)
 
 	return {
 		isLoggedToday, // true
 		userStatus, // 'On time'
 		late, early, absent,
-		lateTime, earlyTime
+		lateTime, earlyTime, lateBy: minutesLateOrEarly
 	};
 }
 

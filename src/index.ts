@@ -39,9 +39,7 @@ try {
   app.use('/auth', AuthRouter);
   app.use('/dashboard', DashboardRouter);
   app.use('/attendance', AttendanceRouter);
-  // Javascript
-
-
+  // 
   app.use('/company', CompanyRouter);
   app.use('/user', UserRouter);
   app.use('/stepper', StepperRouter);
@@ -50,10 +48,10 @@ try {
   app.use('/customer', CustomerRouter);
   app.use('/inventory', InventoryRouter);
   app.use('/inventory_item', InventoryItemRouter);
-  
+
   // exists
   app.use('/project', ProjectRouter);
-  
+
   app.use('/notification', NotificationRouter);
 
 

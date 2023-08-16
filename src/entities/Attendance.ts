@@ -70,6 +70,14 @@ export class Attendance extends BaseEntity {
 	})
 	shift_end: string;
 
+	// Add HR report for reason why late
+	@Column({ nullable: true })
+	late_reason: string;
+
+	// Add Daily report with ending working hours
+	@Column({ nullable: true })
+	daily_report: string;
+
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@ManyToOne(() => Company, company => company.attendances, { onDelete: 'CASCADE' })
