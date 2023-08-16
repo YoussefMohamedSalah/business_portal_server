@@ -138,14 +138,18 @@ export class User extends BaseEntity {
 	is_verified: boolean;
 
 	@Column({
+		type: 'time',
+		nullable: true,
 		default: null
 	})
-	shift_start: string; // 06:00
+	shift_start: string; // 06:00:00
 
 	@Column({
+		type: 'time',
+		nullable: true,
 		default: null
 	})
-	shift_end: string; // 14:00
+	shift_end: string; // 14:00:00
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

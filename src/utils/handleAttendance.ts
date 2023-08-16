@@ -102,7 +102,7 @@ export const calculateMinutesLateOrEarly = (shiftStartTime: Date, logInTime: Dat
 	const timeDiff = logInTime.getTime() - shiftStartTime.getTime();
 	return Math.floor(timeDiff / 1000 / 60);
 }
-
+// Helper function to format minutes to time string in format "HH:mm"
 export const formatMinutesToTime = (minutes: number) => {
 	const hours = Math.floor(minutes / 60);
 	const formattedHours = String(hours).padStart(2, '0');

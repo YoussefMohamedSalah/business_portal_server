@@ -18,11 +18,11 @@ export const addStartAttendance = async (req: Request, res: Response) => {
     if (!user) return res.status(404).json({ msg: "User not found" });
     // check if user has shift and What is it
     const { shift_start, shift_end } = user
+    if (!shift_start || !shift_end) return res.status(404).json({ msg: "User Shift not found" });
     // now check if user already done attendance today
     const existingAttendance = await getByUserId(id);
     if (existingAttendance) return res.status(409).json({ msg: "User Already Done Attendance Today" });
-    // Now get the user shifts
-    if (!shift_start || !shift_end) return res.status(404).json({ msg: "User Shift not found" });
+    // now check if user is late or early or absent
     const data = handleStartWork(shift_start, userLogInTime)
     const { late, early, absent, lateTime, earlyTime } = data;
     const CreateStartAttendanceData = {
@@ -42,7 +42,7 @@ export const addStartAttendance = async (req: Request, res: Response) => {
     return res.json(rest);
 };
 
-// add end attendance for user
+// DONE
 export const addEndAttendance = async (req: Request, res: Response) => {
     const { id } = req.params;
     const date = new Date();
@@ -52,19 +52,16 @@ export const addEndAttendance = async (req: Request, res: Response) => {
     if (date.getHours() < 10) logoutHour = `0${logoutHour}`;
     if (date.getMinutes() < 10) logoutMinute = `0${logoutMinute}`;
     const userLogOutTime = logoutHour + ':' + logoutMinute;
-    // check if user exist
-    const user = await getUserById(id);
-    if (!user) return res.status(404).json({ msg: "User not found" });
-    // check if user has shift and What is it
-    const { shift_start, shift_end } = user
     // Now get the attendance of this user today
     const attendance = await getByUserId(id);
     if (!attendance) return res.status(404).json({ msg: "User Attendance not found" });
+    const { shift_start, shift_end, enter_time, leave_time } = attendance
     // check if user already done attendance today
-    if (attendance?.leave_time) return res.status(409).json({ msg: "User Already Done Attendance Today" });
+    if (leave_time) return res.status(409).json({ msg: "User Already Done Attendance Today" });
     // Calculate Working Hours
-    const workingHoursData = handleEndWork(shift_start, shift_end, attendance?.enter_time, userLogOutTime)
+    const workingHoursData = handleEndWork(shift_start, shift_end, enter_time, userLogOutTime)
     if (!workingHoursData) return res.status(409).json({ msg: "Field To Complete Attendance" });
+    console.log({ workingHoursData })
     const { workingTimeFormat, overtimeFormat } = workingHoursData;
     // now if workingTimeFormat is '00:00' then user is trying to end work before start work time
     '00:00' === workingTimeFormat && res.status(409).json({ msg: "Field To Complete Attendance" });
