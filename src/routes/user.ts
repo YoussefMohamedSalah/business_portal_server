@@ -10,4 +10,4 @@ router.route("/department/:id").get(checkAuth, getDepartmentUsers);
 
 
 
-export { router as UserRouter };k
+export { router as UserRouter };
