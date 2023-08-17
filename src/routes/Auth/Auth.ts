@@ -185,12 +185,18 @@ export const register = async (req: Request, res: Response) => {
 			}
 			// if company exists add it to the user
 			const user = await createUser({ ...paramsData, company: company });
-			if (!user) return res
-				.status(400)
-				.json({ msg: 'Error occurred during Creating New User' })
-			else return res
-				.status(201)
-				.json({ msg: 'New User Created Successfully' })
+			if (!user) {
+				return res
+					.status(400)
+					.json({ msg: 'Error occurred during Creating New User' })
+			}
+			else {
+				company.employee_count = company.employee_count + 1;
+				await company.save();
+				return res
+					.status(201)
+					.json({ msg: 'New User Created Successfully' })
+			}
 		} else return res
 			.status(400)
 			.json({ msg: 'Host User Role Is Not Defined' })

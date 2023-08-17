@@ -136,15 +136,26 @@ export const getAllDepartmentUsers = async (departmentId: string) => {
 };
 
 
-export const getAllUsers = async () => {
-	const userRepository = getRepository(User);
-	const users = await userRepository
-		.createQueryBuilder("user")
-		.where("user.role = :role", { role: Role.USER })
-		.leftJoinAndSelect(
-			"user.company",
-			"company"
-		)
-		.getMany();
-	return users;
+export const getAllUsers = async (companyId: string) => {
+	if (companyId === '') {
+		const userRepository = getRepository(User);
+		const users = await userRepository
+			.createQueryBuilder("user")
+			.where("user.role = :role", { role: Role.USER })
+			.leftJoinAndSelect(
+				"user.company",
+				"company"
+			)
+			.getMany();
+		return users;
+	} else if (companyId && companyId !== '') {
+		const userRepository = getRepository(User);
+		const users = await userRepository
+			.createQueryBuilder("user")
+			.where("user.role = :role", { role: Role.USER })
+			.andWhere("user.company = :companyId", { companyId: companyId })
+			.getMany();
+		return users;
+	} else return;
+
 }

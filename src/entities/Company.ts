@@ -47,6 +47,23 @@ export class Company extends BaseEntity {
     })
     stepper_step: number;
 
+    @Column({
+        default: 0,
+        nullable: true
+    })
+    employee_count: number;
+
+    @Column({
+        default: 0,
+        nullable: true
+    })
+    men_count: number;
+    @Column({
+        default: 0,
+        nullable: true
+    })
+    women_count: number;
+
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     @OneToMany(() => Project, project => project.company, { cascade: true, onDelete: 'CASCADE' })

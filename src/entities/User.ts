@@ -151,6 +151,11 @@ export class User extends BaseEntity {
 	})
 	shift_end: string; // 14:00:00
 
+	@Column({
+		default: null
+	})
+	gender: string;
+
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@ManyToOne(() => Company, company => company.users, { onDelete: "CASCADE" })

@@ -9,7 +9,7 @@ export const handleStartWork = (userShiftStart: string, userLogInTime: string,) 
 	const isLoggedToday = today === logInDate;
 
 	// Calculate lateness/earliness
-	const minutesLateOrEarly = calculateMinutesLateOrEarly(shiftStartTime, logInTime);
+	const minutesLateOrEarly = calculateMinutesLateOrEarly(shiftStartTime, logInTime); // -90 min
 	// Determine if the user is late, early, or on time
 	let userStatus;
 	let late: boolean;
@@ -17,6 +17,7 @@ export const handleStartWork = (userShiftStart: string, userLogInTime: string,) 
 	let absent;
 	let lateTime: string = '00:00:00';
 	let earlyTime: string = '00:00:00';
+
 	if (minutesLateOrEarly > 0) {
 		userStatus = `Late by ${minutesLateOrEarly} minutes`;
 		late = true;
@@ -46,7 +47,7 @@ export const handleStartWork = (userShiftStart: string, userLogInTime: string,) 
 
 // Helper function to calculate total working hours and overtime
 export const handleEndWork = (userShiftStart: string, userShiftEnd: string, userLogInTime: string, userLogOutTime: string,) => {
-	const shiftStart = new Date(`2000-01-01 ${userShiftStart}`).getTime();
+	const shiftStart = new Date(`2000-01-01 ${userShiftStart}`).getTime(); 
 	const shiftEnd = new Date(`2000-01-01 ${userShiftEnd}`).getTime();
 	const logIn = new Date(`2000-01-01 ${userLogInTime}`).getTime();
 	const logOut = new Date(`2000-01-01 ${userLogOutTime}`).getTime();
@@ -105,5 +106,5 @@ export const formatMinutesToTime = (minutes: number) => {
 	const hours = Math.floor(minutes / 60);
 	const formattedHours = String(hours).padStart(2, '0');
 	const formattedMinutes = String(minutes % 60).padStart(2, '0');
-	return `${formattedHours}:${formattedMinutes}`;
+	return `${formattedHours}:${formattedMinutes}`; //01:30
 }

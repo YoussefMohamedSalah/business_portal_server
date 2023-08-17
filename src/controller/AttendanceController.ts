@@ -15,7 +15,7 @@ export const addStartAttendance = async (req: Request, res: Response) => {
     let loginMinute: string = date.getMinutes().toString();
     if (date.getHours() < 10) loginHour = `0${loginHour}`;
     if (date.getMinutes() < 10) loginMinute = `0${loginMinute}`;
-    const userLogInTime = loginHour + ':' + loginMinute;
+    const userLogInTime = loginHour + ':' + loginMinute; //16:15
     // check if user exist
     const user = await getUserAndCompanyById(userId);
     if (!user) return res.status(404).json({ msg: "User not found" });
@@ -94,7 +94,9 @@ export const dailyAutoResetAttendance = async () => {
     // !Important
     // SetTimeout to make sure that all users are added to database and server is Ready To Handle Requests
     setTimeout(async () => {
-        const usersList = await getAllUsers();
+        // !Important
+        // empty string to get all users in every company
+        const usersList = await getAllUsers('');
         if (!usersList) return;
         // now loop throw all users and check if he has attendance yesterday
         usersList.forEach(async (user) => {
