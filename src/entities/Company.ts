@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
 import { User } from './User';
 import { Project } from './Project';
 import { Customer } from './Customer';
@@ -6,6 +6,7 @@ import { Supplier } from './Supplier';
 import { Inventory } from './Inventory';
 import { Department } from './Department';
 import { Attendance } from './Attendance';
+import { RequestWorkFlow } from './RequestWorkFlow';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
@@ -86,6 +87,10 @@ export class Company extends BaseEntity {
 
     @OneToMany(() => Inventory, inventory => inventory.company, { cascade: true, onDelete: 'CASCADE' })
     inventory_list: Inventory[];
+    // --
+    @OneToOne(() => RequestWorkFlow, RequestWorkFlow => RequestWorkFlow.company, { cascade: true, onDelete: 'CASCADE' })
+    @JoinColumn()
+    workFlow: RequestWorkFlow;
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
     @Column({

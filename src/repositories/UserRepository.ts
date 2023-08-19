@@ -15,14 +15,14 @@ import { getRoleFromString } from "../utils/getRoleFromString";
 
 export const createUser = async (paramsData: CreateUserInfo) => {
 	const {
-		email,
-		password,
-		role,
 		first_name,
 		last_name,
-		phone_number,
+		business_title,
+		email,
+		password,
+		string_password,
 		address,
-		working_hours,
+		phone_number,
 		contract_date,
 		contract_ex,
 		renewal_of_residence,
@@ -31,9 +31,16 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 		id_ex_date,
 		salary_per_month,
 		salary_per_hour,
+		role,
 		sign,
 		picture,
 		file,
+		permissions,
+		is_verified,
+		working_hours,
+		shift_start,
+		shift_end,
+		gender,
 		company
 	} = paramsData;
 
@@ -44,38 +51,32 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	user.password = password;
 	user.first_name = first_name;
 	user.last_name = last_name;
-	user.phone_number = phone_number;
-	user.address = address;
-	user.working_hours = working_hours;
-	user.contract_date = contract_date;
-	user.contract_ex = contract_ex;
-	user.renewal_of_residence = renewal_of_residence;
-	user.project = project;
-	user.id_number = id_number;
-	user.id_ex_date = id_ex_date;
-	user.salary_per_month = salary_per_month;
-	user.salary_per_hour = salary_per_hour;
-	user.sign = sign;
-	user.picture = picture;
-	user.file = file;
-	user.role = role;
+	string_password && (user.string_password = string_password);
+	business_title && (user.business_title = business_title);
+	phone_number && (user.phone_number = phone_number);
+	address && (user.address = address);
+	working_hours && (user.working_hours = working_hours);
+	contract_date && (user.contract_date = contract_date);
+	contract_ex && (user.contract_ex = contract_ex);
+	renewal_of_residence && (user.renewal_of_residence = renewal_of_residence);
+	project && (user.project = project);
+	id_number && (user.id_number = id_number);
+	id_ex_date && (user.id_ex_date = id_ex_date);
+	salary_per_month && (user.salary_per_month = salary_per_month);
+	salary_per_hour && (user.salary_per_hour = salary_per_hour);
+	sign && (user.sign = sign);
+	picture && (user.picture = picture);
+	file && (user.file = file);
+	role && (user.role = role);
+	permissions && (user.permissions = permissions);
+	is_verified && (user.is_verified = is_verified);
+	shift_start && (user.shift_start = shift_start);
+	shift_end && (user.shift_end = shift_end);
+	gender && (user.gender = gender);
 	user.company = company;
 	await userRepository.save(user);
 	return user;
 };
-
-// export const getAllCustomersForOwner = async (ownerId: number) => {
-// 	const customerRepository = getRepository(Customer);
-// 	const customers = await customerRepository
-// 		.createQueryBuilder("customer")
-// 		.where("customer.owner = :ownerId", { ownerId: ownerId })
-// 		.leftJoinAndSelect(
-// 			"customer.permissionsCategories",
-// 			"permissionsCategories"
-// 		)
-// 		.getMany();
-// 	return customers;
-// };
 
 // DONE
 export const getByEmail = async (email: string) => {

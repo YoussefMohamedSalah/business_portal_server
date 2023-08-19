@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getAllUsers, getUserAndCompanyById } from '../repositories/UserRepository';
 import { handleStartWork, handleEndWork, parseTime } from '../utils/handleAttendance';
 import { createStartAttendance, getAllToReset, getByUserId } from '../repositories/AttendanceRepository';
+// 
 
 // DONE
 export const addStartAttendance = async (req: Request, res: Response) => {

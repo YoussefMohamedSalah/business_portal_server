@@ -1,6 +1,8 @@
 import { getRepository } from "typeorm";
 import { Department } from "../entities/Department";
 import { Permission } from "../entities/Permission";
+import { RequestWorkFlow } from "../entities/RequestWorkFlow";
+import { Company } from "../entities/Company";
 
 export const getDepartments = async () => {
     const departmentRepository = getRepository(Department);
@@ -19,9 +21,7 @@ export const addPermission = async (type: string, department: any) => {
     return permission;
 };
 
-export const addInitialData = async (
-    name: string,
-) => {
+export const addInitialData = async () => {
     // first check if there is any departments exists
     // if there is departments, just skip creating departments
     let departmentsList = [];
@@ -51,5 +51,17 @@ export const addInitialData = async (
     } else {
         departmentsList = departments;
     }
-    return departmentsList;
+    // second part
+    const workflowRepository = getRepository(RequestWorkFlow);
+    const workflow = new RequestWorkFlow();
+    workflow.site_request_flow = [];
+    workflow.petty_cash_request_flow = [];
+    workflow.material_request_flow = [];
+    await workflowRepository.save(workflow);
+    // data to be returned 
+    const data: any = {
+        departmentsList,
+        workflow
+    }
+    return data;
 };

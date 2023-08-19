@@ -78,19 +78,19 @@ export const register = async (req: Request, res: Response) => {
 			first_name,
 			last_name,
 			phone_number,
-			address,
-			working_hours,
-			contract_date,
-			contract_ex,
-			renewal_of_residence,
-			project,
-			id_number,
-			id_ex_date,
-			salary_per_month,
-			salary_per_hour,
-			sign,
-			picture,
-			file,
+			// address,
+			// working_hours,
+			// contract_date,
+			// contract_ex,
+			// renewal_of_residence,
+			// project,
+			// id_number,
+			// id_ex_date,
+			// salary_per_month,
+			// salary_per_hour,
+			// sign,
+			// picture,
+			// file,
 			// this for company relation
 			companyId
 		} = req.body;
@@ -109,19 +109,19 @@ export const register = async (req: Request, res: Response) => {
 			first_name,
 			last_name,
 			phone_number,
-			address,
-			working_hours,
-			contract_date,
-			contract_ex,
-			renewal_of_residence,
-			project,
-			id_number,
-			id_ex_date,
-			salary_per_month,
-			salary_per_hour,
-			sign,
-			picture,
-			file,
+			// address,
+			// working_hours,
+			// contract_date,
+			// contract_ex,
+			// renewal_of_residence,
+			// project,
+			// id_number,
+			// id_ex_date,
+			// salary_per_month,
+			// salary_per_hour,
+			// sign,
+			// picture,
+			// file,
 			company: companyId
 		};
 
@@ -134,6 +134,7 @@ export const register = async (req: Request, res: Response) => {
 				return res
 					.status(404)
 					.json({ msg: "Error occurred during initialization your Company" });
+
 			// Now Create The user With The company Newly Created...
 			const user = await createUser({ ...paramsData, company: company });
 			if (!user) return res

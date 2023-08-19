@@ -7,12 +7,15 @@ export const createCompany = async (
 ) => {
     // first make sure that initial data exists.
     // then create the company and add the initial data to it 
-    const departmentsList = await addInitialData(name)
-    if (!departmentsList) return console.log('Error, Initial data does not exists');
+    const data = await addInitialData();
+    const { departmentsList, workflow } = data;
+    if (!departmentsList || !workflow) return console.log('Error, Initial data does not exists');
+    // create the company
     const companyRepository = getRepository(Company);
     const company = new Company();
     company.name = name;
     company.departments = departmentsList;
+    company.workFlow = workflow;
     await companyRepository.save(company);
     return company;
 };

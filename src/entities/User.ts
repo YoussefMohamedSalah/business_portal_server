@@ -6,7 +6,6 @@ import {
 	ManyToOne,
 	ManyToMany,
 	JoinTable,
-	ColumnType,
 	OneToMany
 } from "typeorm";
 import { Company } from "./Company";

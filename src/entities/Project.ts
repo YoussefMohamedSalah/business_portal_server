@@ -2,6 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMan
 import { Company } from './Company';
 import { Customer } from './Customer';
 import { User } from './User';
+import { SiteRequest } from './SiteRequest';
+import { PettyCashRequest } from './PettyCashRequest';
+import { MaterialRequest } from './MaterialRequest';
 @Entity({ name: 'project' })
 export class Project extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
@@ -55,10 +58,6 @@ export class Project extends BaseEntity {
 	@Column()
 	project_manager: string;
 
-	// // to be deleted
-	// @Column()
-	// customer_name: string;
-
 	@Column()
 	sites_count: string;
 
@@ -78,6 +77,16 @@ export class Project extends BaseEntity {
 
 	@ManyToMany(() => User, user => user.projects)
 	users: User[];
+
+	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@OneToMany(() => SiteRequest, SiteRequest => SiteRequest.project)
+	SiteRequests: SiteRequest[];
+
+	@OneToMany(() => PettyCashRequest, PettyCashRequest => PettyCashRequest.project)
+	PettyCashRequests: PettyCashRequest[];
+
+	@OneToMany(() => MaterialRequest, MaterialRequest => MaterialRequest.project)
+	MaterialRequests: MaterialRequest[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({
