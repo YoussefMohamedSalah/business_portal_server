@@ -7,6 +7,10 @@ import { Inventory } from './Inventory';
 import { Department } from './Department';
 import { Attendance } from './Attendance';
 import { RequestWorkFlow } from './RequestWorkFlow';
+import { SiteRequest } from './SiteRequest';
+import { PettyCashRequest } from './PettyCashRequest';
+import { MaterialRequest } from './MaterialRequest';
+import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
@@ -87,10 +91,26 @@ export class Company extends BaseEntity {
 
     @OneToMany(() => Inventory, inventory => inventory.company, { cascade: true, onDelete: 'CASCADE' })
     inventory_list: Inventory[];
-    // --
+
+    // Requests
+    @OneToMany(() => SiteRequest, SiteRequest => SiteRequest.company)
+    SiteRequests: SiteRequest[];
+
+    @OneToMany(() => PettyCashRequest, PettyCashRequest => PettyCashRequest.company)
+    PettyCashRequests: PettyCashRequest[];
+
+    @OneToMany(() => MaterialRequest, MaterialRequest => MaterialRequest.company)
+    MaterialRequests: MaterialRequest[];
+
+    @OneToMany(() => PurchaseOrderRequest, purchaseOrderRequest => purchaseOrderRequest.company)
+    PurchaseOrderRequests: PurchaseOrderRequest[];
+    // -----------------------------------------------
+
     @OneToOne(() => RequestWorkFlow, RequestWorkFlow => RequestWorkFlow.company, { cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()
     workFlow: RequestWorkFlow;
+
+
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
     @Column({

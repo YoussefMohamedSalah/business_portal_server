@@ -2,14 +2,14 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMa
 import { Project } from './Project';
 import { Company } from './Company';
 
-@Entity({ name: 'site_request' })
-export class SiteRequest extends BaseEntity {
+@Entity({ name: 'purchase_order_request' })
+export class PurchaseOrderRequest extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column({
         nullable: false,
-        default: 'site_request'
+        default: 'purchase_order_request'
     })
     type: string;
 
@@ -23,28 +23,26 @@ export class SiteRequest extends BaseEntity {
     date: string;
 
     @Column({ nullable: true })
-    description: string;
+    subject: string;
 
     @Column({ nullable: true })
-    subject: string;
+    description: string;
 
     @Column({ nullable: true })
     status: string; // accepted, rejected, pending
 
-    @Column({
-        type: 'jsonb',
-        array: false,
-        default: () => "'[]'",
-        nullable: false,
-    })
-    items: Array<{ description: string, name: string, quantity: number }>;
+    @Column({ nullable: true })
+    vat: number;
+
+    @Column({ nullable: true })
+    total: number;
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-    @ManyToOne(() => Project, project => project.SiteRequests)
+    @ManyToOne(() => Project, project => project.PurchaseOrderRequests)
     project: Project;
 
-    @ManyToOne(() => Company, company => company.SiteRequests)
+    @ManyToOne(() => Company, company => company.PurchaseOrderRequests)
     company: Company;
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 }

@@ -12,7 +12,6 @@ import { getRoleFromString } from "../utils/getRoleFromString";
 // const secretHash = process.env.SECRET_HASH;
 
 // *New* - This is a new method that we are adding to the repository
-
 export const createUser = async (paramsData: CreateUserInfo) => {
 	const {
 		first_name,
@@ -136,7 +135,7 @@ export const getAllDepartmentUsers = async (departmentId: string) => {
 	return users;
 };
 
-
+// DONE
 export const getAllUsers = async (companyId: string) => {
 	if (companyId === '') {
 		const userRepository = getRepository(User);
@@ -159,4 +158,15 @@ export const getAllUsers = async (companyId: string) => {
 		return users;
 	} else return;
 
+}
+
+// DONE
+export const getAllManagers = async (companyId: string) => {
+	const userRepository = getRepository(User);
+	const users = await userRepository
+		.createQueryBuilder("user")
+		.where("user.is_manager = :is_manager", { is_manager: true })
+		.andWhere("user.company = :companyId", { companyId: companyId })
+		.getMany();
+	return users;
 }

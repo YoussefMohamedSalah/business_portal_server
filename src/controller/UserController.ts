@@ -3,7 +3,8 @@ import {
 	createUser,
 	getAllCompanyUsers,
 	getAllDepartmentUsers,
-	getById
+	getById,
+	getAllManagers
 } from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
 import { getById as getCompanyById } from "../repositories/CompanyRepository";
@@ -213,11 +214,8 @@ export const updateUser = async (req: Request, res: Response) => {
 // DONE
 export const deleteUser = async (req: Request, res: Response) => {
 	const { id } = req.params;
-
 	const user = await getById(id);
-	if (!user) {
-		return res.status(404).json({ msg: "User not found" });
-	}
+	if (!user) return res.status(404).json({ msg: "User not found" });
 	await user.remove();
 	return res.json({ msg: "User deleted" });
 };
@@ -237,3 +235,10 @@ export const getDepartmentUsers = async (req: Request, res: Response) => {
 	const users = await getAllDepartmentUsers(departmentId);
 	return res.json(users);
 };
+
+// DONE
+export const getManagers = async (req: Request, res: Response) => {
+	const { companyId } = req.userData!;
+	const users = await getAllManagers(companyId);
+	return res.json(users);
+}

@@ -17,6 +17,8 @@ import { InventoryItemRouter } from './routes/inventoryItem';
 import { DashboardRouter } from './routes/dashboard';
 import { AttendanceRouter } from './routes/attendance';
 import { runAtMidnight } from './auto/CheckDayEnd';
+import { DepartmentRouter } from './routes/department';
+import { RequestRouter } from './routes/request';
 
 // constants
 dotenv.config();
@@ -40,10 +42,12 @@ try {
   app.use('/auth', AuthRouter);
   app.use('/dashboard', DashboardRouter);
   app.use('/attendance', AttendanceRouter);
+  app.use('/request', RequestRouter);
   // 
   app.use('/company', CompanyRouter);
   app.use('/user', UserRouter);
   app.use('/stepper', StepperRouter);
+  app.use('/department', DepartmentRouter);
   // done
   app.use('/supplier', SupplierRouter);
   app.use('/customer', CustomerRouter);

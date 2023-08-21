@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Project } from './Project';
+import { Company } from './Company';
 
 @Entity({ name: 'petty_cash_request' })
 export class PettyCashRequest extends BaseEntity {
@@ -12,6 +13,9 @@ export class PettyCashRequest extends BaseEntity {
 	})
 	type: string;
 
+	@Column({ nullable: true })
+	code: string;
+
 	@Column({
 		type: 'date',
 		default: () => 'CURRENT_DATE'
@@ -21,9 +25,24 @@ export class PettyCashRequest extends BaseEntity {
 	@Column({ nullable: true })
 	subject: string;
 
+	@Column({ nullable: true })
+	description: string;
+
+	@Column({ nullable: true })
+	status: string; // accepted, rejected, pending
+
+	@Column({ nullable: true })
+	vat: number;
+
+	@Column({ nullable: true })
+	total: number;
+
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@ManyToOne(() => Project, project => project.PettyCashRequests)
 	project: Project;
+
+	@ManyToOne(() => Company, company => company.PettyCashRequests)
+	company: Company;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 }

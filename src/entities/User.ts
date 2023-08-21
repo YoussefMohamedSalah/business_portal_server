@@ -86,6 +86,17 @@ export class User extends BaseEntity {
 	project: string;
 
 	@Column({
+		default: false
+	})
+	is_manager: boolean;
+
+	@Column({
+		nullable: true,
+		default: null
+	})
+	department: string;
+
+	@Column({
 		nullable: true
 	})
 	id_number: string;
