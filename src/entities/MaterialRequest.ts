@@ -46,7 +46,7 @@ export class MaterialRequest extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	work_flow: Array<{ userId: string, state: boolean }>;
+	work_flow: Array<{ userId: string, userName: string, title: string, state: boolean }>;
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
