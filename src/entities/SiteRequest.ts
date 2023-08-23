@@ -39,6 +39,15 @@ export class SiteRequest extends BaseEntity {
     })
     items: Array<{ description: string, name: string, quantity: number }>;
 
+    // when creating a new request, we take the current work flow from the company table
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'[]'",
+		nullable: false,
+	})
+	work_flow: Array<{ userId: string, state: boolean }>;
+
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     @ManyToOne(() => Project, project => project.SiteRequests)

@@ -2,6 +2,18 @@ import { Request, Response } from 'express';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { CreateProjectInfo } from 'src/types/CreateProject';
 import { createProject, getAllByCompanyId, getById } from '../repositories/ProjectRepository';
+import { getAllProject_MaterialReq, getAllProject_PcReq, getAllProject_PoReq, getAllProject_SiteReq } from '../repositories/RequestsRepository';
+
+
+// DONE
+export const allCompanyProjects = async (req: Request, res: Response) => {
+    const { companyId } = req.userData!;
+    const projects = await getAllByCompanyId(companyId);
+    if (!projects) {
+        return res.status(404).json({ msg: "Projects not found" });
+    }
+    return res.json(projects);
+};
 
 // DONE
 export const addProject = async (req: Request, res: Response) => {
@@ -72,12 +84,37 @@ export const deleteProject = async (req: Request, res: Response) => {
     return res.json({ msg: "Project deleted" });
 }
 
+// ** This is Getting All Requests For The Project **
 // DONE
-export const allCompanyProjects = async (req: Request, res: Response) => {
-    const { companyId } = req.userData!;
-    const projects = await getAllByCompanyId(companyId);
-    if (!projects) {
-        return res.status(404).json({ msg: "Projects not found" });
+export const getAllProjectPoRequests = async (req: Request, res: Response) => {
+    const { projectId } = req.params;
+    const requests = await getAllProject_PoReq(projectId);
+    if (!requests) return res.status(404).json({ msg: "Requests not found" });
+    return res.json(requests);
+};
+
+// DONE
+export const getAllProjectPcRequests = async (req: Request, res: Response) => {
+    const { projectId } = req.params;
+    const company = await getAllProject_PcReq(projectId);
+    if (company) {
+        return res.json(company);
     }
-    return res.json(projects);
+    return res.status(404).json({ msg: "company not found" });
+};
+
+// DONE
+export const getAllProjectMaterialRequests = async (req: Request, res: Response) => {
+    const { projectId } = req.params;
+    const requests = await getAllProject_SiteReq(projectId);
+    if (!requests) return res.status(404).json({ msg: "Requests not found" });
+    return res.json(requests);
+};
+
+// DONE
+export const getAllProjectSiteRequests = async (req: Request, res: Response) => {
+    const { projectId } = req.params;
+    const requests = await getAllProject_MaterialReq(projectId);
+    if (!requests) return res.status(404).json({ msg: "Requests not found" });
+    return res.json(requests);
 };
