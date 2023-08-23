@@ -22,6 +22,34 @@ export class PettyCashRequest extends BaseEntity {
 	})
 	date: string;
 
+	@Column({
+		type: 'date',
+		default: () => 'CURRENT_DATE'
+	})
+	transaction_date: string;
+
+	@Column({ nullable: true })
+	paid_amount: number;
+
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'{}'",
+		nullable: false,
+	})
+	user: { id: string, name: string };
+
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'{}'",
+		nullable: false,
+	})
+	project_details: { id: string, name: string };
+
+	@Column({ nullable: true })
+	balance_payment: number;
+
 	@Column({ nullable: true })
 	subject: string;
 

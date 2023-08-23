@@ -30,21 +30,17 @@ export class RequestWorkFlow extends BaseEntity {
 	})
 	material_request_flow: Array<{ userId: string, state: boolean }>;
 
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'[]'",
+		nullable: false,
+	})
+	purchase_order_flow: Array<{ userId: string, state: boolean }>;
+
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@OneToOne(() => Company, company => company.workFlow)
 	company: Company;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 }
-
-/**
-	site_request_flow: [
-	{
-		userId: '1',
-		state: false
-	},
-	{
-		userId: '2',
-		state: false
-	},
- */
