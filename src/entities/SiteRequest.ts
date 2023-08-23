@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, BeforeInsert, JoinTable, OneToMany } from 'typeorm';
 import { Project } from './Project';
 import { Company } from './Company';
 
@@ -13,8 +13,16 @@ export class SiteRequest extends BaseEntity {
     })
     type: string;
 
-    @Column({ nullable: true })
-    code: string;
+	@PrimaryGeneratedColumn('increment')
+	code: string;
+
+    @Column({
+        type: 'jsonb',
+        array: false,
+        default: () => "'{}'",
+        nullable: false,
+    })
+    user: { id: string, name: string };
 
     @Column({
         type: 'date',
@@ -46,7 +54,7 @@ export class SiteRequest extends BaseEntity {
         default: () => "'[]'",
         nullable: false,
     })
-    work_flow: Array<{ userId: string, userName: string, title: string, state: boolean }>;
+    work_flow: Array<{ userId: string, title: string, state: boolean }>;
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

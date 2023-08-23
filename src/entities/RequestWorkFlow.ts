@@ -12,7 +12,7 @@ export class RequestWorkFlow extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	site_request_flow: Array<{ userId: string, userName: string, title: string, state: boolean }>;
+	site_request_flow: Array<{ userId: string, title: string, state: boolean }>;
 
 	@Column({
 		type: 'jsonb',
@@ -20,7 +20,7 @@ export class RequestWorkFlow extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	petty_cash_request_flow: Array<{ userId: string, userName: string, title: string, state: boolean }>;
+	petty_cash_request_flow: Array<{ userId: string, title: string, state: boolean }>;
 
 	@Column({
 		type: 'jsonb',
@@ -28,7 +28,7 @@ export class RequestWorkFlow extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	material_request_flow: Array<{ userId: string, userName: string, title: string, state: boolean }>;
+	material_request_flow: Array<{ userId: string, title: string, state: boolean }>;
 
 	@Column({
 		type: 'jsonb',
@@ -36,7 +36,7 @@ export class RequestWorkFlow extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	purchase_order_flow: Array<{ userId: string, userName: string, title: string, state: boolean }>;
+	purchase_order_flow: Array<{ userId: string, title: string, state: boolean }>;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

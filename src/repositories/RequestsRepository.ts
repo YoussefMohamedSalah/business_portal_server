@@ -1,6 +1,11 @@
 import { getRepository } from "typeorm";
 import { Company } from "../entities/Company";
 import { Project } from "../entities/Project";
+import { PurchaseOrderRequest } from "../entities/PurchaseOrderRequest";
+import { MaterialRequest } from "../entities/MaterialRequest";
+import { SiteRequest } from "../entities/SiteRequest";
+import { PettyCashRequest } from "../entities/PettyCashRequest";
+import { User } from "../entities/User";
 
 // ** This Is Getting All Requests For The Company **
 // NOT DONE
@@ -206,3 +211,93 @@ export const getSiteById = async (companyId: string, id: string) => {
     let selectedRequest = allRequests.find(request => request.id === id);
     return selectedRequest;
 };
+
+//** Create New Request **
+export const createPoRequest = async (data: any, company: Company, user: User, project: Project) => {
+    const { type, subject, description, vat, total } = data;
+    const requestRepository = getRepository(PurchaseOrderRequest);
+    const request = new PurchaseOrderRequest();
+    request.type = type;
+    request.subject = subject;
+    request.description = description;
+    request.vat = vat;
+    request.total = total;
+    request.status = 'pending';
+    request.work_flow = company.workFlow.purchase_order_flow;
+    request.user = {
+        id: user.id,
+        name: `${user.first_name} ${user.last_name}`,
+    };
+    request.project_details = {
+        id: project.id,
+        name: project.name,
+    };
+    request.project = project;
+    request.company = company;
+    await requestRepository.save(request);
+    return request;
+}
+export const createPcRequest = async (data: any, company: Company, user: User, project: Project) => {
+    const { type, subject, description, vat, total } = data;
+    const requestRepository = getRepository(PettyCashRequest);
+    const request = new (PettyCashRequest);
+    request.type = type;
+    request.subject = subject;
+    request.description = description;
+    request.vat = vat;
+    request.total = total;
+    request.status = 'pending';
+    request.work_flow = company.workFlow.petty_cash_request_flow;
+    request.user = {
+        id: user.id,
+        name: `${user.first_name} ${user.last_name}`,
+    };
+    request.project_details = {
+        id: project.id,
+        name: project.name,
+    };
+    request.project = project;
+    request.company = company;
+    await requestRepository.save(request);
+    return request;
+}
+export const createMaterialRequest = async (data: any, company: Company, user: User, project: Project) => {
+    const {subject, description } = data;
+    const requestRepository = getRepository(MaterialRequest);
+    const request = new MaterialRequest();
+    request.subject = subject;
+    request.description = description;
+    request.status = 'pending';
+    request.work_flow = company.workFlow.material_request_flow;
+    request.user = {
+        id: user.id,
+        name: `${user.first_name} ${user.last_name}`,
+    };
+    request.project_details = {
+        id: project.id,
+        name: project.name,
+    };
+    request.project = project;
+    request.company = company;
+    
+    await requestRepository.save(request);
+    return request;
+}
+export const createSiteRequest = async (data: any, company: Company, user: User, project: Project) => {
+    const { subject, description, items } = data;
+    const requestRepository = getRepository(SiteRequest);
+    const request = new SiteRequest();
+    request.subject = subject;
+    request.description = description;
+    request.status = 'pending';
+    request.items = items;
+    request.work_flow = company.workFlow.site_request_flow;
+    request.user = {
+        id: user.id,
+        name: `${user.first_name} ${user.last_name}`,
+    };
+    request.project = project;
+    request.company = company;
+    await requestRepository.save(request);
+    return request;
+}

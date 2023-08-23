@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, BeforeInsert, Generated, OneToMany } from 'typeorm';
 import { Project } from './Project';
 import { Company } from './Company';
 
@@ -13,14 +13,31 @@ export class PurchaseOrderRequest extends BaseEntity {
     })
     type: string;
 
-    @Column({ nullable: true })
-    code: string;
+	@PrimaryGeneratedColumn('increment')
+	code: string;
 
     @Column({
         type: 'date',
         default: () => 'CURRENT_DATE'
     })
     date: string;
+
+    @Column({
+        type: 'jsonb',
+        array: false,
+        default: () => "'{}'",
+        nullable: false,
+    })
+    user: { id: string, name: string };
+
+    @Column({
+        type: 'jsonb',
+        array: false,
+        default: () => "'{}'",
+        nullable: false,
+    })
+    project_details: { id: string, name: string };
+
 
     @Column({ nullable: true })
     subject: string;
@@ -38,13 +55,13 @@ export class PurchaseOrderRequest extends BaseEntity {
     total: number;
 
     // when creating a new request, we take the current work flow from the company table
-	@Column({
-		type: 'jsonb',
-		array: false,
-		default: () => "'[]'",
-		nullable: false,
-	})
-	work_flow: Array<{ userId: string, userName: string, title: string, state: boolean }>;
+    @Column({
+        type: 'jsonb',
+        array: false,
+        default: () => "'[]'",
+        nullable: false,
+    })
+    work_flow: Array<{ userId: string, title: string, state: boolean }>;
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
@@ -54,4 +71,9 @@ export class PurchaseOrderRequest extends BaseEntity {
     @ManyToOne(() => Company, company => company.PurchaseOrderRequests)
     company: Company;
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+    @BeforeInsert()
+    generateCode() {
+        // Generate a unique incremental code
+        this.code = `po-${this.code}`;
+    }
 }

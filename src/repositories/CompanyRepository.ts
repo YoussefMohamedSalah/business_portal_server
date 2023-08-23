@@ -28,3 +28,13 @@ export const getById = async (id: string) => {
         .getOne();
     return company;
 };
+
+export const getCompanyWithWorkflow = async (id: string) => {
+    const companyRepository = getRepository(Company);
+    const company = await companyRepository
+        .createQueryBuilder("company")
+        .leftJoinAndSelect("company.workFlow", "workFlow")
+        .where("company.id = :id", { id: id })
+        .getOne();
+    return company;
+}

@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getAllPcRequests, getAllPoRequests, getAllMaterialRequests, getAllSiteRequests, deleteRequest, updatePoRequest, updatePcRequest, updateSiteRequest, updateMaterialRequest, getRequestById } from "../controller/RequestsController";
+import { getAllPcRequests, getAllPoRequests, getAllMaterialRequests, getAllSiteRequests, deleteRequest, updatePoRequest, updatePcRequest, updateSiteRequest, updateMaterialRequest, getRequestById, createRequest } from "../controller/RequestsController";
 import { checkAuth } from "../middleware/checkAuth";
 
 const router = Router();
+router.route("/:projectId").post(checkAuth, createRequest )
 // **************************************************
 router.route("/purchase_order").get(checkAuth, getAllPoRequests);
 router.route("/petty_cash").get(checkAuth, getAllPcRequests);

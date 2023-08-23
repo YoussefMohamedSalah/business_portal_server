@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable, OneToMany, BeforeInsert, Generated } from 'typeorm';
 import { Project } from './Project';
 import { Company } from './Company';
 
@@ -13,7 +13,7 @@ export class PettyCashRequest extends BaseEntity {
 	})
 	type: string;
 
-	@Column({ nullable: true })
+	@PrimaryGeneratedColumn('increment')
 	code: string;
 
 	@Column({
@@ -72,7 +72,7 @@ export class PettyCashRequest extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	work_flow: Array<{ userId: string, userName: string, title: string, state: boolean }>;
+	work_flow: Array<{ userId: string, title: string, state: boolean }>;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

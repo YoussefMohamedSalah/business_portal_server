@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { getAllCompany_PoReq, getAllCompany_PcReq, getAllCompany_SiteReq, getAllCompany_MaterialReq, getPcById, getPoById, getMaterialById, getSiteById, getById } from '../repositories/RequestsRepository';
-
-
+import { getAllCompany_PoReq, getAllCompany_PcReq, getAllCompany_SiteReq, getAllCompany_MaterialReq, getPcById, getPoById, getMaterialById, getSiteById, getById, createPoRequest, createPcRequest, createMaterialRequest, createSiteRequest } from '../repositories/RequestsRepository';
+import { getCompanyWithWorkflow } from '../repositories/CompanyRepository';
+import { getById as getUserById } from '../repositories/UserRepository';
+import { getById as getProjectById } from '../repositories/ProjectRepository';
 // ** This Is Getting All Requests For The Company **
 // DONE
 export const getAllPoRequests = async (req: Request, res: Response) => {
@@ -14,11 +15,9 @@ export const getAllPoRequests = async (req: Request, res: Response) => {
 // DONE
 export const getAllPcRequests = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
-    const company = await getAllCompany_PcReq(companyId);
-    if (company) {
-        return res.json(company);
-    }
-    return res.status(404).json({ msg: "company not found" });
+    const requests = await getAllCompany_PcReq(companyId);
+    if (!requests) return res.status(404).json({ msg: "Requests not found" });
+    return res.json(requests);
 };
 
 // DONE
@@ -37,6 +36,9 @@ export const getAllSiteRequests = async (req: Request, res: Response) => {
     return res.json(requests);
 };
 
+
+// ** This Is Getting One Requests For The Company By Id **
+// DONE
 export const getRequestById = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { companyId } = req.userData!;
@@ -47,17 +49,8 @@ export const getRequestById = async (req: Request, res: Response) => {
     return res.json(request);
 };
 
-
-
-
-
-
-
-
-
-
-
-
+// ** This Is Update And Delete One Requests For The Company By Id **
+// DONE
 export const deleteRequest = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { companyId } = req.userData!;
@@ -66,8 +59,6 @@ export const deleteRequest = async (req: Request, res: Response) => {
     await request.remove();
     return res.json({ msg: "Request deleted" });
 };
-
-
 
 // DONE
 export const updatePcRequest = async (req: Request, res: Response) => {
@@ -136,3 +127,50 @@ export const updateSiteRequest = async (req: Request, res: Response) => {
     await request.save();
     return res.json(request);
 };
+
+// ** This Is Creating New Requests For The Company By Request Type In Params **
+
+export const createRequest = async (req: Request, res: Response) => {
+    const { projectId } = req.params;
+    const { companyId, userId } = req.userData!;
+    const { type, subject, description, vat, total, items } = req.body;
+    let data = {
+        type,
+        subject,
+        description,
+        vat,
+        total,
+        items
+    }
+    const company = await getCompanyWithWorkflow(companyId);
+    if (!company) return res.status(404).json({ msg: "Company not found" });
+
+    const user = await getUserById(userId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    const project = await getProjectById(projectId);
+    if (!project) return res.status(404).json({ msg: "Project not found" });
+
+
+    let request;
+    if (type === 'purchase_order_request') {
+        const createdRequest = await createPoRequest(data, company, user, project)
+        if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
+        request = createdRequest;
+    } else if (type === 'petty_cash_request') {
+        const createdRequest = await createPcRequest(data, company, user, project)
+        if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
+        request = createdRequest;
+    } else if (type === 'material_request') {
+        const createdRequest = await createMaterialRequest(data, company, user, project)
+        if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
+        request = createdRequest;
+    } else if (type === 'site_request') {
+        const createdRequest = await createSiteRequest(data, company, user, project)
+        if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
+        request = createdRequest;
+    }
+    return res.json(request);
+};
+
+
