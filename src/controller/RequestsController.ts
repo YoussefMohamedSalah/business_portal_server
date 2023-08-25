@@ -153,6 +153,8 @@ export const createRequest = async (req: Request, res: Response) => {
 
 
     let request;
+
+
     if (type === 'purchase_order_request') {
         const createdRequest = await createPoRequest(data, company, user, project)
         if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
@@ -166,6 +168,7 @@ export const createRequest = async (req: Request, res: Response) => {
         if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
         request = createdRequest;
     } else if (type === 'site_request') {
+        console.log(data)
         const createdRequest = await createSiteRequest(data, company, user, project)
         if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
         request = createdRequest;

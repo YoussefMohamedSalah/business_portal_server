@@ -222,7 +222,7 @@ export const createPoRequest = async (data: any, company: Company, user: User, p
     request.description = description;
     request.vat = vat;
     request.total = total;
-    request.status = 'pending';
+    request.status = 'Bending';
     request.work_flow = company.workFlow.purchase_order_flow;
     request.user = {
         id: user.id,
@@ -246,7 +246,7 @@ export const createPcRequest = async (data: any, company: Company, user: User, p
     request.description = description;
     request.vat = vat;
     request.total = total;
-    request.status = 'pending';
+    request.status = 'Bending';
     request.work_flow = company.workFlow.petty_cash_request_flow;
     request.user = {
         id: user.id,
@@ -262,12 +262,12 @@ export const createPcRequest = async (data: any, company: Company, user: User, p
     return request;
 }
 export const createMaterialRequest = async (data: any, company: Company, user: User, project: Project) => {
-    const {subject, description } = data;
+    const { subject, description } = data;
     const requestRepository = getRepository(MaterialRequest);
     const request = new MaterialRequest();
     request.subject = subject;
     request.description = description;
-    request.status = 'pending';
+    request.status = 'Bending';
     request.work_flow = company.workFlow.material_request_flow;
     request.user = {
         id: user.id,
@@ -279,18 +279,18 @@ export const createMaterialRequest = async (data: any, company: Company, user: U
     };
     request.project = project;
     request.company = company;
-    
+
     await requestRepository.save(request);
     return request;
 }
 export const createSiteRequest = async (data: any, company: Company, user: User, project: Project) => {
-    const { subject, description, items } = data;
+    // const { subject, description, items } = data;
     const requestRepository = getRepository(SiteRequest);
     const request = new SiteRequest();
-    request.subject = subject;
-    request.description = description;
-    request.status = 'pending';
-    request.items = items;
+    request.subject = data.subject ? data.subject : request.subject;
+    request.description = data.description ? data.description : request.description;
+    request.status = 'Bending';
+    request.items = data.items ? data.items : request.items;
     request.work_flow = company.workFlow.site_request_flow;
     request.user = {
         id: user.id,

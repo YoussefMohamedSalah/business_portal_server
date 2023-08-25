@@ -1,8 +1,45 @@
 import { Request, Response } from 'express';
-import { getAllUsers, getUserAndCompanyById } from '../repositories/UserRepository';
+import { getAllUsers, getById, getUserAndCompanyById } from '../repositories/UserRepository';
 import { handleStartWork, handleEndWork, parseTime } from '../utils/handleAttendance';
 import { createStartAttendance, getAllToReset, getByUserId } from '../repositories/AttendanceRepository';
 // 
+
+// DONE
+export const getAttendanceStatus = async (req: Request, res: Response) => {
+    const { userId } = req.userData!;
+    const today = new Date().toISOString().slice(0, 10) // 2021-08-01
+    let attendanceStatus: any = {};
+    const user = await getById(userId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    // check if user has shift and What is it
+    const { shift_start, shift_end } = user
+    if (!shift_start || !shift_end) return res.status(404).json({ msg: "You'r Shift not found" });
+    // now check if user already done attendance today
+    const existingAttendance = await getByUserId(userId, today);
+    // if (existingAttendance) return res.status(409).json({ msg: "You Already Start Attendance Today" });
+    if (!existingAttendance) {
+        attendanceStatus = {
+            status: false,
+            shift_start: user.shift_start,
+            shift_end: user.shift_end,
+        }
+    } else {
+        let shiftEndHour = shift_end.split(':')[0];
+        let shiftEndMinute = shift_end.split(':')[1];
+        let shiftStartHour = shift_start.split(':')[0];
+        let shiftStartMinute = shift_start.split(':')[1];
+        let totalShiftHour = parseInt(shiftEndHour) - parseInt(shiftStartHour);
+        let totalShiftMinute = parseInt(shiftEndMinute) - parseInt(shiftStartMinute);
+        let stringTotalShiftHour = totalShiftHour < 10 ? `0${totalShiftHour}` : totalShiftHour.toString();;
+        let stringTotalShiftMinute = totalShiftMinute < 10 ? `0${totalShiftMinute}` : totalShiftMinute.toString();;
+        attendanceStatus = {
+            status: true,
+            ...existingAttendance,
+            total_Shift_Hours: `${stringTotalShiftHour}:${stringTotalShiftMinute}:00`,
+        }
+    }
+    return res.json(attendanceStatus)
+}
 
 // DONE
 export const addStartAttendance = async (req: Request, res: Response) => {
@@ -66,13 +103,13 @@ export const addEndAttendance = async (req: Request, res: Response) => {
     if (!attendance) return res.status(404).json({ msg: "User Attendance not found" });
     const { shift_start, shift_end, enter_time, leave_time } = attendance
     // check if user already done attendance today
-    if (leave_time) return res.status(409).json({ msg: "You Already Done Attendance Today" });
+    if (leave_time) return res.json({ msg: "You Already Done Attendance Today" });
     // Calculate Working Hours
     const workingHoursData = handleEndWork(shift_start, shift_end, enter_time, userLogOutTime)
-    if (!workingHoursData) return res.status(409).json({ msg: "Field To Complete Attendance" });
+    if (!workingHoursData) return res.json({ msg: "Field To Complete Attendance" });
     const { workingTimeFormat, overtimeFormat } = workingHoursData;
     // now if workingTimeFormat is '00:00' then user is trying to end work before start work time
-    '00:00' === workingTimeFormat && res.status(409).json({ msg: "Field To Complete Attendance" });
+    '00:00' === workingTimeFormat && res.json({ msg: "Field To Complete Attendance" });
     // now update attendance
     attendance.leave_time = userLogOutTime;
     attendance.working_hours = workingTimeFormat;

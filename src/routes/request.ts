@@ -3,7 +3,7 @@ import { getAllPcRequests, getAllPoRequests, getAllMaterialRequests, getAllSiteR
 import { checkAuth } from "../middleware/checkAuth";
 
 const router = Router();
-router.route("/:projectId").post(checkAuth, createRequest )
+router.route("/:projectId").post(checkAuth, createRequest)
 // **************************************************
 router.route("/purchase_order").get(checkAuth, getAllPoRequests);
 router.route("/petty_cash").get(checkAuth, getAllPcRequests);

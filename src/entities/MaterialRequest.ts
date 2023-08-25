@@ -13,8 +13,8 @@ export class MaterialRequest extends BaseEntity {
     })
     type: string;
 
-	@PrimaryGeneratedColumn('increment')
-	code: string;
+    @PrimaryGeneratedColumn('increment')
+    code: string;
 
     @Column({
         type: 'jsonb',
@@ -62,7 +62,7 @@ export class MaterialRequest extends BaseEntity {
         default: () => "'[]'",
         nullable: false,
     })
-    work_flow: Array<{ userId: string, title: string, state: boolean }>;
+    work_flow: Array<{ userId: string, title: string, state: boolean, isRejected: boolean }>;
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

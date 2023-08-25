@@ -13,8 +13,8 @@ export class PurchaseOrderRequest extends BaseEntity {
     })
     type: string;
 
-	@PrimaryGeneratedColumn('increment')
-	code: string;
+    @PrimaryGeneratedColumn('increment')
+    code: string;
 
     @Column({
         type: 'date',
@@ -46,7 +46,7 @@ export class PurchaseOrderRequest extends BaseEntity {
     description: string;
 
     @Column({ nullable: true })
-    status: string; // accepted, rejected, pending
+    status: string; // Accepted, Rejected, Bending
 
     @Column({ nullable: true })
     vat: number;
@@ -61,7 +61,7 @@ export class PurchaseOrderRequest extends BaseEntity {
         default: () => "'[]'",
         nullable: false,
     })
-    work_flow: Array<{ userId: string, title: string, state: boolean }>;
+    work_flow: Array<{ userId: string, title: string, state: boolean, isRejected: boolean }>;
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
@@ -77,3 +77,4 @@ export class PurchaseOrderRequest extends BaseEntity {
         this.code = `po-${this.code}`;
     }
 }
+
