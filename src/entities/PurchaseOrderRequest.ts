@@ -46,7 +46,7 @@ export class PurchaseOrderRequest extends BaseEntity {
     description: string;
 
     @Column({ nullable: true })
-    status: string; // Accepted, Rejected, Bending
+    status: string;
 
     @Column({ nullable: true })
     vat: number;

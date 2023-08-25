@@ -3,6 +3,7 @@ import { getAllCompany_PoReq, getAllCompany_PcReq, getAllCompany_SiteReq, getAll
 import { getCompanyWithWorkflow } from '../repositories/CompanyRepository';
 import { getById as getUserById } from '../repositories/UserRepository';
 import { getById as getProjectById } from '../repositories/ProjectRepository';
+import { RequestType } from '../enums/RequestType';
 // ** This Is Getting All Requests For The Company **
 // DONE
 export const getAllPoRequests = async (req: Request, res: Response) => {
@@ -153,22 +154,19 @@ export const createRequest = async (req: Request, res: Response) => {
 
 
     let request;
-
-
-    if (type === 'purchase_order_request') {
+    if (type === RequestType.PURCHASE_ORDER) {
         const createdRequest = await createPoRequest(data, company, user, project)
         if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
         request = createdRequest;
-    } else if (type === 'petty_cash_request') {
+    } else if (type === RequestType.PETTY_CASH) {
         const createdRequest = await createPcRequest(data, company, user, project)
         if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
         request = createdRequest;
-    } else if (type === 'material_request') {
+    } else if (type === RequestType.MATERIAL) {
         const createdRequest = await createMaterialRequest(data, company, user, project)
         if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
         request = createdRequest;
-    } else if (type === 'site_request') {
-        console.log(data)
+    } else if (type === RequestType.SITE) {
         const createdRequest = await createSiteRequest(data, company, user, project)
         if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
         request = createdRequest;
