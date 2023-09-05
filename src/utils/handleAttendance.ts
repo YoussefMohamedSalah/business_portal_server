@@ -47,43 +47,23 @@ export const handleStartWork = (userShiftStart: string, userLogInTime: string,) 
 
 // Helper function to calculate total working hours and overtime
 export const handleEndWork = (userShiftStart: string, userShiftEnd: string, userLogInTime: string, userLogOutTime: string,) => {
-	const shiftStart = new Date(`2000-01-01 ${userShiftStart}`).getTime(); 
+	const shiftStart = new Date(`2000-01-01 ${userShiftStart}`).getTime();
 	const shiftEnd = new Date(`2000-01-01 ${userShiftEnd}`).getTime();
 	const logIn = new Date(`2000-01-01 ${userLogInTime}`).getTime();
-	const logOut = new Date(`2000-01-01 ${userLogOutTime}`).getTime();
-	let workingTimeFormat = '00:00';
-	let overtimeFormat = '00:00';
+	const logOut = new Date(`2000-01-01 ${userLogOutTime}:00`).getTime();
+	let totalWorkingToReturn = '00:00';
+	let overTimeToReturn = '00:00';
+	let totalShiftMinutes = (shiftEnd - shiftStart) / (1000 * 60);
+	let totalWorkingMinutes = (logOut - logIn) / (1000 * 60);
 
-	if (logOut >= shiftStart && logIn <= shiftEnd) {
-		// Calculate working hours only if the log-in and log-out times fall within the shift timings
-		const start = Math.max(logIn, shiftStart);
-		const end = Math.min(logOut, shiftEnd);
-		let workingHours = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
-
-		// Calculate the regular working hours
-		const regularHours = Math.floor(workingHours);
-		const regularMinutes = Math.floor((workingHours - regularHours) * 60);
-
-		// Format the regular working hours as a time string
-		const formattedRegularHours = String(regularHours).padStart(2, '0');
-		const formattedRegularMinutes = String(regularMinutes).padStart(2, '0');
-		workingTimeFormat = `${formattedRegularHours}:${formattedRegularMinutes}`;
-		// Calculate the overtime
-		const totalWorkingHours = (shiftEnd - shiftStart) / (1000 * 60 * 60);
-		const overtimeHours = (end - start) / (1000 * 60 * 60) - totalWorkingHours;
-		const overtimeMinutes = Math.floor((overtimeHours - Math.floor(overtimeHours)) * 60);
-
-		// calculate the over time only if user worked more than the shift hours
-		if (totalWorkingHours <= workingHours) {
-			// Format the overtime as a time string
-			const formattedOvertimeHours = String(Math.floor(overtimeHours)).padStart(2, '0');
-			const formattedOvertimeMinutes = String(overtimeMinutes).padStart(2, '0');
-			overtimeFormat = `${formattedOvertimeHours}:${formattedOvertimeMinutes}`;
-		}
+	if(totalWorkingMinutes > totalShiftMinutes) {
+		let overTimeMinutes = totalWorkingMinutes - totalShiftMinutes;
+		overTimeToReturn = formatMinutesToTime(overTimeMinutes);
 	}
+	totalWorkingToReturn = formatMinutesToTime(totalWorkingMinutes);
 	return {
-		workingTimeFormat,
-		overtimeFormat
+		workingTimeFormat: totalWorkingToReturn,
+		overtimeFormat: overTimeToReturn
 	}
 }
 

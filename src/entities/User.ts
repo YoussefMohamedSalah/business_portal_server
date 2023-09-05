@@ -6,7 +6,10 @@ import {
 	ManyToOne,
 	ManyToMany,
 	JoinTable,
-	OneToMany
+	OneToMany,
+	PrimaryColumn,
+	Generated,
+	BeforeInsert
 } from "typeorm";
 import { Company } from "./Company";
 import { Project } from "./Project";
@@ -15,7 +18,11 @@ import { Attendance } from "./Attendance";
 
 @Entity({ name: "user" })
 export class User extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid") id: string;
+	@PrimaryGeneratedColumn("uuid")
+	id: string;
+
+	@Column({ unique: true, nullable: true })
+	user_id: number;
 
 	@Column({
 		default: null
@@ -81,20 +88,25 @@ export class User extends BaseEntity {
 	renewal_of_residence: Date;
 
 	@Column({
-		nullable: true
-	})
-	project: string;
-
-	@Column({
 		default: false
 	})
 	is_manager: boolean;
 
 	@Column({
-		nullable: true,
-		default: null
+		type: 'jsonb',
+		array: false,
+		default: () => "'{}'",
+		nullable: false,
 	})
-	department: string;
+	department_info: { id: string, name: string };
+
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'[]'",
+		nullable: false,
+	})
+	projects_info: Array<{ id: string, name: string }>;
 
 	@Column({
 		nullable: true
@@ -127,7 +139,8 @@ export class User extends BaseEntity {
 	sign: string;
 
 	@Column({
-		default: null
+		default: 'https://gravatar.com/avatar/f42228ef47a296bebf07d1228e2eabd6?s=400&d=robohash&r=x',
+		nullable: true
 	})
 	picture: string;
 
@@ -152,14 +165,14 @@ export class User extends BaseEntity {
 		nullable: true,
 		default: null
 	})
-	shift_start: string; // 06:00:00
+	shift_start: string;
 
 	@Column({
 		type: 'time',
 		nullable: true,
 		default: null
 	})
-	shift_end: string; // 14:00:00
+	shift_end: string;
 
 	@Column({
 		default: null
@@ -171,15 +184,25 @@ export class User extends BaseEntity {
 	@ManyToOne(() => Company, company => company.users, { onDelete: "CASCADE" })
 	company: Company;
 
-	@ManyToMany(() => Department, department => department.users)
-	departments: Department[];
+	@ManyToMany(() => Project, project => project.members)
+	@JoinTable({
+		name: "project_members",
+		joinColumn: {
+			name: "member_id",
+			referencedColumnName: "id"
+		},
+		inverseJoinColumn: {
+			name: "project_id",
+			referencedColumnName: "id"
+		}
+	})
+	project: Project;
+
+	@ManyToOne(() => Department, department => department.users)
+	department: Department;
 
 	@OneToMany(() => Attendance, attendance => attendance.user)
 	attendances: Attendance[];
-
-	@ManyToMany(() => Project, project => project.users)
-	@JoinTable({ name: "user_project" })
-	projects: Project[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({
@@ -193,4 +216,10 @@ export class User extends BaseEntity {
 		default: () => "CURRENT_TIMESTAMP"
 	})
 	updatedAt: Date;
+
+	// BeforeInsert decorator to generate and increment user_id
+	@BeforeInsert()
+	incrementUserId() {
+		this.user_id = Math.floor(Math.random() * 10000) + 1;
+	}
 }

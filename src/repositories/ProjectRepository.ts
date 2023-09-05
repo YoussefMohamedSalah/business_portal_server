@@ -8,19 +8,21 @@ export const createProject = async (
     createData: CreateProjectInfo,
     company: Company
 ) => {
-    const { name, latitude, log,
+    const {
+        name, description, latitude, longitude,
         bid_value, duration, delivery_date,
         contract_number, contract_date, po_budget,
-        pc_budget, subcontractor_budget, staff_Budget,
+        pc_budget, subcontractor_budget, staff_budget,
         total_budget, project_manager, sites_count,
-        buildings_count, floors_count
+        buildings_count, floors_count, project_status,
     } = createData;
     // create Project
     const projectRepository = getRepository(Project);
     const project = new Project();
     project.name = name;
+    project.description = description;
     project.latitude = latitude;
-    project.log = log;
+    project.longitude = longitude;
     project.bid_value = bid_value;
     project.duration = duration;
     project.delivery_date = delivery_date;
@@ -29,12 +31,13 @@ export const createProject = async (
     project.po_budget = po_budget;
     project.pc_budget = pc_budget;
     project.subcontractor_budget = subcontractor_budget;
-    project.staff_Budget = staff_Budget;
+    project.staff_budget = staff_budget;
     project.total_budget = total_budget;
     project.project_manager = project_manager;
     project.sites_count = sites_count;
     project.buildings_count = buildings_count;
     project.floors_count = floors_count;
+    project.project_status = project_status;
     project.company = company;
     await projectRepository.save(project);
     return project;

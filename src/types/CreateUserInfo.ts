@@ -1,3 +1,14 @@
+import { Project } from "../entities/Project";
+import { Company } from "../entities/Company";
+import { Department } from "../entities/Department";
+
+export type RegisterUserInfo = {
+	first_name: string;
+	last_name: string;
+	email: string;
+	password: string;
+	phone_number: string;
+};
 export type CreateUserInfo = {
 	first_name: string;
 	last_name: string;
@@ -10,7 +21,6 @@ export type CreateUserInfo = {
 	contract_date?: Date;
 	contract_ex?: Date;
 	renewal_of_residence?: Date;
-	project?: string;
 	id_number?: string;
 	id_ex_date?: string;
 	salary_per_month?: string;
@@ -25,5 +35,7 @@ export type CreateUserInfo = {
 	shift_start?: string;
 	shift_end?: string;
 	gender?: string;
-	company: any;
+	projects: Project[];
+	department: Department;
+	company: Company;
 };

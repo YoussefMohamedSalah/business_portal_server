@@ -20,8 +20,7 @@ export class Department extends BaseEntity {
 	@JoinTable({ name: 'company_department' })
 	company: Company;
 
-	@ManyToMany(() => User, user => user.departments)
-	@JoinTable({ name: 'user_department' })
+	@OneToMany(() => User, user => user.department)
 	users: User[];
 
 	@OneToMany(() => Permission, permission => permission.department)

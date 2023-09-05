@@ -11,6 +11,7 @@ import { SiteRequest } from './SiteRequest';
 import { PettyCashRequest } from './PettyCashRequest';
 import { MaterialRequest } from './MaterialRequest';
 import { PurchaseOrderRequest } from './PurchaseOrderRequest';
+import { Task } from './Task';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
@@ -73,6 +74,9 @@ export class Company extends BaseEntity {
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     @OneToMany(() => Project, project => project.company, { cascade: true, onDelete: 'CASCADE' })
     projects: Project[];
+
+    @OneToMany(() => Task, task => task.company, { cascade: true, onDelete: 'CASCADE' })
+    tasks: Task[];
 
     @ManyToMany(() => Department, department => department.company, { cascade: true, onDelete: 'CASCADE' })
     departments: Department[];

@@ -38,7 +38,6 @@ export class PurchaseOrderRequest extends BaseEntity {
     })
     project_details: { id: string, name: string };
 
-
     @Column({ nullable: true })
     subject: string;
 

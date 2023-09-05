@@ -1,6 +1,8 @@
 import express from 'express';
 import Cors from 'cors';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
+import multer from 'multer';
 import { errorHandler } from "./middleware/errorMiddleware";
 import { entities } from './entities';
 import { connectToDataBase } from './config/db';
@@ -19,6 +21,7 @@ import { AttendanceRouter } from './routes/attendance';
 import { runAtMidnight } from './auto/CheckDayEnd';
 import { DepartmentRouter } from './routes/department';
 import { RequestRouter } from './routes/request';
+import fileUpload from 'express-fileupload';
 
 // constants
 dotenv.config();
@@ -26,8 +29,10 @@ const app = express();
 
 // Middleware
 app.use(Cors());
+// app.use(multer())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // connected to data base
 try {
@@ -36,6 +41,17 @@ try {
   );
 
   connectToDataBase(entities);
+
+
+  // app.post('/upload',
+  //   fileUpload({
+  //     createParentPath: true,
+  //   }),
+  //   (req, res) => {
+  //     const file = req.file;
+  //     console.log(req.body);
+  //     res.json({ msg: 'ok' });
+  //   });
 
 
   // Routes

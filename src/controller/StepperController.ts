@@ -96,14 +96,19 @@ export const updateUserPosition = async (req: Request, res: Response) => {
 export const updateCompany = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
     const company = await getCompanyById(companyId);
-    if (!company) {
-        return res.status(404).json({ msg: "Company not found" });
-    }
-    const { name, address, logo, size } = req.body;
+    if (!company) return res.status(404).json({ msg: "Company not found" });
+
+    const formData = req.body;
+    const name = formData.name;
+    const address = formData.address;
+    const logo = formData.logo;
+    const size = formData.size;
     company.name = name ? name : company.name;
     company.address = address ? address : company.address;
     company.logo = logo ? logo : company.logo;
     company.size = size ? size : company.size;
+
+
     // this is automatic when user reach this point
     company.stepper_state = true;
     company.stepper_step = 3;

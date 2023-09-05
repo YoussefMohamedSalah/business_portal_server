@@ -6,6 +6,7 @@ import { SiteRequest } from './SiteRequest';
 import { PettyCashRequest } from './PettyCashRequest';
 import { MaterialRequest } from './MaterialRequest';
 import { PurchaseOrderRequest } from './PurchaseOrderRequest';
+import { Task } from './Task';
 @Entity({ name: 'project' })
 export class Project extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
@@ -15,16 +16,25 @@ export class Project extends BaseEntity {
 	name: string;
 
 	@Column({ nullable: true })
-	latitude: string;
+	description: string;
+
+	@Column({ nullable: true, default: null })
+	longitude: string;
 
 	@Column({ nullable: true })
-	log: string;
+	latitude: string;
+
+	@Column({ nullable: true, default: 'https://cdn.pixabay.com/photo/2018/06/17/20/35/chain-3481377_1280.jpg' })
+	thumbnail: string;
 
 	@Column({ nullable: true })
 	bid_value: string;
 
-	@Column()
-	duration: string;
+	@Column({ nullable: true })
+	duration: number; // in days
+
+	@Column({ nullable: true })
+	project_status: string;
 
 	@Column({
 		type: 'timestamp',
@@ -32,14 +42,26 @@ export class Project extends BaseEntity {
 	})
 	delivery_date: string;
 
-	@Column({ nullable: true })
-	contract_number: string;
-
 	@Column({
 		type: 'timestamp',
 		default: () => 'CURRENT_TIMESTAMP'
 	})
 	contract_date: string;
+
+	@Column({ nullable: true })
+	contract_number: string;
+
+	@Column({ nullable: true })
+	project_manager: string; // user id
+
+	@Column({ nullable: true })
+	sites_count: string;
+
+	@Column({ nullable: true })
+	buildings_count: string;
+
+	@Column({ nullable: true })
+	floors_count: string;
 
 	// -----------------------------------------------
 	@Column({ default: null, nullable: true })
@@ -58,35 +80,44 @@ export class Project extends BaseEntity {
 	pc_expenses: string;
 
 	@Column({ default: null, nullable: true })
-	subcontractor_budget: string;
+	staff_budget: string;
+	
+	@Column({ default: null, nullable: true })
+	staff_expenses: string;
 
 	@Column({ default: null, nullable: true })
-	staff_Budget: string;
-	// -----------------------------------------------
+	subcontractor_budget: string;
 
-	@Column({ nullable: true })
-	project_manager: string;
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'[]'",
+		nullable: false,
+	})
+	comments: Array<{ id: number, userId: string, name: string, comment: string }>;
 
-	@Column({ nullable: true })
-	sites_count: string;
+	@Column({ nullable: true, default: 0 })
+	comments_count: number;
 
-	@Column({ nullable: true })
-	buildings_count: string;
+	@Column({ nullable: true, default: 0 })
+	members_count: number;
 
-	@Column({ nullable: true })
-	floors_count: string;
+	@Column({ nullable: true, default: 0 })
+	tasks_count: number;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@ManyToOne(() => Company, company => company.projects, { onDelete: 'CASCADE' })
 	company: Company;
 
-	@ManyToOne(() => Customer, customer => customer.projects, { onDelete: 'CASCADE' })
+	@ManyToOne(() => Customer, customer => customer.projects)
 	customer: Customer;
 
-	@ManyToMany(() => User, user => user.projects)
-	users: User[];
+	@OneToMany(() => Task, task => task.project, { onDelete: 'CASCADE' })
+	tasks: Task[];
 
+	@ManyToMany(() => User, user => user.project, { onDelete: 'CASCADE' })
+	members: User[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@OneToMany(() => SiteRequest, SiteRequest => SiteRequest.project)
 	SiteRequests: SiteRequest[];

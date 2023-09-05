@@ -1,20 +1,35 @@
+import { Task } from "../entities/Task";
+import { User } from "../entities/User";
+
+interface Comment {
+    id: string;
+    comment: string;
+    userId: string;
+    name: string;
+}
 
 export type CreateProjectInfo = {
     name: string;
+    description: string;
     latitude: string;
-    log: string;
+    longitude: string;
     bid_value: string;
-    duration: string;
+    duration: number;
+    project_status: string;
     delivery_date: string;
     contract_number: string;
+    project_manager: string;
     contract_date: string;
     po_budget: string;
     pc_budget: string;
     subcontractor_budget: string;
-    staff_Budget: string;
+    staff_budget: string;
     total_budget: string;
-    project_manager: string;
     sites_count: string;
     buildings_count: string;
     floors_count: string;
+    thumbnail?: string;
+    comments?: Comment[];
+    members?: User[];
+    tasks?: Task[];
 };

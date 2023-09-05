@@ -6,8 +6,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { createCompany } from "../../repositories/CompanyRepository";
-import { CreateUserInfo } from "../../types/CreateUserInfo";
-import { createUser, getByEmail } from "../../repositories/UserRepository";
+import { CreateUserInfo, RegisterUserInfo } from "../../types/CreateUserInfo";
+import { createUser, getByEmail, registerUser } from "../../repositories/UserRepository";
 import { Company } from "../../entities/Company";
 
 dotenv.config();
@@ -78,20 +78,6 @@ export const register = async (req: Request, res: Response) => {
 			first_name,
 			last_name,
 			phone_number,
-			// address,
-			// working_hours,
-			// contract_date,
-			// contract_ex,
-			// renewal_of_residence,
-			// project,
-			// id_number,
-			// id_ex_date,
-			// salary_per_month,
-			// salary_per_hour,
-			// sign,
-			// picture,
-			// file,
-			// this for company relation
 			companyId
 		} = req.body;
 
@@ -102,105 +88,62 @@ export const register = async (req: Request, res: Response) => {
 		}
 
 		// Input Data
-		const paramsData: CreateUserInfo = {
+		const paramsData: RegisterUserInfo = {
 			email,
 			password: await bcrypt.hash(password, 10),
-			role,
 			first_name,
 			last_name,
 			phone_number,
-			// address,
-			// working_hours,
-			// contract_date,
-			// contract_ex,
-			// renewal_of_residence,
-			// project,
-			// id_number,
-			// id_ex_date,
-			// salary_per_month,
-			// salary_per_hour,
-			// sign,
-			// picture,
-			// file,
-			company: companyId
 		};
+		// add new company under the name of 'Company Name'
+		// inside CreateCompany i will create the departments as well
+		const company = await createCompany("Company Name");
+		if (!company)
+			return res
+				.status(404)
+				.json({ msg: "Error occurred during initialization your Company" });
 
-		// first check if is owner or is user
-		if (role && role === "superuser") {
-			// add new company under the name of 'Company Name'
-			// inside CreateCompany i will create the departments as well
-			const company = await createCompany("Company Name");
-			if (!company)
-				return res
-					.status(404)
-					.json({ msg: "Error occurred during initialization your Company" });
-
-			// Now Create The user With The company Newly Created...
-			const user = await createUser({ ...paramsData, company: company });
-			if (!user) return res
-				.status(400)
-				.json({ msg: 'Error occurred during Creating New User' })
-
-			// Generate an access token with user data
-			const accessToken = jwt.sign(
-				{
-					userId: user.id,
-					companyId: company.id,
-					email: user.email
-				},
-				secretHash as string,
-				{ expiresIn: "30d" }
-			);
-
-			const refreshToken = jwt.sign(
-				{
-					userId: user.id,
-					companyId: company.id,
-					email: user.email
-				},
-				secretHash as string,
-				{ expiresIn: "60d" }
-			);
-
-
-			return res.json({
-				access: accessToken,
-				refresh: refreshToken,
-				userInfo: {
-					id: user.id,
-					first_name: user.first_name,
-					last_name: user.last_name,
-					email: user.email,
-					phone_number: user.phone_number,
-					role: user.role,
-					picture: ""
-				},
-				company: user.company
-			});
-
-		} else if (role && role !== 'superuser') {
-			// first get company by id, then add it to the newly created user
-			const company = await Company.findOne({ where: { id: companyId } });
-			if (!company) {
-				return res.status(400).json({ message: "Company does not exists" });
-			}
-			// if company exists add it to the user
-			const user = await createUser({ ...paramsData, company: company });
-			if (!user) {
-				return res
-					.status(400)
-					.json({ msg: 'Error occurred during Creating New User' })
-			}
-			else {
-				company.employee_count = company.employee_count + 1;
-				await company.save();
-				return res
-					.status(201)
-					.json({ msg: 'New User Created Successfully' })
-			}
-		} else return res
+		// Now Create The user With The company Newly Created...
+		const user = await registerUser(paramsData, company);
+		if (!user) return res
 			.status(400)
-			.json({ msg: 'Host User Role Is Not Defined' })
+			.json({ msg: 'Error occurred during Creating New User' })
+
+		// Generate an access token with user data
+		const accessToken = jwt.sign(
+			{
+				userId: user.id,
+				companyId: company.id,
+				email: user.email
+			},
+			secretHash as string,
+			{ expiresIn: "30d" }
+		);
+
+		const refreshToken = jwt.sign(
+			{
+				userId: user.id,
+				companyId: company.id,
+				email: user.email
+			},
+			secretHash as string,
+			{ expiresIn: "60d" }
+		);
+
+		return res.json({
+			access: accessToken,
+			refresh: refreshToken,
+			userInfo: {
+				id: user.id,
+				first_name: user.first_name,
+				last_name: user.last_name,
+				email: user.email,
+				phone_number: user.phone_number,
+				role: 'superuser',
+				picture: ""
+			},
+			company: user.company
+		});
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ message: "Server error" });

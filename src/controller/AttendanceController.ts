@@ -7,13 +7,14 @@ import { createStartAttendance, getAllToReset, getByUserId } from '../repositori
 // DONE
 export const getAttendanceStatus = async (req: Request, res: Response) => {
     const { userId } = req.userData!;
+    if (!userId) return res.status(200).json({ msg: "User not found" });
     const today = new Date().toISOString().slice(0, 10) // 2021-08-01
     let attendanceStatus: any = {};
     const user = await getById(userId);
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    if (!user) return res.status(200).json({ msg: "User not found" });
     // check if user has shift and What is it
     const { shift_start, shift_end } = user
-    if (!shift_start || !shift_end) return res.status(404).json({ msg: "You'r Shift not found" });
+    if (shift_start === null || shift_end === null) return res.status(200).json({ msg: "You'r Shifts not found" });
     // now check if user already done attendance today
     const existingAttendance = await getByUserId(userId, today);
     // if (existingAttendance) return res.status(409).json({ msg: "You Already Start Attendance Today" });
@@ -100,7 +101,7 @@ export const addEndAttendance = async (req: Request, res: Response) => {
     const userLogOutTime = logoutHour + ':' + logoutMinute;
     // Now get the attendance of this user today
     const attendance = await getByUserId(userId, stringDate);
-    if (!attendance) return res.status(404).json({ msg: "User Attendance not found" });
+    if (!attendance) return res.json({ msg: "User Attendance not found" });
     const { shift_start, shift_end, enter_time, leave_time } = attendance
     // check if user already done attendance today
     if (leave_time) return res.json({ msg: "You Already Done Attendance Today" });
@@ -109,7 +110,7 @@ export const addEndAttendance = async (req: Request, res: Response) => {
     if (!workingHoursData) return res.json({ msg: "Field To Complete Attendance" });
     const { workingTimeFormat, overtimeFormat } = workingHoursData;
     // now if workingTimeFormat is '00:00' then user is trying to end work before start work time
-    '00:00' === workingTimeFormat && res.json({ msg: "Field To Complete Attendance" });
+    if ('00:00' === workingTimeFormat) return res.json({ msg: "Field To Complete Attendance" });
     // now update attendance
     attendance.leave_time = userLogOutTime;
     attendance.working_hours = workingTimeFormat;

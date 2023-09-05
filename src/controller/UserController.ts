@@ -10,6 +10,9 @@ import bcrypt from "bcrypt";
 import { getById as getCompanyById } from "../repositories/CompanyRepository";
 import { CreateUserInfo } from "../types/CreateUserInfo";
 import { User } from "../entities/User";
+import { getById as getDepartmentById } from "../repositories/DepartmentRepository";
+import { getById as getProjectById } from "../repositories/ProjectRepository";
+import { Project } from "../entities/Project";
 
 // done
 export const addUser = async (req: Request, res: Response) => {
@@ -20,41 +23,41 @@ export const addUser = async (req: Request, res: Response) => {
 		last_name,
 		business_title,
 		email,
-		password,
 		string_password,
-		address,
-		phone_number,
+		projects,
 		contract_date,
 		contract_ex,
-		renewal_of_residence,
-		project,
 		id_number,
 		id_ex_date,
-		salary_per_month,
-		salary_per_hour,
-		role,
-		sign,
-		picture,
-		file,
-		permissions,
-		is_verified,
-		working_hours,
+		phone_number,
 		shift_start,
 		shift_end,
-		gender
+		gender,
+		password,
+		salary_per_month,
+		departmentId,
 	} = req.body;
-
-	const company = await getCompanyById(companyId);
-	if (!company) return res.status(404).json({ msg: "Company not found" });
 
 	// Check if the user already exists
 	const existingUser = await User.findOne({ where: { email } });
 	if (existingUser) {
-		return res.status(400).json({ message: "User already exists" });
+		return res.status(400).json({ message: "User with same email already exists" });
 	}
 
-	// before creating the new user we need to get all permissions and add it
-	// to it and check if the permissions that sent in the request are exist
+	const company = await getCompanyById(companyId);
+	if (!company) return res.status(404).json({ msg: "Company not found" });
+
+	const department = await getDepartmentById(departmentId);
+	if (!department) return res.status(404).json({ msg: "Department not found" });
+
+	let projects_arr: Project[] = [];
+	if (projects && projects.length > 0) {
+		for (let i = 0; i < projects?.length; i++) {
+			let project = await getProjectById(projects[i]);
+			if (!project) return res.status(404).json({ msg: "Project not found" });
+			projects_arr.push(project);
+		}
+	}
 
 	// Input Data
 	const paramsData: CreateUserInfo = {
@@ -62,28 +65,19 @@ export const addUser = async (req: Request, res: Response) => {
 		last_name,
 		business_title,
 		email,
-		password,
+		password: await bcrypt.hash(password, 10),
 		string_password,
-		address,
 		phone_number,
 		contract_date,
 		contract_ex,
-		renewal_of_residence,
-		project,
+		projects: projects_arr,
 		id_number,
 		id_ex_date,
 		salary_per_month,
-		salary_per_hour,
-		role,
-		sign,
-		picture,
-		file,
-		permissions,
-		is_verified,
-		working_hours,
 		shift_start,
 		shift_end,
 		gender,
+		department,
 		company
 	}
 
@@ -91,53 +85,9 @@ export const addUser = async (req: Request, res: Response) => {
 	if (!user) {
 		return res
 			.status(409)
-			.json({ msg: "User with same email already exists" });
+			.json({ msg: "Field to Create Employee" });
 	}
 	return res.json(user);
-
-
-	// now will get all permissions and check if the permissions that sent in the request are exist
-	// if (permissions.length !== 0) {
-	// 	const allPermissions = await getAllPermissionsCategories(companyId);
-	// 	const selectedPermissions = allPermissions.filter(permission =>
-	// 		permissions.includes(permission.id)
-	// 	);
-	// 	if (selectedPermissions.length !== permissions.length) {
-	// 		return res.status(404).json({ msg: "Permission not found" });
-	// 	}
-	// 	const customer = await createCustomer(
-	// 		name,
-	// 		email,
-	// 		password,
-	// 		phone,
-	// 		role,
-	// 		allPermissions,
-	// 		store,
-	// 		owner
-	// 	);
-	// 	if (!customer)
-	// 		return res
-	// 			.status(409)
-	// 			.json({ msg: "User with same email already exists" });
-	// 	else return res.json(customer);
-	// } else {
-	// 	const customer = await createCustomer(
-	// 		name,
-	// 		email,
-	// 		password,
-	// 		phone,
-	// 		role,
-	// 		[],
-	// 		store,
-	// 		owner
-	// 	);
-	// 	if (!customer)
-	// 		return res
-	// 			.status(409)
-	// 			.json({ msg: "User with same email already exists" });
-	// 	else return res.json(customer);
-	// }
-	return;
 };
 
 // DONE

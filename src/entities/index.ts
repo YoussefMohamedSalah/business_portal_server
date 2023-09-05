@@ -18,6 +18,7 @@ import { SiteRequest } from './SiteRequest'
 import { MaterialRequest } from './MaterialRequest'
 import { PettyCashRequest } from './PettyCashRequest'
 import { PurchaseOrderRequest } from "./PurchaseOrderRequest";
+import { Task } from "./Task";
 
 export const entities = [
 	User,
@@ -36,6 +37,7 @@ export const entities = [
 	SiteRequest,
 	MaterialRequest,
 	PettyCashRequest,
-	PurchaseOrderRequest
+	PurchaseOrderRequest,
+	Task,
 	// UserDepartment,
 ];
