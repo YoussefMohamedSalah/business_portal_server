@@ -75,7 +75,6 @@ export const getById = async (id: string) => {
 };
 
 export const getAllToReset = async (date: string) => {
-    console.log(date)
     const attendanceRepository = getRepository(Attendance);
     const attendance = await attendanceRepository
         .createQueryBuilder("attendance")

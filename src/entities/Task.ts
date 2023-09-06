@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { Company } from './Company';
 import { Project } from './Project';
+import { Group } from './Group';
 
 @Entity({ name: 'task' })
 export class Task extends BaseEntity {
@@ -8,24 +9,58 @@ export class Task extends BaseEntity {
 	id: string;
 
 	@Column({ nullable: true })
+	task_type: string;
+
+	@Column({ nullable: true })
 	name: string;
 
-    @Column({ nullable: true })
-    description: string;
+	@Column({ nullable: true })
+	description: string;
 
-    @Column({ nullable: true })
-    status: string;
+	@Column({ nullable: true })
+	task_priority: string;
 
-    @Column({ nullable: true })
-    priority: string;
+	@Column({ nullable: true })
+	task_progress: string;
 
-    // Relations
+	@Column({ nullable: true })
+	status: string;
+
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'{}'",
+		nullable: false,
+	})
+	user: { id: string, name: string };
+
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'[]'",
+		nullable: false,
+	})
+	files: File[];
+
+	@Column({
+		type: 'timestamp',
+		default: () => 'CURRENT_TIMESTAMP'
+	})
+	start_at: Date;
+
+	@Column({
+		type: 'timestamp',
+		default: null,
+	})
+	end_at: Date;
+
+	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@ManyToOne(() => Company, company => company.tasks, { onDelete: 'CASCADE' })
 	company: Company;
 
-	@ManyToOne(() => Project, project => project.tasks, { onDelete: 'CASCADE' })
-	project: Project;
+	@ManyToOne(() => Group, group => group.tasks, { onDelete: 'CASCADE' })
+	group: Group;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable, OneToOne } from 'typeorm';
 import { Company } from './Company';
 import { Customer } from './Customer';
 import { User } from './User';
@@ -7,6 +7,7 @@ import { PettyCashRequest } from './PettyCashRequest';
 import { MaterialRequest } from './MaterialRequest';
 import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Task } from './Task';
+import { Group } from './Group';
 @Entity({ name: 'project' })
 export class Project extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
@@ -33,7 +34,7 @@ export class Project extends BaseEntity {
 	@Column({ nullable: true })
 	duration: number; // in days
 
-	@Column({ nullable: true })
+	@Column({ nullable: true, default: 'In Progress' })
 	project_status: string;
 
 	@Column({
@@ -54,38 +55,38 @@ export class Project extends BaseEntity {
 	@Column({ nullable: true })
 	project_manager: string; // user id
 
-	@Column({ nullable: true })
+	@Column({ nullable: true, default:0 })
 	sites_count: string;
 
-	@Column({ nullable: true })
+	@Column({ nullable: true, default:0 })
 	buildings_count: string;
 
-	@Column({ nullable: true })
+	@Column({ nullable: true, default:0 })
 	floors_count: string;
 
 	// -----------------------------------------------
-	@Column({ default: null, nullable: true })
+	@Column({ default:0, nullable: true })
 	total_budget: string;
 
-	@Column({ default: null, nullable: true })
+	@Column({ default:0, nullable: true })
 	po_budget: string;
 
-	@Column({ default: null, nullable: true })
+	@Column({ default:0, nullable: true })
 	po_expenses: string;
 
-	@Column({ default: null, nullable: true })
+	@Column({ default:0, nullable: true })
 	pc_budget: string;
 
-	@Column({ default: null, nullable: true })
+	@Column({ default:0, nullable: true })
 	pc_expenses: string;
 
-	@Column({ default: null, nullable: true })
+	@Column({ default:0, nullable: true })
 	staff_budget: string;
 	
-	@Column({ default: null, nullable: true })
+	@Column({ default:0, nullable: true })
 	staff_expenses: string;
 
-	@Column({ default: null, nullable: true })
+	@Column({ default:0, nullable: true })
 	subcontractor_budget: string;
 
 	@Column({
@@ -96,13 +97,13 @@ export class Project extends BaseEntity {
 	})
 	comments: Array<{ id: number, userId: string, name: string, comment: string }>;
 
-	@Column({ nullable: true, default: 0 })
+	@Column({ default: 0 })
 	comments_count: number;
 
-	@Column({ nullable: true, default: 0 })
+	@Column({ default: 0 })
 	members_count: number;
 
-	@Column({ nullable: true, default: 0 })
+	@Column({ default: 0 })
 	tasks_count: number;
 
 	// Relations
@@ -113,11 +114,9 @@ export class Project extends BaseEntity {
 	@ManyToOne(() => Customer, customer => customer.projects)
 	customer: Customer;
 
-	@OneToMany(() => Task, task => task.project, { onDelete: 'CASCADE' })
-	tasks: Task[];
+	@OneToOne(() => Group, group => group.project)
+	group: Group;
 
-	@ManyToMany(() => User, user => user.project, { onDelete: 'CASCADE' })
-	members: User[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@OneToMany(() => SiteRequest, SiteRequest => SiteRequest.project)
 	SiteRequests: SiteRequest[];

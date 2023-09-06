@@ -15,6 +15,7 @@ export const createProject = async (
         pc_budget, subcontractor_budget, staff_budget,
         total_budget, project_manager, sites_count,
         buildings_count, floors_count, project_status,
+        customer
     } = createData;
     // create Project
     const projectRepository = getRepository(Project);
@@ -39,6 +40,7 @@ export const createProject = async (
     project.floors_count = floors_count;
     project.project_status = project_status;
     project.company = company;
+    project.customer = customer;
     await projectRepository.save(project);
     return project;
 };
@@ -62,19 +64,3 @@ export const getAllByCompanyId = async (companyId: string) => {
         .getMany();
     return project;
 };
-
-
-
-// export const getInventoryItemsById = async (id: string) => {
-//     const projectRepository = getRepository(Inventory);
-//     const inventory = await projectRepository
-//         .createQueryBuilder("inventory")
-//         .where("project.id = :id", { id: id })
-//         .leftJoinAndSelect(
-//             "project.items",
-//             "items"
-//         )
-//         .getOne();
-//     return inventory;
-// };
-

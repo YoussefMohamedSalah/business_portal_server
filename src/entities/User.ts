@@ -184,20 +184,6 @@ export class User extends BaseEntity {
 	@ManyToOne(() => Company, company => company.users, { onDelete: "CASCADE" })
 	company: Company;
 
-	@ManyToMany(() => Project, project => project.members)
-	@JoinTable({
-		name: "project_members",
-		joinColumn: {
-			name: "member_id",
-			referencedColumnName: "id"
-		},
-		inverseJoinColumn: {
-			name: "project_id",
-			referencedColumnName: "id"
-		}
-	})
-	project: Project;
-
 	@ManyToOne(() => Department, department => department.users)
 	department: Department;
 

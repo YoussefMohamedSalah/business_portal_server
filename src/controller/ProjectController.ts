@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
-import { CreateProjectInfo } from 'src/types/CreateProject';
+import { CreateProjectInfo } from '../types/CreateProject';
 import { createProject, getAllByCompanyId, getById } from '../repositories/ProjectRepository';
 import { getAllProject_MaterialReq, getAllProject_PcReq, getAllProject_PoReq, getAllProject_SiteReq } from '../repositories/RequestsRepository';
 
@@ -51,7 +51,6 @@ export const updateProject = async (req: Request, res: Response) => {
         pc_budget, subcontractor_budget, staff_budget,
         total_budget, project_manager, sites_count,
         buildings_count, floors_count, comments,
-        members, tasks
     } = req.body;
     project.name = name ? name : project.name;
     project.description = description ? description : project.description;
@@ -71,14 +70,6 @@ export const updateProject = async (req: Request, res: Response) => {
     project.sites_count = sites_count ? sites_count : project.sites_count;
     project.buildings_count = buildings_count ? buildings_count : project.buildings_count;
     project.floors_count = floors_count ? floors_count : project.floors_count;
-    if (tasks) {
-        project.tasks = tasks;
-        project.tasks_count = tasks.length;
-    }
-    if (members) {
-        project.members = members;
-        project.members_count = members.length;
-    }
     if (comments) {
         project.comments = comments;
         project.comments_count = comments.length;
@@ -86,24 +77,6 @@ export const updateProject = async (req: Request, res: Response) => {
     await project.save();
     return res.json(project);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // DONE
 export const deleteProject = async (req: Request, res: Response) => {

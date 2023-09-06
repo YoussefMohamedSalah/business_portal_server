@@ -19,6 +19,7 @@ import { MaterialRequest } from './MaterialRequest'
 import { PettyCashRequest } from './PettyCashRequest'
 import { PurchaseOrderRequest } from "./PurchaseOrderRequest";
 import { Task } from "./Task";
+import { Group } from "./Group";
 
 export const entities = [
 	User,
@@ -39,5 +40,6 @@ export const entities = [
 	PettyCashRequest,
 	PurchaseOrderRequest,
 	Task,
+	Group,
 	// UserDepartment,
 ];
