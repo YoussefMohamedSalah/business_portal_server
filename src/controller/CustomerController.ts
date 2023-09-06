@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createCustomer, getById } from '../repositories/CustomerRepository';
+import { createCustomer, getAllByCompanyId, getById } from '../repositories/CustomerRepository';
 import { CreateCustomerInfo } from 'src/types/CreateCustomerInfo';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
 
@@ -8,7 +8,6 @@ export const addCustomer = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
     const createData: CreateCustomerInfo = req.body;
     // first get company by id
-    if (companyId) return res.status(400).json({ msg: "Company id is required" });
     const company = await getCompanyById(companyId);
     if (!company) return res.status(404).json({ msg: "Company not found" });
     // then create customer
@@ -34,8 +33,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
     if (!customer) {
         return res.status(404).json({ msg: "Customer not found" });
     }
-    const { name, customer_type, company_name, vat_on, representative, phone_number, email, country, city, area, street, building_number, postal_code } = req.body;
-    customer.name = name ? name : customer.name;
+    const { customer_type, company_name, vat_on, representative, phone_number, email, country, city, area, street, building_number, postal_code } = req.body;
     customer.customer_type = customer_type ? customer_type : customer.customer_type;
     customer.company_name = company_name ? company_name : customer.company_name;
     customer.vat_on = vat_on ? vat_on : customer.vat_on;
@@ -55,6 +53,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
 // DONE
 export const deleteCustomer = async (req: Request, res: Response) => {
     const { id } = req.params;
+    console.log({id})
     const customer = await getById(id);
     if (!customer) {
         return res.status(404).json({ msg: "Customer not found" });
@@ -63,12 +62,9 @@ export const deleteCustomer = async (req: Request, res: Response) => {
     return res.json({ msg: "Customer deleted" });
 }
 
+// DONE
 export const getAllCompanyCustomers = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
-    const company = await getCompanyById(companyId);
-    if (!company) {
-        return res.status(404).json({ msg: "Company not found" });
-    }
-    const customers = company.customers;
+    const customers = await getAllByCompanyId(companyId);
     return res.json(customers);
 };

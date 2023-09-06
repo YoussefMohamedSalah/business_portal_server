@@ -34,11 +34,6 @@ export class Customer extends BaseEntity {
   @Column({
     default: null
   })
-  name: string;
-
-  @Column({
-    default: null
-  })
   phone_number: string;
 
   @Column({

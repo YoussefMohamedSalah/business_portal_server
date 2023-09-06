@@ -20,8 +20,8 @@ export enum Role {
 }
 
 export enum CustomerType {
-	Company = 'company',
-	Person = 'person',
+	Company = 'Company',
+	Individual = 'Individual',
 }
 
 export enum SupplierType {

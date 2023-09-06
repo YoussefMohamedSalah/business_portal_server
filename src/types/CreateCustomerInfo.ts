@@ -1,5 +1,4 @@
 export type CreateCustomerInfo = {
-    name: string;
     customer_type?: string;
     company_name?: string;
     vat_on?: string;

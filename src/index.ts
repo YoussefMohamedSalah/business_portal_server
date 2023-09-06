@@ -22,6 +22,7 @@ import { runAtMidnight } from './auto/CheckDayEnd';
 import { DepartmentRouter } from './routes/department';
 import { RequestRouter } from './routes/request';
 import fileUpload from 'express-fileupload';
+import { EmployeeRouter } from './routes/employee';
 
 // constants
 dotenv.config();
@@ -62,6 +63,7 @@ try {
   // 
   app.use('/company', CompanyRouter);
   app.use('/user', UserRouter);
+  app.use('/employee', EmployeeRouter)
   app.use('/stepper', StepperRouter);
   app.use('/department', DepartmentRouter);
   // done

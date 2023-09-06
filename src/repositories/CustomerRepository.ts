@@ -8,7 +8,7 @@ export const createCustomer = async (
     createData: CreateCustomerInfo,
     company: Company
 ) => {
-    const { name, customer_type, company_name, vat_on, representative, phone_number, email, country, city, area, street, building_number, postal_code } = createData;
+    const { customer_type, company_name, vat_on, representative, phone_number, email, country, city, area, street, building_number, postal_code } = createData;
     // check if customer already exists
     if (!email) return null;
     const existingCustomer = await getByEmail(email);
@@ -16,8 +16,9 @@ export const createCustomer = async (
     // create customer
     const customerRepository = getRepository(Customer);
     const customer = new Customer();
-    customer.name = name ? name : '';
-    customer.customer_type = customer_type ? customer_type : '';
+    if (customer_type) {
+        customer.customer_type = customer_type;
+    }
     customer.company_name = company_name ? company_name : '';
     customer.vat_on = vat_on ? vat_on : '';
     customer.representative = representative ? representative : '';
@@ -52,4 +53,14 @@ export const getByEmail = async (email: string) => {
         .where("customer.email = :email", { email: email })
         .getOne();
     return customer;
+};
+
+// DONE
+export const getAllByCompanyId = async (companyId: string) => {
+    const customerRepository = getRepository(Customer);
+    const customers = await customerRepository
+        .createQueryBuilder("customer")
+        .where("customer.companyId = :companyId", { companyId: companyId })
+        .getMany();
+    return customers;
 };
