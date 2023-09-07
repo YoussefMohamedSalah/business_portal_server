@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
 import { Company } from './Company';
 import { Customer } from './Customer';
 import { User } from './User';
@@ -115,6 +115,7 @@ export class Project extends BaseEntity {
 	customer: Customer;
 
 	@OneToOne(() => Group, group => group.project)
+	@JoinColumn()
 	group: Group;
 
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

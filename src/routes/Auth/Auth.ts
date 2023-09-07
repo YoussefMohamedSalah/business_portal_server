@@ -32,6 +32,7 @@ export const login = async (req: Request, res: Response) => {
 		{
 			userId: user.id,
 			companyId: user.company.id,
+			userName: user.first_name + " " + user.last_name,
 			email: user.email
 		},
 		secretHash as string,
@@ -43,6 +44,7 @@ export const login = async (req: Request, res: Response) => {
 		{
 			id: user.id,
 			companyId: user.company.id,
+			userName: user.first_name + " " + user.last_name,
 			email: user.email
 		},
 		secretHash as string,
@@ -172,6 +174,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 			{
 				id: user.id,
 				companyId: user.company.id,
+				userName: user.first_name + " " + user.last_name,
 				email: user.email
 			},
 			secretHash as string,

@@ -3,6 +3,7 @@ import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { CreateProjectInfo } from '../types/CreateProject';
 import { createProject, getAllByCompanyId, getById } from '../repositories/ProjectRepository';
 import { getAllProject_MaterialReq, getAllProject_PcReq, getAllProject_PoReq, getAllProject_SiteReq } from '../repositories/RequestsRepository';
+import { addGroup } from '../repositories/GroupRepository';
 
 
 // DONE
@@ -23,13 +24,34 @@ export const addProject = async (req: Request, res: Response) => {
     if (!companyId) return res.status(400).json({ msg: "Company id is required" });
     const company = await getCompanyById(companyId);
     if (!company) return res.status(404).json({ msg: "Company not found" });
+
     // then create project
     const project = await createProject(createData, company);
     if (!project) return res.status(409).json({ msg: "Field To Create Project" });
-    else return res.json(project);
+
+    // we Need To create Group to add its id to the project
+    let createGroupData = {}
+    if (createData.project_manager) {
+        createGroupData = {
+            name: `${project.name}'s Group - ${createData.project_manager}`,
+            description: `This is ${createData.project_manager}'s Group And This Group Responsible For 0 Members To Work On ${createData.name} Project`,
+            manager: createData.project_manager,
+            members: [],
+        }
+    } else {
+        createGroupData = {
+            name: `${project.name} Management Group`,
+            description: `This is ${project.name}'s Group And This Group Responsible For 0 Members.`,
+            manager: { id: "", name: "" },
+            members: [],
+        }
+    }
+    const group = await addGroup(createGroupData, project);
+    if (!group) return res.status(409).json({ msg: "Field To Create Group" });
+    return res.json(project);
 };
 
-// DONE
+// DONEs
 export const getProjectById = async (req: Request, res: Response) => {
     const { id } = req.params;
     const project = await getById(id);

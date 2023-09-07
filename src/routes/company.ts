@@ -16,7 +16,7 @@ router.route("/").get(checkAuth, getCompanyById).put(checkAuth, updateCompany).d
 router.route("/customer/").get(checkAuth, getAllCompanyCustomers);
 router.route("/inventory/").get(checkAuth, allCompanyInventories);
 router.route("/supplier/").get(checkAuth, allCompanySuppliers);
-router.route("/tasks/").get(checkAuth, getAllTasksByCompanyId)
+router.route("/task/").get(checkAuth, getAllTasksByCompanyId)
 router.route("/project/").get(checkAuth, allCompanyProjects);
 router.route("/department/").get(checkAuth, getCompanyDepartments)
 router.route("/user/").get(checkAuth, getCompanyUsers);

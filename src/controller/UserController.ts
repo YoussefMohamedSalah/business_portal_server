@@ -13,6 +13,7 @@ import { User } from "../entities/User";
 import { getById as getDepartmentById } from "../repositories/DepartmentRepository";
 import { getById as getProjectById } from "../repositories/ProjectRepository";
 import { Project } from "../entities/Project";
+import { Company } from "src/entities/Company";
 
 // done
 export const addUser = async (req: Request, res: Response) => {
@@ -46,6 +47,12 @@ export const addUser = async (req: Request, res: Response) => {
 
 	const company = await getCompanyById(companyId);
 	if (!company) return res.status(404).json({ msg: "Company not found" });
+
+
+
+
+
+
 
 	const department = await getDepartmentById(departmentId);
 	if (!department) return res.status(404).json({ msg: "Department not found" });
@@ -87,6 +94,33 @@ export const addUser = async (req: Request, res: Response) => {
 			.status(409)
 			.json({ msg: "Field to Create Employee" });
 	}
+
+
+
+
+
+	if (gender) {
+		if (gender === 'Male') {
+			company.men_count++;
+			company.employee_count++;
+		} else if (gender === 'Female') {
+			company.women_count++;
+			company.employee_count++;
+		}
+		await company.save();
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 	return res.json(user);
 };
 
@@ -103,6 +137,7 @@ export const getUserById = async (req: Request, res: Response) => {
 //DONE
 export const updateUser = async (req: Request, res: Response) => {
 	const { id } = req.params;
+	const { companyId } = req.userData!;
 
 	const user = await getById(id);
 	if (!user) {
@@ -128,8 +163,36 @@ export const updateUser = async (req: Request, res: Response) => {
 		sign,
 		picture,
 		file,
-		permissions
+		permissions,
+		departmentId,
+		gender,
 	} = req.body;
+
+	let department;
+	if (departmentId) {
+		department = await getDepartmentById(departmentId);
+		if (!department) return res.status(404).json({ msg: "Department not found" });
+	}
+
+	if (gender && user.gender !== gender) {
+		let company: Company | null = await getCompanyById(companyId)
+		if (!company) return res.status(404).json({ msg: "Company not found" });
+		if (user.gender === null && gender === 'Male') {
+			company.men_count++;
+			company.employee_count++;
+		} else if (user.gender === null && gender === 'Female') {
+			company.women_count++;
+			company.employee_count++;
+		} else if (user.gender === 'Male' && gender === 'Female') {
+			company.women_count++;
+			company.women_count--;
+		} else if (user.gender === 'Female' && gender === 'Male') {
+			company.women_count--;
+			company.women_count++;
+		}
+		await company.save();
+	}
+
 	user.first_name = first_name ? first_name : user.first_name;
 	user.last_name = last_name ? last_name : user.last_name;
 	user.business_title = business_title ? business_title : user.business_title;
@@ -154,9 +217,14 @@ export const updateUser = async (req: Request, res: Response) => {
 		: user.salary_per_hour;
 	user.sign = sign ? sign : user.sign;
 	user.picture = picture ? picture : user.picture;
+	user.gender = gender ? gender : user.gender;
 	user.file = file ? file : user.file;
 	user.permissions = permissions ? permissions : user.permissions;
 	user.role = role ? role : user.role;
+	if (departmentId && department) {
+		user.department = department ? department : user.department;
+		user.department_info = department ? department : user.department_info;
+	}
 	await user.save();
 	return res.json(user);
 };

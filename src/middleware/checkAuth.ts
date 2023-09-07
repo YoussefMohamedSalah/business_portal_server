@@ -14,6 +14,7 @@ declare global {
 			userData?: {
 				userId: string;
 				companyId: string;
+				userName: string;
 			};
 		}
 	}
@@ -44,7 +45,7 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const user: any = jwt.verify(token, `${secretHash}`);
 		const { userId, companyId } = user;
-		req.userData = { userId, companyId };
+		req.userData = { userId, companyId, userName: user.name };
 		next();
 	} catch (error) {
 		return res.status(400).json({

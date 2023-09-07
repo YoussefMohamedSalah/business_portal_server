@@ -3,7 +3,7 @@ import { Group } from "../entities/Group";
 import { Project } from "../entities/Project";
 
 // DONE
-export const addGroup = async (createData: any,project: Project) => {
+export const addGroup = async (createData: any, project: Project) => {
     const { name, description, manager, members } = createData;
     const groupRepository = getRepository(Group);
     const group = new Group();

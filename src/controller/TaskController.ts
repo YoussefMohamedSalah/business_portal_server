@@ -8,7 +8,7 @@ import { createGeneralTask, createGroupTask, getAllByCompanyId, getAllByGroupId,
 
 // DONE
 export const addTask = async (req: Request, res: Response) => {
-    const { companyId } = req.userData!;
+    const { userId, companyId, userName } = req.userData!;
     const { projectId } = req.params;
     const { task_type, name, description, task_priority } = req.body;
     if (!task_type) return res.json({ msg: "Task type is required" });
@@ -21,7 +21,8 @@ export const addTask = async (req: Request, res: Response) => {
             name: name,
             description: description,
             task_priority: task_priority,
-            status: 'Pending'
+            status: 'Pending',
+            user: { id: userId, name: userName }
         }
         let task = await createGeneralTask(company, createInput);
         if (!task) return res.json({ msg: "Task not created" });
@@ -34,7 +35,8 @@ export const addTask = async (req: Request, res: Response) => {
             name: name,
             description: description,
             task_priority: task_priority,
-            status: 'Pending'
+            status: 'Pending',
+            user: { id: req.userData!.userId, name: userName }
         }
         let task = await createGroupTask(group, createInput);
         if (!task) return res.json({ msg: "Task not created" });
@@ -77,11 +79,8 @@ export const getTaskById = async (req: Request, res: Response) => {
 // DONE
 export const getAllTasksByProjectId = async (req: Request, res: Response) => {
     const { projectId } = req.params;
-
     const group = await getGroupByProjectId(projectId);
     if (!group) return res.json({ msg: "Project's Group not found" });
-
-
     const tasks = await getAllByGroupId(group.id);
     if (!tasks) return res.json({ msg: "Tasks not found" });
     return res.json(tasks);
