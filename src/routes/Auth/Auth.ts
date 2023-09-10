@@ -114,7 +114,8 @@ export const register = async (req: Request, res: Response) => {
 			{
 				userId: user.id,
 				companyId: company.id,
-				email: user.email
+				email: user.email,
+				userName: user.first_name + " " + user.last_name,
 			},
 			secretHash as string,
 			{ expiresIn: "30d" }

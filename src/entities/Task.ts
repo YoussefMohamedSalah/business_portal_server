@@ -43,13 +43,13 @@ export class Task extends BaseEntity {
 	files: File[];
 
 	@Column({
-		type: 'timestamp',
+		type: 'date',
 		default: () => 'CURRENT_TIMESTAMP'
 	})
 	start_at: Date;
 
 	@Column({
-		type: 'timestamp',
+		type: 'date',
 		default: null,
 	})
 	end_at: Date;

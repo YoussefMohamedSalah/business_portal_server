@@ -12,6 +12,7 @@ export const addTender = async (req: Request, res: Response) => {
     if (!company) return res.status(404).json({ msg: "Company not found" });
     // then create Tender
     let user = { id: userId, name: userName };
+    console.log(userName)
     const tender = await createTender(createData, company, user);
     if (!tender) return res.status(409).json({ msg: "Field To Create Tender" });
     else return res.json(tender);
@@ -56,7 +57,7 @@ export const deleteTender = async (req: Request, res: Response) => {
 }
 
 // DONE
-export const getAllCompanyTenders = async (req: Request, res: Response) => {
+export const getCompanyTenders = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
     const tenders = await getAllByCompanyId(companyId);
     return res.json(tenders);

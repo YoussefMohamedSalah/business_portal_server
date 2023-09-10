@@ -36,13 +36,13 @@ export class Project extends BaseEntity {
 	project_status: string;
 
 	@Column({
-		type: 'timestamp',
+		type: 'date',
 		default: () => 'CURRENT_TIMESTAMP'
 	})
 	delivery_date: string;
 
 	@Column({
-		type: 'timestamp',
+		type: 'date',
 		default: () => 'CURRENT_TIMESTAMP'
 	})
 	contract_date: string;

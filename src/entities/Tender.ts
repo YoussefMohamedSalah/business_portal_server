@@ -31,13 +31,13 @@ export class Tender extends BaseEntity {
     user: { id: string, name: string };
 
     @Column({
-        type: 'timestamp',
+        type: 'date',
         default: () => 'CURRENT_TIMESTAMP'
     })
     date: string;
 
     @Column({
-        type: 'timestamp',
+        type: 'date',
         default: () => 'CURRENT_TIMESTAMP'
     })
     hand_over: string;

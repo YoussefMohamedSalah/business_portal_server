@@ -70,19 +70,19 @@ export class User extends BaseEntity {
 	working_hours: string;
 
 	@Column({
-		type: "timestamp",
+		type: "date",
 		default: () => "CURRENT_TIMESTAMP"
 	})
 	contract_date: Date;
 
 	@Column({
-		type: "timestamp",
+		type: "date",
 		default: () => "CURRENT_TIMESTAMP"
 	})
 	contract_ex: Date;
 
 	@Column({
-		type: "timestamp",
+		type: "date",
 		default: () => "CURRENT_TIMESTAMP"
 	})
 	renewal_of_residence: Date;

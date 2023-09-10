@@ -44,8 +44,8 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
 
 	try {
 		const user: any = jwt.verify(token, `${secretHash}`);
-		const { userId, companyId } = user;
-		req.userData = { userId, companyId, userName: user.name };
+		const { userId, companyId, userName } = user;
+		req.userData = { userId, companyId, userName };
 		next();
 	} catch (error) {
 		return res.status(400).json({
