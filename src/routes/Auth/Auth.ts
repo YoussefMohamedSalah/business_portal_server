@@ -19,14 +19,12 @@ export const login = async (req: Request, res: Response) => {
 	// Check if the owner exists
 	// const user = await User.findOne({ where: { email } });
 	const user = await getByEmail(email)
-	if (!user) {
-		return res.status(401).json({ message: "Invalid email or password" });
-	}
+	if (!user) return res.status(401).json({ message: "Invalid email or password" });
+
 	// Check if the password is correct
 	const isPasswordCorrect = await bcrypt.compare(password, user.password);
-	if (!isPasswordCorrect) {
-		return res.status(401).json({ message: "Invalid email or password" });
-	}
+	if (!isPasswordCorrect) return res.status(401).json({ message: "Invalid email or password" });
+
 	// Generate an access token with user data
 	const accessToken = jwt.sign(
 		{
@@ -141,8 +139,8 @@ export const register = async (req: Request, res: Response) => {
 				last_name: user.last_name,
 				email: user.email,
 				phone_number: user.phone_number,
-				role: 'superuser',
-				picture: ""
+				role: user.role,
+				avatar: ""
 			},
 			company: user.company
 		});

@@ -142,7 +142,7 @@ export class User extends BaseEntity {
 		default: 'https://gravatar.com/avatar/f42228ef47a296bebf07d1228e2eabd6?s=400&d=robohash&r=x',
 		nullable: true
 	})
-	picture: string;
+	avatar: string;
 
 	@Column({
 		default: null

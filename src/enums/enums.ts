@@ -14,6 +14,7 @@ export enum FuncType {
 }
 
 export enum Role {
+	SUPERUSER = 'superuser',
 	OWNER = 'owner',
 	ADMIN = 'admin',
 	USER = 'user',

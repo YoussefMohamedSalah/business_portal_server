@@ -34,6 +34,8 @@ export const registerUser = async (
 	user.first_name = first_name;
 	user.last_name = last_name;
 	phone_number && (user.phone_number = phone_number);
+	user.is_manager = true;
+	user.role = Role.SUPERUSER;
 	user.company = company;
 	await userRepository.save(user);
 	return user;

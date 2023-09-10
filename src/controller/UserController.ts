@@ -161,7 +161,7 @@ export const updateUser = async (req: Request, res: Response) => {
 		salary_per_hour,
 		role,
 		sign,
-		picture,
+		avatar,
 		file,
 		permissions,
 		departmentId,
@@ -216,7 +216,7 @@ export const updateUser = async (req: Request, res: Response) => {
 		? salary_per_hour
 		: user.salary_per_hour;
 	user.sign = sign ? sign : user.sign;
-	user.picture = picture ? picture : user.picture;
+	user.avatar = avatar ? avatar : user.avatar;
 	user.gender = gender ? gender : user.gender;
 	user.file = file ? file : user.file;
 	user.permissions = permissions ? permissions : user.permissions;
