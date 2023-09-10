@@ -12,6 +12,7 @@ import { PettyCashRequest } from './PettyCashRequest';
 import { MaterialRequest } from './MaterialRequest';
 import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Task } from './Task';
+import { Tender } from './Tender';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
@@ -86,6 +87,9 @@ export class Company extends BaseEntity {
 
     @OneToMany(() => Customer, customer => customer.company, { cascade: true, onDelete: 'CASCADE' })
     customers: Customer[];
+
+    @OneToMany(() => Tender, tender => tender.company, { cascade: true, onDelete: 'CASCADE' })
+    tenders: Tender[];
 
     @OneToMany(() => Supplier, supplier => supplier.company, { cascade: true, onDelete: 'CASCADE' })
     suppliers: Supplier[];

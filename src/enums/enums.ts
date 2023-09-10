@@ -1,6 +1,7 @@
-export enum StatusType {
-	CLOSE = "close",
-	OPEN = "open",
+export enum Status {
+	APPROVED = "Approved",
+	PENDING = "Pending",
+	REJECTED = "Rejected",
 }
 
 export enum NyType {
@@ -12,6 +13,7 @@ export enum FuncType {
 	FUNCTION = "function",
 	AGGREGATE = "aggregate"
 }
+
 
 export enum Role {
 	SUPERUSER = 'superuser',
@@ -26,8 +28,8 @@ export enum CustomerType {
 }
 
 export enum SupplierType {
-	Company = 'company',
-	Person = 'person',
+	Company = 'Company',
+	Individual = 'Individual',
 }
 
 export enum InventoryType {

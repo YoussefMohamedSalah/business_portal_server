@@ -1,12 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
 import { Company } from './Company';
 import { Customer } from './Customer';
-import { User } from './User';
 import { SiteRequest } from './SiteRequest';
 import { PettyCashRequest } from './PettyCashRequest';
 import { MaterialRequest } from './MaterialRequest';
 import { PurchaseOrderRequest } from './PurchaseOrderRequest';
-import { Task } from './Task';
 import { Group } from './Group';
 @Entity({ name: 'project' })
 export class Project extends BaseEntity {

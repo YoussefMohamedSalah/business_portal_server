@@ -1,5 +1,7 @@
+import { CustomerType } from "../enums/enums";
+
 export type CreateCustomerInfo = {
-    customer_type?: string;
+    customer_type?: CustomerType;
     company_name?: string;
     vat_on?: string;
     representative?: string;

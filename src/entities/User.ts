@@ -22,7 +22,7 @@ export class User extends BaseEntity {
 	id: string;
 
 	@Column({ unique: true, nullable: true })
-	user_id: number;
+	user_id: string;
 
 	@Column({
 		default: null
@@ -206,6 +206,6 @@ export class User extends BaseEntity {
 	// BeforeInsert decorator to generate and increment user_id
 	@BeforeInsert()
 	incrementUserId() {
-		this.user_id = Math.floor(Math.random() * 10000) + 1;
+		this.user_id = `E-${Math.floor(Math.random() * 10000) + 1}`;
 	}
 }

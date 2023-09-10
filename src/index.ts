@@ -24,6 +24,7 @@ import { RequestRouter } from './routes/request';
 import fileUpload from 'express-fileupload';
 import { EmployeeRouter } from './routes/employee';
 import { TaskRouter } from './routes/task';
+import { TenderRouter } from './routes/tender';
 
 // constants
 dotenv.config();
@@ -68,6 +69,7 @@ try {
   app.use('/stepper', StepperRouter);
   app.use('/department', DepartmentRouter);
   app.use('/task', TaskRouter);
+  app.use('/tender', TenderRouter);
   // done
   app.use('/supplier', SupplierRouter);
   app.use('/customer', CustomerRouter);
