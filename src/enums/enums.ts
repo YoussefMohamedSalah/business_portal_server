@@ -4,6 +4,13 @@ export enum Status {
 	REJECTED = "Rejected",
 }
 
+export enum RequestType {
+	PURCHASE_ORDER = "purchase_order_request",
+	PETTY_CASH = "petty_cash_request",
+	SITE = "site_request",
+	MATERIAL = "material_request",
+}
+
 export enum NyType {
 	NO = "N",
 	YES = "Y"

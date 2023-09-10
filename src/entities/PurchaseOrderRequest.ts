@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, BeforeInsert, Generated, OneToMany } from 'typeorm';
 import { Project } from './Project';
 import { Company } from './Company';
+import { Status } from '../enums/enums';
 
 @Entity({ name: 'purchase_order_request' })
 export class PurchaseOrderRequest extends BaseEntity {
@@ -13,7 +14,7 @@ export class PurchaseOrderRequest extends BaseEntity {
     })
     type: string;
 
-    @PrimaryGeneratedColumn('increment')
+    @Column({ unique: true, nullable: true })
     code: string;
 
     @Column({
@@ -44,7 +45,11 @@ export class PurchaseOrderRequest extends BaseEntity {
     @Column({ nullable: true })
     description: string;
 
-    @Column({ nullable: true })
+    @Column({
+        type: 'enum',
+        default: Status.PENDING,
+        enum: Status
+    })
     status: string;
 
     @Column({ nullable: true })
@@ -70,10 +75,10 @@ export class PurchaseOrderRequest extends BaseEntity {
     @ManyToOne(() => Company, company => company.PurchaseOrderRequests)
     company: Company;
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+    // BeforeInsert decorator to generate and increment CODE
     @BeforeInsert()
-    generateCode() {
-        // Generate a unique incremental code
-        this.code = `po-${this.code}`;
+    incrementTenderId() {
+        this.code = `PO-${Math.floor(Math.random() * 10000) + 1}`;
     }
 }
 

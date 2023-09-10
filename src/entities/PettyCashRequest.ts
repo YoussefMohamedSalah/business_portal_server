@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable, OneToMany, BeforeInsert, Generated } from 'typeorm';
 import { Project } from './Project';
 import { Company } from './Company';
+import { Status } from '../enums/enums';
 
 @Entity({ name: 'petty_cash_request' })
 export class PettyCashRequest extends BaseEntity {
@@ -13,7 +14,7 @@ export class PettyCashRequest extends BaseEntity {
 	})
 	type: string;
 
-	@PrimaryGeneratedColumn('increment')
+	@Column({ unique: true, nullable: true })
 	code: string;
 
 	@Column({
@@ -56,8 +57,12 @@ export class PettyCashRequest extends BaseEntity {
 	@Column({ nullable: true })
 	description: string;
 
-	@Column({ nullable: true })
-	status: string; // accepted, rejected, pending
+    @Column({
+        type: 'enum',
+        default: Status.PENDING,
+        enum: Status
+    })
+    status: string;
 
 	@Column({ nullable: true })
 	vat: number;
@@ -82,4 +87,9 @@ export class PettyCashRequest extends BaseEntity {
 	@ManyToOne(() => Company, company => company.PettyCashRequests)
 	company: Company;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	// BeforeInsert decorator to generate and increment CODE
+	@BeforeInsert()
+	incrementTenderId() {
+		this.code = `PC-${Math.floor(Math.random() * 10000) + 1}`;
+	}
 }

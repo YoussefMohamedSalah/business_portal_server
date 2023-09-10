@@ -6,7 +6,7 @@ import { MaterialRequest } from "../entities/MaterialRequest";
 import { SiteRequest } from "../entities/SiteRequest";
 import { PettyCashRequest } from "../entities/PettyCashRequest";
 import { User } from "../entities/User";
-import { RequestStatusType } from "../enums/RequestType";
+import { Status } from "../enums/enums";
 
 // ** This Is Getting All Requests For The Company **
 // NOT DONE
@@ -223,7 +223,7 @@ export const createPoRequest = async (data: any, company: Company, user: User, p
     request.description = description;
     request.vat = vat;
     request.total = total;
-    request.status = RequestStatusType.BENDING;
+    request.status = Status.PENDING;
     request.work_flow = company.workFlow.purchase_order_flow;
     request.user = {
         id: user.id,
@@ -247,7 +247,7 @@ export const createPcRequest = async (data: any, company: Company, user: User, p
     request.description = description;
     request.vat = vat;
     request.total = total;
-    request.status = RequestStatusType.BENDING;
+    request.status = Status.PENDING;
     request.work_flow = company.workFlow.petty_cash_request_flow;
     request.user = {
         id: user.id,
@@ -268,7 +268,7 @@ export const createMaterialRequest = async (data: any, company: Company, user: U
     const request = new MaterialRequest();
     request.subject = subject;
     request.description = description;
-    request.status = RequestStatusType.BENDING;
+    request.status = Status.PENDING;
     request.work_flow = company.workFlow.material_request_flow;
     request.user = {
         id: user.id,
@@ -289,7 +289,7 @@ export const createSiteRequest = async (data: any, company: Company, user: User,
     const request = new SiteRequest();
     request.subject = data.subject ? data.subject : request.subject;
     request.description = data.description ? data.description : request.description;
-    request.status = RequestStatusType.BENDING;
+    request.status = Status.PENDING;
     request.items = data.items ? data.items : request.items;
     request.work_flow = company.workFlow.site_request_flow;
     request.user = {

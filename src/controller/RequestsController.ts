@@ -3,7 +3,7 @@ import { getAllCompany_PoReq, getAllCompany_PcReq, getAllCompany_SiteReq, getAll
 import { getCompanyWithWorkflow } from '../repositories/CompanyRepository';
 import { getById as getUserById } from '../repositories/UserRepository';
 import { getById as getProjectById } from '../repositories/ProjectRepository';
-import { RequestType } from '../enums/RequestType';
+import { RequestType } from '../enums/enums';
 // ** This Is Getting All Requests For The Company **
 // DONE
 export const getAllPoRequests = async (req: Request, res: Response) => {

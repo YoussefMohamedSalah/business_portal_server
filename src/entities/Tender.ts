@@ -10,7 +10,7 @@ export class Tender extends BaseEntity {
     id: string;
 
     @Column({ unique: true, nullable: true })
-    tender_id: string;
+    code: string;
 
     @Column({
         type: 'enum',
@@ -76,9 +76,9 @@ export class Tender extends BaseEntity {
     })
     updatedAt: Date;
 
-    // BeforeInsert decorator to generate and increment user_id
+    // BeforeInsert decorator to generate and increment code
     @BeforeInsert()
     incrementTenderId() {
-        this.tender_id = `T-${Math.floor(Math.random() * 10000) + 1}`;
+        this.code = `T-${Math.floor(Math.random() * 10000) + 1}`;
     }
 }

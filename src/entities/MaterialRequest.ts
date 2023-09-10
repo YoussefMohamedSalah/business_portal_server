@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable, OneToMany, BeforeInsert } from 'typeorm';
 import { Project } from './Project';
 import { Company } from './Company';
+import { Status } from '../enums/enums';
 
 @Entity({ name: 'material_request' })
 export class MaterialRequest extends BaseEntity {
@@ -13,7 +14,7 @@ export class MaterialRequest extends BaseEntity {
     })
     type: string;
 
-    @PrimaryGeneratedColumn('increment')
+    @Column({ unique: true, nullable: true })
     code: string;
 
     @Column({
@@ -44,8 +45,12 @@ export class MaterialRequest extends BaseEntity {
     @Column({ nullable: true })
     subject: string;
 
-    @Column({ nullable: true })
-    status: string; // accepted, rejected, pending
+    @Column({
+        type: 'enum',
+        default: Status.PENDING,
+        enum: Status
+    })
+    status: string;
 
     @Column({
         type: 'jsonb',
@@ -72,9 +77,9 @@ export class MaterialRequest extends BaseEntity {
     @ManyToOne(() => Company, company => company.MaterialRequests)
     company: Company;
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+    // BeforeInsert decorator to generate and increment CODE
     @BeforeInsert()
-    generateCode() {
-        // Generate a unique incremental code
-        this.code = `ma-${this.id}`;
+    incrementTenderId() {
+        this.code = `MA-${Math.floor(Math.random() * 10000) + 1}`;
     }
 }

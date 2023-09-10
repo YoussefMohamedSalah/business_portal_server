@@ -12,7 +12,6 @@ export const addTender = async (req: Request, res: Response) => {
     if (!company) return res.status(404).json({ msg: "Company not found" });
     // then create Tender
     let user = { id: userId, name: userName };
-    console.log(userName)
     const tender = await createTender(createData, company, user);
     if (!tender) return res.status(409).json({ msg: "Field To Create Tender" });
     else return res.json(tender);
