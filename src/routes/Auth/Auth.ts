@@ -6,9 +6,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { createCompany } from "../../repositories/CompanyRepository";
-import { CreateUserInfo, RegisterUserInfo } from "../../types/CreateUserInfo";
-import { createUser, getByEmail, registerUser } from "../../repositories/UserRepository";
-import { Company } from "../../entities/Company";
+import { RegisterUserInfo } from "../../types/CreateUserInfo";
+import { getByEmail, registerUser } from "../../repositories/UserRepository";
 
 dotenv.config();
 const router = Router();
@@ -17,7 +16,6 @@ const secretHash = process.env.SECRET_HASH;
 export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	// Check if the owner exists
-	// const user = await User.findOne({ where: { email } });
 	const user = await getByEmail(email)
 	if (!user) return res.status(401).json({ message: "Invalid email or password" });
 
@@ -74,11 +72,9 @@ export const register = async (req: Request, res: Response) => {
 		const {
 			email,
 			password,
-			role,
 			first_name,
 			last_name,
 			phone_number,
-			companyId
 		} = req.body;
 
 		// Check if the user already exists

@@ -40,8 +40,8 @@ export enum SupplierType {
 }
 
 export enum InventoryType {
-	Master = 'master_inventory',
-	project = 'project_inventory',
+	MASTER = 'master_inventory',
+	PROJECT = 'project_inventory',
 }
 
 export enum DepartmentType {

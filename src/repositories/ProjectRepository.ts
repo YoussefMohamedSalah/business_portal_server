@@ -2,6 +2,8 @@ import { getRepository } from "typeorm";
 import { Company } from "../entities/Company";
 import { CreateProjectInfo } from "src/types/CreateProject";
 import { Project } from "../entities/Project";
+import { InventoryType } from "../enums/enums";
+import { createInventory } from "./InventoryRepository";
 
 // DONE
 export const createProject = async (
@@ -42,6 +44,14 @@ export const createProject = async (
     project.company = company;
     project.customer = customer;
     await projectRepository.save(project);
+
+    // Create the inventory for the company
+    const createInventoryData = { type: InventoryType.PROJECT, items_count: 0, items_value: 0 }
+    await createInventory(createInventoryData, company, project);
+
+
+
+
     return project;
 };
 

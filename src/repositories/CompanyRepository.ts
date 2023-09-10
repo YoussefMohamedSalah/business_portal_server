@@ -1,7 +1,12 @@
 import { getRepository } from "typeorm";
 import { Company } from "../entities/Company";
 import { addInitialData } from "./InitialDataRepository";
+import { createInventory } from "./InventoryRepository";
+import { InventoryType } from "../enums/enums";
 
+
+// DONE
+// need to create company inventory.
 export const createCompany = async (
     name: string,
 ) => {
@@ -17,6 +22,10 @@ export const createCompany = async (
     company.departments = departmentsList;
     company.workFlow = workflow;
     await companyRepository.save(company);
+
+    // Create the inventory for the company
+    const createInventoryData = { type: InventoryType.MASTER, items_count: 0, items_value: 0 }
+    await createInventory(createInventoryData, company);
     return company;
 };
 

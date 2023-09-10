@@ -6,6 +6,7 @@ import { PettyCashRequest } from './PettyCashRequest';
 import { MaterialRequest } from './MaterialRequest';
 import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Group } from './Group';
+import { Inventory } from './Inventory';
 @Entity({ name: 'project' })
 export class Project extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
@@ -117,6 +118,10 @@ export class Project extends BaseEntity {
 	group: Group;
 
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@OneToOne(() => Inventory, inventory => inventory.project)
+	@JoinColumn()
+	inventory: Inventory;
+
 	@OneToMany(() => SiteRequest, SiteRequest => SiteRequest.project)
 	SiteRequests: SiteRequest[];
 

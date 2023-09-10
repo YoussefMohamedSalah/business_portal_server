@@ -1,7 +1,1 @@
-add requests
-
-........ less important ........
-
--- send otp from 6 digits to the user's Email. from backend. verify the otp saved in backend, then response with true or false. // need provider
--- after the stepper is completed make sure to update the stepper_status to true and navigate to dashboard. // done
--- try again with notifications.
+when creating company,,,, create new co inventory. to hold items and counts

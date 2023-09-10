@@ -1,7 +1,7 @@
-import { InventoryType } from "src/enums/enums";
+import { InventoryType } from "../enums/enums";
 
 export type CreateInventoryInfo = {
-    type: InventoryType,
+    type: string,
     items_count: number,
     items_value: number,
 };

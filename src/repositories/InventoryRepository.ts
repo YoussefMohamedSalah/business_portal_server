@@ -3,20 +3,23 @@ import { Company } from "../entities/Company";
 import { CreateInventoryInfo } from "src/types/CreateInventory";
 import { Inventory } from "../entities/Inventory";
 import { InventoryType } from "../enums/enums";
+import { Project } from "../entities/Project";
 
 // DONE
 export const createInventory = async (
     createData: CreateInventoryInfo,
-    company: Company
+    company: Company,
+    project?:Project
 ) => {
     const { type, items_count, items_value } = createData;
     // create inventory
     const inventoryRepository = getRepository(Inventory);
     const inventory = new Inventory();
-    inventory.type = type ? type : InventoryType.Master;
+    inventory.type = type ? type : InventoryType.MASTER;
     inventory.items_count = items_count ? items_count : 0;
     inventory.items_value = items_value ? items_value : 0;
     inventory.company = company;
+    if(project) inventory.project = project;
     await inventoryRepository.save(inventory);
     return inventory;
 };

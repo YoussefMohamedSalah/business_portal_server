@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 import { InventoryType } from '../enums/enums';
 import { Company } from './Company';
 import { InventoryItem } from './InventoryItem';
+import { Project } from './Project';
 
 // this will be connected with company entity -- yes
 // also this will be connected with project entity -- yes
@@ -13,24 +14,28 @@ export class Inventory extends BaseEntity {
 
 	@Column({
 		type: 'enum',
-		default: InventoryType.Master,
+		default: InventoryType.MASTER,
 		enum: InventoryType
 	})
-	type: InventoryType;
+	type: string;
 
-	@Column()
+	@Column({
+		default: 0
+	})
 	items_count: number;
 
-	@Column()
+	@Column({
+		default: 0
+	})
 	items_value: number;
-
-	@Column()
-	items: string;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@ManyToOne(() => Company, company => company.inventory_list, { onDelete: 'CASCADE' })
 	company: Company;
+
+	@OneToOne(() => Project, project => project.inventory, { cascade: true, onDelete: 'CASCADE' })
+    project: Project;
 
 	@OneToMany(() => InventoryItem, inventoryItem => inventoryItem.inventory, { cascade: true, onDelete: 'CASCADE' })
 	inventory_items: InventoryItem[];
