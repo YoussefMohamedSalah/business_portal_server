@@ -46,6 +46,7 @@ export const getAllByCompanyId = async (companyId: string) => {
     const supplier = await supplierRepository
         .createQueryBuilder("supplier")
         .where("supplier.companyId = :companyId", { companyId: companyId })
+        .orderBy("supplier.createdAt", "DESC")
         .getMany();
     return supplier;
 };

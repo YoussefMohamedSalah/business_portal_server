@@ -10,7 +10,10 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
 
     afterInsert(event: InsertEvent<User>) {
         console.log('User inserted:', event.entity);
-        createNotification("Welcome to the app", "Welcome to the app", event.entity);
+        // createNotification("Welcome to the app", "Welcome to the app", event.entity);
+        // i will create a function that takes term and value..
+        // for example, term = User, value = event.entity
+        // then i will decide what to do with the value
         
     }
 }

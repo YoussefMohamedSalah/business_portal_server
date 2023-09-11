@@ -18,12 +18,11 @@ export const createNotification = async (
 };
 
 // DONE
-export const getById = async (id: string, userId: string) => {
+export const getById = async (id: string) => {
     const notificationRepository = getRepository(Notification);
     const notification = await notificationRepository
         .createQueryBuilder("notification")
         .where("notification.id = :id", { id: id })
-        .andWhere("notification.userId = :userId", { userId: userId })
         .getOne();
     return notification;
 };
@@ -34,6 +33,7 @@ export const getAllNotifications = async (userId: string) => {
     const notification = await notificationRepository
         .createQueryBuilder("notification")
         .where("notification.userId = :userId", { userId: userId })
+        .orderBy("notification.receivedAt", "DESC")
         .getMany();
     return notification;
 };

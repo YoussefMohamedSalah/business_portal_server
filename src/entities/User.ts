@@ -4,15 +4,10 @@ import {
 	PrimaryGeneratedColumn,
 	BaseEntity,
 	ManyToOne,
-	ManyToMany,
-	JoinTable,
 	OneToMany,
-	PrimaryColumn,
-	Generated,
 	BeforeInsert
 } from "typeorm";
 import { Company } from "./Company";
-import { Project } from "./Project";
 import { Department } from "./Department";
 import { Attendance } from "./Attendance";
 import { Notification } from "./Notification";

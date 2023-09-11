@@ -40,6 +40,7 @@ export const getAllByCompanyId = async (companyId: string) => {
     const tenders = await tenderRepository
         .createQueryBuilder("tender")
         .where("tender.companyId = :companyId", { companyId: companyId })
+        .orderBy("tender.createdAt", "DESC")
         .getMany();
     return tenders;
 };

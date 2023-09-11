@@ -168,6 +168,7 @@ export const getAllCompanyUsers = async (companyId: string) => {
 	const users = await userRepository
 		.createQueryBuilder("user")
 		.where("user.company = :companyId", { companyId: companyId })
+		.orderBy("user.createdAt", "DESC")
 		// .leftJoinAndSelect(
 		// 	"user.project",
 		// 	"project"

@@ -60,6 +60,7 @@ export const getAllByCompanyId = async (companyId: string) => {
     const tasks = await taskRepository
         .createQueryBuilder("task")
         .where("task.companyId = :companyId", { companyId: companyId })
+        .orderBy("task.createdAt", "DESC")
         .getMany();
     return tasks;
 };

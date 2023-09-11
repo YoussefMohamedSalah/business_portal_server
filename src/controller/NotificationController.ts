@@ -11,9 +11,8 @@ export const getNotifications = async (req: Request, res: Response) => {
 };
 
 export const getNotificationById = async (req: Request, res: Response) => {
-    const { userId } = req.userData!;
     const { id } = req.params;
-    const notification = await getById(id, userId);
+    const notification = await getById(id);
     if (!notification) return res.status(404).json({ msg: "Notification not found" });
     notification.is_read = true;
     await notification.save();
@@ -21,9 +20,8 @@ export const getNotificationById = async (req: Request, res: Response) => {
 };
 
 export const deleteNotification = async (req: Request, res: Response) => {
-    const { userId } = req.userData!;
     const { id } = req.params;
-    const notification = await getById(id, userId);
+    const notification = await getById(id);
     if (!notification) {
         return res.status(404).json({ msg: "Notification not found" });
     }
@@ -44,12 +42,9 @@ export const deleteAllNotifications = async (req: Request, res: Response) => {
 }
 
 export const markNotificationAsRead = async (req: Request, res: Response) => {
-    const { userId } = req.userData!;
     const { id } = req.params;
-    const notification = await getById(id, userId);
-    if (!notification) {
-        return res.status(404).json({ msg: "Notification not found" });
-    }
+    const notification = await getById(id);
+    if (!notification) return res.status(404).json({ msg: "Notification not found" });
     notification.is_read = true;
     await notification.save();
     return res.status(200).json(notification);
