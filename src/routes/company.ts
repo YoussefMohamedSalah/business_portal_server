@@ -9,6 +9,7 @@ import { getCompanyUsers } from "../controller/UserController";
 import { getCompanyDepartments } from "../controller/DepartmentController";
 import { getAllTasksByCompanyId } from "../controller/TaskController";
 import { getCompanyTenders } from "../controller/TenderController";
+import { allCompanyGroups } from "../controller/GroupController";
 
 const router = Router();
 router.route("/").post(checkAuth, addCompany);
@@ -22,5 +23,6 @@ router.route("/project/").get(checkAuth, allCompanyProjects);
 router.route("/department/").get(checkAuth, getCompanyDepartments)
 router.route("/user/").get(checkAuth, getCompanyUsers);
 router.route("/tender/").get(checkAuth, getCompanyTenders);
+router.route("/group/").get(checkAuth, allCompanyGroups);
 
 export { router as CompanyRouter };

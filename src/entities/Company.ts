@@ -13,6 +13,7 @@ import { MaterialRequest } from './MaterialRequest';
 import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Task } from './Task';
 import { Tender } from './Tender';
+import { Group } from './Group';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
@@ -75,6 +76,9 @@ export class Company extends BaseEntity {
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     @OneToMany(() => Project, project => project.company, { cascade: true, onDelete: 'CASCADE' })
     projects: Project[];
+
+    @OneToMany(() => Group, group => group.company, { cascade: true, onDelete: 'CASCADE' })
+    groups: Group[];
 
     @OneToMany(() => Task, task => task.company, { cascade: true, onDelete: 'CASCADE' })
     tasks: Task[];

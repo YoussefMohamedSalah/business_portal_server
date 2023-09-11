@@ -139,7 +139,7 @@ export const dailyAutoResetAttendance = async () => {
         if (!usersList) return;
         // now loop throw all users and check if he has attendance yesterday
         usersList.forEach(async (user) => {
-            let userJoiningDate = user.contract_date.toISOString().slice(0, 10);
+            let userJoiningDate = user.contract_date;
             // if user is new, or there is no shift start or end data saved, then skip him
             if (userJoiningDate === today || !user.shift_start || !user.shift_end) return;
             // get user yesterdays attendance

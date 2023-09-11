@@ -22,24 +22,27 @@ export class Group extends BaseEntity {
 	})
 	manager: { id: string, name: string };
 
-    @Column({
-        type: 'jsonb',
-        array: false,
-        default: () => "'[]'",
-        nullable: false,
-    })
-    members: Array<{ id: string, name: string }>;
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'[]'",
+		nullable: false,
+	})
+	members: Array<{ id: string, name: string }>;
 
-    @Column({default: 0})
-    members_count: number;
+	@Column({ default: 0 })
+	members_count: number;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+	@ManyToOne(() => Company, company => company.groups, { onDelete: 'CASCADE' })
+	company: Company;
+
 	@OneToOne(() => Project, project => project.group, { onDelete: 'CASCADE' })
 	project: Project;
 
-    @OneToMany(() => Task, task => task.group, { onDelete: 'CASCADE' })
-    tasks: Task[];
+	@OneToMany(() => Task, task => task.group, { onDelete: 'CASCADE' })
+	tasks: Task[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

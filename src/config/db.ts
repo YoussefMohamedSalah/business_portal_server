@@ -1,10 +1,11 @@
 import dotenv from "dotenv";
+import { UserSubscriber } from "../subscribers/UserSubscriber";
 import { createConnection } from 'typeorm';
 
 // constants
 dotenv.config();
 
-export const connectToDataBase = async (entities: any[]) => {
+export const connectToDataBase = async (entities: any[], subscribers: any[]) => {
 	const databasePort = process.env.DATABASE_PORT;
 	const databaseType = process.env.DATABASE_TYPE;
 	const databaseHost = process.env.DATABASE_HOST;
@@ -22,7 +23,9 @@ export const connectToDataBase = async (entities: any[]) => {
 			database: databaseName as any,
 			entities: entities,
 			synchronize: true,
-		})
+			subscribers: [UserSubscriber],
+		});
+
 		console.log(`You Are Now Connected to Port ${process.env.SERVER_PORT} With Database At Port: ${process.env.DATABASE_PORT}`)
 	} catch (error) {
 		console.log(error);

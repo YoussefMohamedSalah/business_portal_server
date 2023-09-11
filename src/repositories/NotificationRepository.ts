@@ -1,23 +1,39 @@
-import { EntityRepository, Repository, getConnection, getCustomRepository } from "typeorm";
+import { getRepository } from "typeorm";
 import { Notification } from "../entities/Notification";
 
+// DONE
+export const createNotification = async (
+    title: string,
+    content: string,
+    userId: any,
+) => {
+    // create a notification
+    const notificationRepository = getRepository(Notification);
+    const notification = new Notification();
+    notification.title = title;
+    notification.content = content;
+    notification.user = userId;
+    await notificationRepository.save(notification);
+    return notification;
+};
 
-@EntityRepository(Notification)
-export class NotificationRepository extends Repository<Notification> {
+// DONE
+export const getById = async (id: string, userId: string) => {
+    const notificationRepository = getRepository(Notification);
+    const notification = await notificationRepository
+        .createQueryBuilder("notification")
+        .where("notification.id = :id", { id: id })
+        .andWhere("notification.userId = :userId", { userId: userId })
+        .getOne();
+    return notification;
+};
 
-    // async listenForNotifications() {
-    //     const notificationRepository = getCustomRepository(NotificationRepository);
-    //     const queryBuilder = notificationRepository.createQueryBuilder('notification');
-    //     const queryRunner = notificationRepository.manager.queryRunner;
-    //     if (!queryRunner) return
-    //     await queryRunner.connect();
-    //     await queryRunner.query('LISTEN my_channel');
-    //     queryRunner.connection.on('notification', async (msg: any) => {
-    //         console.log('Received notification:', msg.content);
-    //         const notification = new Notification();
-    //         notification.content = msg.content;
-    //         notification.receivedAt = new Date();
-    //         await notificationRepository.save(notification);
-    //     });
-    // }
-}
+// DONE
+export const getAllNotifications = async (userId: string) => {
+    const notificationRepository = getRepository(Notification);
+    const notification = await notificationRepository
+        .createQueryBuilder("notification")
+        .where("notification.userId = :userId", { userId: userId })
+        .getMany();
+    return notification;
+};

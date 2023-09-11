@@ -105,21 +105,22 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	}
 	await companyRepository.save(company);
 
+	// ! FIX THIS ASAP
 	// now add this user to project members
-	if (projects && projects.length > 0) {
-		const projectRepository = getRepository(Project);
-		for (let i = 0; i < projects.length; i++) {
-			if (projects[i]) {
-				projects[i].members_count = projects[i].members_count + 1;
-				await projectRepository.save(projects[i]);
-				const member_project = getRepository('project_members');
-				await member_project.insert({
-					project_id: projects[i].id,
-					member_id: user.id
-				});
-			}
-		}
-	}
+	// if (projects && projects.length > 0) {
+	// 	const projectRepository = getRepository(Project);
+	// 	for (let i = 0; i < projects.length; i++) {
+	// 		if (projects[i]) {
+	// 			projects[i].members_count = projects[i].members_count + 1;
+	// 			await projectRepository.save(projects[i]);
+	// 			const member_project = getRepository('project_members');
+	// 			await member_project.insert({
+	// 				project_id: projects[i].id,
+	// 				member_id: user.id
+	// 			});
+	// 		}
+	// 	}
+	// }
 	return user;
 };
 

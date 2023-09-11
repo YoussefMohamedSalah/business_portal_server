@@ -1,7 +1,10 @@
 import { Router } from "express";
-import { getCustomRepository } from "typeorm";
-import { createNotification } from "../controller/NotificationController";
+import { getNotifications, getNotificationById, deleteNotification, deleteAllNotifications, markNotificationAsRead } from "../controller/NotificationController";
+import { checkAuth } from "../middleware/checkAuth";
 
 const router = Router();
-router.route("/").post(createNotification);
+
+router.route("/").get(checkAuth, getNotifications);
+
+
 export { router as NotificationRouter };

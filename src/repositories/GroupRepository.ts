@@ -25,3 +25,13 @@ export const getById = async (id: string) => {
         .getOne();
     return group;
 };
+
+// DONE
+export const getAllByCompanyId = async (companyId: string) => {
+    const groupRepository = getRepository(Group);
+    const group = await groupRepository
+        .createQueryBuilder("group")
+        .where("group.companyId = :companyId", { companyId: companyId })
+        .getMany();
+    return group;
+};

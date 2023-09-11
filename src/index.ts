@@ -1,10 +1,14 @@
+import 'reflect-metadata';
 import express from 'express';
 import Cors from 'cors';
 import dotenv from 'dotenv';
+// ************************************************
+import { entities } from './entities';
+import { subscribers } from './subscribers';
+// ************************************************
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import { errorHandler } from "./middleware/errorMiddleware";
-import { entities } from './entities';
 import { connectToDataBase } from './config/db';
 import { AuthRouter } from './routes/Auth/Auth';
 import { NotificationRouter } from './routes/notification';
@@ -25,6 +29,7 @@ import fileUpload from 'express-fileupload';
 import { EmployeeRouter } from './routes/employee';
 import { TaskRouter } from './routes/task';
 import { TenderRouter } from './routes/tender';
+import { GroupRouter } from './routes/group';
 
 // constants
 dotenv.config();
@@ -43,7 +48,7 @@ try {
     console.log(`Server Running on port : ${process.env.SERVER_PORT}`)
   );
 
-  connectToDataBase(entities);
+  connectToDataBase(entities, subscribers);
 
 
   // app.post('/upload',
@@ -70,6 +75,7 @@ try {
   app.use('/department', DepartmentRouter);
   app.use('/task', TaskRouter);
   app.use('/tender', TenderRouter);
+  app.use('/group', GroupRouter);
   // done
   app.use('/supplier', SupplierRouter);
   app.use('/customer', CustomerRouter);
@@ -79,7 +85,7 @@ try {
   // exists
   app.use('/project', ProjectRouter);
 
-  app.use('/notification', NotificationRouter);
+  app.use('/notifications', NotificationRouter);
 
   // eventListeners 
   // setInterval(runAtMidnight, 1000);

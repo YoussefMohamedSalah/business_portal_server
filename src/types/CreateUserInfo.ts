@@ -18,9 +18,9 @@ export type CreateUserInfo = {
 	string_password?: string;
 	address?: string;
 	phone_number?: string;
-	contract_date?: Date;
-	contract_ex?: Date;
-	renewal_of_residence?: Date;
+	contract_date?: string;
+	contract_ex?: string;
+	renewal_of_residence?: string;
 	id_number?: string;
 	id_ex_date?: string;
 	salary_per_month?: string;

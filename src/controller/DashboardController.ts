@@ -30,7 +30,7 @@ export const dashboardAttendance = async (req: Request, res: Response) => {
     const usersList = await getAllUsers(companyId);
     if (!usersList) return res.status(404).json({ msg: "Users not found" });
     usersList.forEach((user) => {
-        let userJoiningDate = user.contract_date.toISOString().slice(0, 10);
+        let userJoiningDate = user.contract_date
         if (userJoiningDate === today || !user.shift_start || !user.shift_end) {
             new_employee_count++;
         } else {

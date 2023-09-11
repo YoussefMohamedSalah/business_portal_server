@@ -15,6 +15,7 @@ import { Company } from "./Company";
 import { Project } from "./Project";
 import { Department } from "./Department";
 import { Attendance } from "./Attendance";
+import { Notification } from "./Notification";
 
 @Entity({ name: "user" })
 export class User extends BaseEntity {
@@ -73,19 +74,19 @@ export class User extends BaseEntity {
 		type: "date",
 		default: () => "CURRENT_TIMESTAMP"
 	})
-	contract_date: Date;
+	contract_date: string;
 
 	@Column({
 		type: "date",
 		default: () => "CURRENT_TIMESTAMP"
 	})
-	contract_ex: Date;
+	contract_ex: string;
 
 	@Column({
 		type: "date",
 		default: () => "CURRENT_TIMESTAMP"
 	})
-	renewal_of_residence: Date;
+	renewal_of_residence: string;
 
 	@Column({
 		default: false
@@ -187,8 +188,11 @@ export class User extends BaseEntity {
 	@ManyToOne(() => Department, department => department.users)
 	department: Department;
 
-	@OneToMany(() => Attendance, attendance => attendance.user)
+	@OneToMany(() => Attendance, attendance => attendance.user, { onDelete: "CASCADE" })
 	attendances: Attendance[];
+
+	@OneToMany(() => Notification, notification => notification.user, { onDelete: "CASCADE" })
+	notifications: Notification[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

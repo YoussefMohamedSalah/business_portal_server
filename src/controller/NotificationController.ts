@@ -1,20 +1,57 @@
 import { Request, Response } from 'express';
-import { createCompany, getById } from '../repositories/CompanyRepository';
-import bcrypt from "bcrypt";
-import { Notification } from '../entities/Notification';
-import { getCustomRepository } from 'typeorm';
-import { NotificationRepository } from '../repositories/NotificationRepository';
+import { getAllNotifications, getById } from '../repositories/NotificationRepository';
 
-export const createNotification = async (req: Request, res: Response) => {
-    const { content, sender } = req.body;
-    const notificationRepository = getCustomRepository(NotificationRepository);
-    const notification = notificationRepository.create({ content, sender });
-    await notificationRepository.save(notification);
-    return res.status(201).json({ msg: "notification added" });
+export const getNotifications = async (req: Request, res: Response) => {
+    const { userId } = req.userData!;
+    const userNotifications = await getAllNotifications(userId);
+    if (userNotifications) {
+        return res.status(200).json(userNotifications);
+    }
+    return res.status(200).json([]);
 };
 
-// export const listenForNotifications = async (req: Request, res: Response) => {
-//     const notificationRepository = getCustomRepository(NotificationRepository);
-//     await notificationRepository.listenForNotifications();
-//     return res.status(200).json({ msg: "listening for notifications" });
-// };
+export const getNotificationById = async (req: Request, res: Response) => {
+    const { userId } = req.userData!;
+    const { id } = req.params;
+    const notification = await getById(id, userId);
+    if (!notification) return res.status(404).json({ msg: "Notification not found" });
+    notification.is_read = true;
+    await notification.save();
+    return res.status(200).json(notification);
+};
+
+export const deleteNotification = async (req: Request, res: Response) => {
+    const { userId } = req.userData!;
+    const { id } = req.params;
+    const notification = await getById(id, userId);
+    if (!notification) {
+        return res.status(404).json({ msg: "Notification not found" });
+    }
+    await notification.remove();
+    return res.status(200).json({ msg: "Notification deleted successfully" });
+};
+
+export const deleteAllNotifications = async (req: Request, res: Response) => {
+    const { userId } = req.userData!;
+    const userNotifications = await getAllNotifications(userId);
+    if (userNotifications.length === 0) {
+        return res.status(404).json({ msg: "Notifications not found" });
+    }
+    userNotifications.forEach(async (notification) => {
+        await notification.remove();
+    });
+    return res.status(200).json({ msg: "Notifications deleted successfully" });
+}
+
+export const markNotificationAsRead = async (req: Request, res: Response) => {
+    const { userId } = req.userData!;
+    const { id } = req.params;
+    const notification = await getById(id, userId);
+    if (!notification) {
+        return res.status(404).json({ msg: "Notification not found" });
+    }
+    notification.is_read = true;
+    await notification.save();
+    return res.status(200).json(notification);
+}
+
