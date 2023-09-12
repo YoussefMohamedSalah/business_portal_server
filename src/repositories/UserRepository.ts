@@ -99,9 +99,9 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	const companyRepository = getRepository(Company);
 	company.employee_count = company.employee_count + 1;
 	if (user.gender === 'male') {
-		company.men_count = company.men_count + 1;
+		company.male_count = company.male_count + 1;
 	} else if (user.gender === 'female') {
-		company.women_count = company.women_count + 1
+		company.female_count = company.female_count + 1
 	}
 	await companyRepository.save(company);
 

@@ -16,15 +16,15 @@ export const dashboardAttendance = async (req: Request, res: Response) => {
     let absent = 0;
     let late_count = 0;
     let early_count = 0;
-    let men_count = 0;
-    let women_count = 0;
+    let male_count = 0;
+    let female_count = 0;
 
     // getting Company Data
     const company = await getById(companyId);
     if (!company) return res.status(404).json({ msg: "Company not found" });
     // employee_count = company.employee_count;
-    men_count = company.men_count;
-    women_count = company.women_count;
+    male_count = company.male_count;
+    female_count = company.female_count;
 
     // get all company users
     const usersList = await getAllUsers(companyId);
@@ -52,6 +52,6 @@ export const dashboardAttendance = async (req: Request, res: Response) => {
     late_count = todayAttendanceList.filter((attendance) => attendance.late === true).length;
     early_count = todayAttendanceList.filter((attendance) => attendance.early === true).length;
 
-    const dashboardData = { employee_count, present, absent, late_count, early_count, men_count, women_count }
+    const dashboardData = { employee_count, present, absent, late_count, early_count, male_count, female_count }
     return res.json(dashboardData);
 };

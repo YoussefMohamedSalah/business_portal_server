@@ -88,20 +88,23 @@ export const addUser = async (req: Request, res: Response) => {
 
 	if (gender) {
 		if (gender === 'Male') {
-			company.men_count++;
+			company.male_count++;
 			company.employee_count++;
 		} else if (gender === 'Female') {
-			company.women_count++;
+			company.female_count++;
 			company.employee_count++;
 		}
-		await company.save();
+	} else {
+		company.male_count++;
+		company.employee_count++;
 	}
+	await company.save();
 	return res.json(user);
 };
 
 // DONE
 export const getUserById = async (req: Request, res: Response) => {
-	const { id } = req.params; 
+	const { id } = req.params;
 	let isValidUUID = validateUUID(id);
 	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 	const user = await getById(id);
@@ -111,7 +114,7 @@ export const getUserById = async (req: Request, res: Response) => {
 
 //DONE
 export const updateUser = async (req: Request, res: Response) => {
-	const { id } = req.params; 
+	const { id } = req.params;
 	let isValidUUID = validateUUID(id);
 	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 	const { companyId } = req.userData!;
@@ -155,17 +158,17 @@ export const updateUser = async (req: Request, res: Response) => {
 		let company: Company | null = await getCompanyById(companyId)
 		if (!company) return res.status(404).json({ msg: "Company not found" });
 		if (user.gender === null && gender === 'Male') {
-			company.men_count++;
+			company.male_count++;
 			company.employee_count++;
 		} else if (user.gender === null && gender === 'Female') {
-			company.women_count++;
+			company.female_count++;
 			company.employee_count++;
 		} else if (user.gender === 'Male' && gender === 'Female') {
-			company.women_count++;
-			company.women_count--;
+			company.female_count++;
+			company.female_count--;
 		} else if (user.gender === 'Female' && gender === 'Male') {
-			company.women_count--;
-			company.women_count++;
+			company.female_count--;
+			company.female_count++;
 		}
 		await company.save();
 	}
@@ -208,7 +211,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteUser = async (req: Request, res: Response) => {
-	const { id } = req.params; 
+	const { id } = req.params;
 	let isValidUUID = validateUUID(id);
 	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 	const user = await getById(id);

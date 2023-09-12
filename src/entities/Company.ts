@@ -65,12 +65,12 @@ export class Company extends BaseEntity {
         default: 0,
         nullable: true
     })
-    men_count: number;
+    male_count: number;
     @Column({
         default: 0,
         nullable: true
     })
-    women_count: number;
+    female_count: number;
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
