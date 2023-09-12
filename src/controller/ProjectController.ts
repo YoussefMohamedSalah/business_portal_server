@@ -4,6 +4,7 @@ import { CreateProjectInfo } from '../types/CreateProject';
 import { createProject, getAllByCompanyId, getById } from '../repositories/ProjectRepository';
 import { getAllProject_MaterialReq, getAllProject_PcReq, getAllProject_PoReq, getAllProject_SiteReq } from '../repositories/RequestsRepository';
 import { addGroup } from '../repositories/GroupRepository';
+import { validateUUID } from '../utils/validateUUID';
 
 
 // DONE
@@ -51,9 +52,15 @@ export const addProject = async (req: Request, res: Response) => {
     return res.json(project);
 };
 
+
+
+
+
 // DONEs
 export const getProjectById = async (req: Request, res: Response) => {
     const { id } = req.params;
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const project = await getById(id);
     if (!project) return res.status(404).json({ msg: "Project not found" });
     return res.json(project);
@@ -61,7 +68,8 @@ export const getProjectById = async (req: Request, res: Response) => {
 
 // DONE
 export const updateProject = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const project = await getById(id);
     if (!project) {
         return res.status(404).json({ msg: "project not found" });
@@ -102,7 +110,8 @@ export const updateProject = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteProject = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const project = await getById(id);
     if (!project) {
         return res.status(404).json({ msg: "Project not found" });

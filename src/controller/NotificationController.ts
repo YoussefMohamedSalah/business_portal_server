@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { getAllNotifications, getById } from '../repositories/NotificationRepository';
+import { validateUUID } from '../utils/validateUUID';
 
 export const getNotifications = async (req: Request, res: Response) => {
     const { userId } = req.userData!;
@@ -11,7 +12,9 @@ export const getNotifications = async (req: Request, res: Response) => {
 };
 
 export const getNotificationById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const notification = await getById(id);
     if (!notification) return res.status(404).json({ msg: "Notification not found" });
     notification.is_read = true;
@@ -20,7 +23,9 @@ export const getNotificationById = async (req: Request, res: Response) => {
 };
 
 export const deleteNotification = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const notification = await getById(id);
     if (!notification) {
         return res.status(404).json({ msg: "Notification not found" });
@@ -42,7 +47,9 @@ export const deleteAllNotifications = async (req: Request, res: Response) => {
 }
 
 export const markNotificationAsRead = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const notification = await getById(id);
     if (!notification) return res.status(404).json({ msg: "Notification not found" });
     notification.is_read = true;

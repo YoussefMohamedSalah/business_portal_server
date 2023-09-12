@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { CreateSupplierInfo } from 'src/types/CreateSupplier';
 import { createSupplier, getAllByCompanyId, getById } from '../repositories/SupplierRepository';
+import { validateUUID } from '../utils/validateUUID';
 
 // DONE
 export const addSupplier = async (req: Request, res: Response) => {
@@ -19,7 +20,9 @@ export const addSupplier = async (req: Request, res: Response) => {
 
 // DONE
 export const getSupplierById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const supplier = await getById(id);
     if (supplier) {
         return res.json(supplier);
@@ -29,7 +32,9 @@ export const getSupplierById = async (req: Request, res: Response) => {
 
 // DONE
 export const updateSupplier = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const supplier = await getById(id);
     if (!supplier) {
         return res.status(404).json({ msg: "Supplier not found" });
@@ -68,7 +73,9 @@ export const updateSupplier = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteSupplier = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const supplier = await getById(id);
     if (!supplier) {
         return res.status(404).json({ msg: "Supplier not found" });

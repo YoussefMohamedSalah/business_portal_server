@@ -21,7 +21,7 @@ router.route("/supplier/").get(checkAuth, allCompanySuppliers);
 router.route("/task/").get(checkAuth, getAllTasksByCompanyId)
 router.route("/project/").get(checkAuth, allCompanyProjects);
 router.route("/department/").get(checkAuth, getCompanyDepartments)
-router.route("/user/").get(checkAuth, getCompanyUsers);
+router.route("/employee/").get(checkAuth, getCompanyUsers);
 router.route("/tender/").get(checkAuth, getCompanyTenders);
 router.route("/group/").get(checkAuth, allCompanyGroups);
 

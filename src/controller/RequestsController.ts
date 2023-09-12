@@ -4,6 +4,8 @@ import { getCompanyWithWorkflow } from '../repositories/CompanyRepository';
 import { getById as getUserById } from '../repositories/UserRepository';
 import { getById as getProjectById } from '../repositories/ProjectRepository';
 import { RequestType } from '../enums/enums';
+import { validateUUID } from '../utils/validateUUID';
+
 // ** This Is Getting All Requests For The Company **
 // DONE
 export const getAllPoRequests = async (req: Request, res: Response) => {
@@ -41,7 +43,9 @@ export const getAllSiteRequests = async (req: Request, res: Response) => {
 // ** This Is Getting One Requests For The Company By Id **
 // DONE
 export const getRequestById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const { companyId } = req.userData!;
     const request = await getById(companyId, id);
     if (!request) {
@@ -53,7 +57,9 @@ export const getRequestById = async (req: Request, res: Response) => {
 // ** This Is Update And Delete One Requests For The Company By Id **
 // DONE
 export const deleteRequest = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const { companyId } = req.userData!;
     const request = await getById(companyId, id);
     if (!request) return res.status(404).json({ msg: "Request not found" });
@@ -63,7 +69,9 @@ export const deleteRequest = async (req: Request, res: Response) => {
 
 // DONE
 export const updatePcRequest = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const { companyId } = req.userData!;
     const request = await getPcById(companyId, id);
     if (!request) return res.status(404).json({ msg: "Request not found" });
@@ -83,7 +91,9 @@ export const updatePcRequest = async (req: Request, res: Response) => {
 
 // DONE
 export const updatePoRequest = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const { companyId } = req.userData!;
     const request = await getPoById(companyId, id);
     if (!request) return res.status(404).json({ msg: "Request not found" });
@@ -99,7 +109,9 @@ export const updatePoRequest = async (req: Request, res: Response) => {
 
 // DONE
 export const updateMaterialRequest = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const { companyId } = req.userData!;
 
     const request = await getMaterialById(companyId, id);
@@ -116,7 +128,9 @@ export const updateMaterialRequest = async (req: Request, res: Response) => {
 
 // DONE
 export const updateSiteRequest = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const { companyId } = req.userData!;
     const request = await getSiteById(companyId, id);
     if (!request) return res.status(404).json({ msg: "Request not found" });

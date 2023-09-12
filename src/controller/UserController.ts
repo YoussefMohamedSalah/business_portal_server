@@ -14,8 +14,9 @@ import { getById as getDepartmentById } from "../repositories/DepartmentReposito
 import { getById as getProjectById } from "../repositories/ProjectRepository";
 import { Project } from "../entities/Project";
 import { Company } from "src/entities/Company";
+import { validateUUID } from '../utils/validateUUID';
 
-// done
+// DONE
 export const addUser = async (req: Request, res: Response) => {
 	const { companyId } = req.userData!;
 	// permissions is an array of permission ids
@@ -47,12 +48,6 @@ export const addUser = async (req: Request, res: Response) => {
 
 	const company = await getCompanyById(companyId);
 	if (!company) return res.status(404).json({ msg: "Company not found" });
-
-
-
-
-
-
 
 	const department = await getDepartmentById(departmentId);
 	if (!department) return res.status(404).json({ msg: "Department not found" });
@@ -89,15 +84,7 @@ export const addUser = async (req: Request, res: Response) => {
 	}
 
 	const user = await createUser(paramsData);
-	if (!user) {
-		return res
-			.status(409)
-			.json({ msg: "Field to Create Employee" });
-	}
-
-
-
-
+	if (!user) return res.status(409).json({ msg: "Field to Create Employee" });
 
 	if (gender) {
 		if (gender === 'Male') {
@@ -109,34 +96,24 @@ export const addUser = async (req: Request, res: Response) => {
 		}
 		await company.save();
 	}
-
-
-
-
-
-
-
-
-
-
-
-
 	return res.json(user);
 };
 
 // DONE
 export const getUserById = async (req: Request, res: Response) => {
-	const { id } = req.params;
+	const { id } = req.params; 
+	let isValidUUID = validateUUID(id);
+	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 	const user = await getById(id);
-	if (user) {
-		return res.json(user);
-	}
+	if (user) return res.json(user);
 	return res.status(404).json({ msg: "User not found" });
 };
 
 //DONE
 export const updateUser = async (req: Request, res: Response) => {
-	const { id } = req.params;
+	const { id } = req.params; 
+	let isValidUUID = validateUUID(id);
+	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 	const { companyId } = req.userData!;
 
 	const user = await getById(id);
@@ -231,7 +208,9 @@ export const updateUser = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteUser = async (req: Request, res: Response) => {
-	const { id } = req.params;
+	const { id } = req.params; 
+	let isValidUUID = validateUUID(id);
+	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 	const user = await getById(id);
 	if (!user) return res.status(404).json({ msg: "User not found" });
 	await user.remove();
@@ -239,7 +218,6 @@ export const deleteUser = async (req: Request, res: Response) => {
 };
 
 // DONE
-// all users for single company
 export const getCompanyUsers = async (req: Request, res: Response) => {
 	const { companyId } = req.userData!;
 	const users = await getAllCompanyUsers(companyId);
@@ -247,7 +225,6 @@ export const getCompanyUsers = async (req: Request, res: Response) => {
 };
 
 // DONE
-// all users for single department
 export const getDepartmentUsers = async (req: Request, res: Response) => {
 	const { departmentId } = req.params;
 	const users = await getAllDepartmentUsers(departmentId);

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { createCustomer, getAllByCompanyId, getById } from '../repositories/CustomerRepository';
 import { CreateCustomerInfo } from 'src/types/CreateCustomerInfo';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
+import { validateUUID } from '../utils/validateUUID';
 
 // DONE
 export const addCustomer = async (req: Request, res: Response) => {
@@ -18,7 +19,9 @@ export const addCustomer = async (req: Request, res: Response) => {
 
 // DONE
 export const getCustomerById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const customer = await getById(id);
     if (customer) {
         return res.json(customer);
@@ -28,7 +31,9 @@ export const getCustomerById = async (req: Request, res: Response) => {
 
 // DONE
 export const updateCustomer = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const customer = await getById(id);
     if (!customer) {
         return res.status(404).json({ msg: "Customer not found" });
@@ -52,8 +57,10 @@ export const updateCustomer = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteCustomer = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    console.log({id})
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
+    console.log({ id })
     const customer = await getById(id);
     if (!customer) {
         return res.status(404).json({ msg: "Customer not found" });

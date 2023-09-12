@@ -48,10 +48,6 @@ export const createProject = async (
     // Create the inventory for the company
     const createInventoryData = { type: InventoryType.PROJECT, items_count: 0, items_value: 0 }
     await createInventory(createInventoryData, company, project);
-
-
-
-
     return project;
 };
 

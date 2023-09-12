@@ -18,6 +18,7 @@ router.route("/").post(checkAuth, addProject);
 router.route("/tasks/:id").get(checkAuth, getAllTasksByProjectId);
 router.route("/:id").get(checkAuth, getProjectById).patch(checkAuth, updateProject).delete(checkAuth, deleteProject);
 
+
 // ** requests **
 router.route("/purchase_order/:projectId").get(checkAuth, getAllProjectPoRequests);
 router.route("/petty_cash/:projectId").get(checkAuth, getAllProjectPcRequests);

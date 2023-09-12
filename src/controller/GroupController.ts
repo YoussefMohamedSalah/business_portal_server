@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import { getById as getProjectById } from '../repositories/ProjectRepository';
 import { addGroup, getAllByCompanyId, getById } from '../repositories/GroupRepository';
+import { validateUUID } from '../utils/validateUUID';
 
 // DONE
 export const createGroup = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const { members, manager } = req.body;
     const project = await getProjectById(id);
     if (!project) {
@@ -24,7 +27,9 @@ export const createGroup = async (req: Request, res: Response) => {
 
 // DONE
 export const updateGroup = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const { members, manager, name, description } = req.body;
     const group = await getById(id);
     if (!group) return res.status(404).json({ msg: "Group not found" });
@@ -38,7 +43,9 @@ export const updateGroup = async (req: Request, res: Response) => {
 
 // DONE
 export const getGroupById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     // this id is Project Id
     const group = await getById(id);
     if (!group) return res.status(404).json({ msg: "Group not found" });
@@ -47,7 +54,9 @@ export const getGroupById = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteGroup = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const group = await getById(id);
     if (!group) {
         return res.status(404).json({ msg: "Group not found" });

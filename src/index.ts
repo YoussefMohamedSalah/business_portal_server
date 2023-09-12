@@ -2,12 +2,12 @@ import 'reflect-metadata';
 import express from 'express';
 import Cors from 'cors';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
+import multer from 'multer';
 // ************************************************
 import { entities } from './entities';
 import { subscribers } from './subscribers';
 // ************************************************
-import bodyParser from 'body-parser';
-import multer from 'multer';
 import { errorHandler } from "./middleware/errorMiddleware";
 import { connectToDataBase } from './config/db';
 import { AuthRouter } from './routes/Auth/Auth';
@@ -42,7 +42,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// connected to data base
 try {
   app.listen(process.env.SERVER_PORT, () =>
     console.log(`Server Running on port : ${process.env.SERVER_PORT}`)
@@ -62,12 +61,11 @@ try {
   //   });
 
 
-  // Routes
+  // ROUTES
   app.use('/auth', AuthRouter);
   app.use('/dashboard', DashboardRouter);
   app.use('/attendance', AttendanceRouter);
   app.use('/request', RequestRouter);
-  // 
   app.use('/company', CompanyRouter);
   app.use('/user', UserRouter);
   app.use('/employee', EmployeeRouter)
@@ -76,25 +74,18 @@ try {
   app.use('/task', TaskRouter);
   app.use('/tender', TenderRouter);
   app.use('/group', GroupRouter);
-  // done
   app.use('/supplier', SupplierRouter);
   app.use('/customer', CustomerRouter);
   app.use('/inventory', InventoryRouter);
   app.use('/inventory_item', InventoryItemRouter);
-
-  // exists
   app.use('/project', ProjectRouter);
-
   app.use('/notifications', NotificationRouter);
 
   // eventListeners 
   // setInterval(runAtMidnight, 1000);
 
-
-  // Server Running
 } catch (error) {
   console.error(error);
   throw new Error('Unable To Connect To Database');
 }
-// Error Handler
 app.use(errorHandler);

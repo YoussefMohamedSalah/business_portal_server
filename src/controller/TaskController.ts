@@ -3,6 +3,7 @@ import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { getById as getGroupByProjectId } from '../repositories/GroupRepository';
 import { CreateTaskInput } from '../types/CreateTaskInput';
 import { createGeneralTask, createGroupTask, getAllByCompanyId, getAllByGroupId, getById } from '../repositories/TaskRepository';
+import { validateUUID } from '../utils/validateUUID';
 
 
 
@@ -47,7 +48,9 @@ export const addTask = async (req: Request, res: Response) => {
 
 // DONE
 export const updateTask = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const { name, description, task_priority, status } = req.body;
     const task = await getById(id);
     if (!task) return res.json({ msg: "Task not found" });
@@ -61,7 +64,9 @@ export const updateTask = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteTask = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const task = await getById(id);
     if (!task) return res.json({ msg: "Task not found" });
     await task.remove();
@@ -70,7 +75,9 @@ export const deleteTask = async (req: Request, res: Response) => {
 
 // DONE
 export const getTaskById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const task = await getById(id);
     if (!task) return res.json({ msg: "Task not found" });
     return res.json(task);

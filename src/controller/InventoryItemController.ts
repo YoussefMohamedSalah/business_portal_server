@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getById as getInventoryById } from '../repositories/InventoryRepository';
 import { createInventoryItem, getAllByInventoryId, getById } from '../repositories/InventoryItemRepository';
 import { CreateInventoryItemInfo } from 'src/types/CreateInventoryItemInfo';
+import { validateUUID } from '../utils/validateUUID';
 
 // DONE
 export const addInventoryItem = async (req: Request, res: Response) => {
@@ -19,7 +20,9 @@ export const addInventoryItem = async (req: Request, res: Response) => {
 
 // DONE
 export const getInventoryItemById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const inventoryItem = await getById(id);
     if (inventoryItem) {
         return res.json(inventoryItem);
@@ -29,7 +32,9 @@ export const getInventoryItemById = async (req: Request, res: Response) => {
 
 // DONE
 export const updateInventoryItem = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const inventoryItem = await getById(id);
     if (!inventoryItem) {
         return res.status(404).json({ msg: "Inventory Item Is not found" });
@@ -45,7 +50,9 @@ export const updateInventoryItem = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteInventoryItem = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const inventoryItem = await getById(id);
     if (!inventoryItem) {
         return res.status(404).json({ msg: "Inventory Item I not found" });

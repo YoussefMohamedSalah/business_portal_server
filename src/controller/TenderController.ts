@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { createTender, getAllByCompanyId, getById } from '../repositories/TenderRepository';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { CreateTender } from '../types/CreateTender';
+import { validateUUID } from '../utils/validateUUID';
 
 // DONE
 export const addTender = async (req: Request, res: Response) => {
@@ -19,7 +20,9 @@ export const addTender = async (req: Request, res: Response) => {
 
 // DONE
 export const getTenderById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const tender = await getById(id);
     if (tender) {
         return res.json(tender);
@@ -29,7 +32,9 @@ export const getTenderById = async (req: Request, res: Response) => {
 
 // DONE
 export const updateTender = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const tender = await getById(id);
     if (!tender) return res.status(404).json({ msg: "Tender not found" });
 
@@ -46,7 +51,9 @@ export const updateTender = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteTender = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params; 
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const tender = await getById(id);
     if (!tender) {
         return res.status(404).json({ msg: "Tender not found" });
