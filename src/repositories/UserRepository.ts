@@ -220,6 +220,30 @@ export const getById = async (id: string) => {
 };
 
 // DONE
+export const getWithPasswordById = async (id: string) => {
+	const userRepository = getRepository(User);
+	const user = await userRepository
+		.createQueryBuilder("user")
+		.where("user.id = :id", { id: id })
+		.select([
+			"user.id",
+			"user.password",
+			"user.user_id",
+			"user.first_name",
+			"user.last_name",
+			"user.email",
+			"user.avatar",
+			"user.role"
+		])
+		.leftJoinAndSelect(
+			"user.company",
+			"company"
+		)
+		.getOne();
+	return user;
+};
+
+// DONE
 export const getAllCompanyUsers = async (companyId: string) => {
 	const userRepository = getRepository(User);
 	const users = await userRepository

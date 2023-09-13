@@ -7,7 +7,8 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { createCompany } from "../../repositories/CompanyRepository";
 import { RegisterUserInfo } from "../../types/CreateUserInfo";
-import { getByEmail, registerUser } from "../../repositories/UserRepository";
+import { getByEmail, getWithPasswordById, registerUser } from "../../repositories/UserRepository";
+import { checkAuth } from "../../middleware/checkAuth";
 
 dotenv.config();
 const router = Router();
@@ -147,7 +148,6 @@ export const register = async (req: Request, res: Response) => {
 	}
 };
 
-
 export const refreshToken = async (req: Request, res: Response) => {
 	const { refresh } = req.body;
 	try {
@@ -183,9 +183,67 @@ export const refreshToken = async (req: Request, res: Response) => {
 	}
 };
 
+export const changePassword = async (req: Request, res: Response) => {
+	const { oldPassword, newPassword } = req.body;
+	const { userId } = req.userData!;
+
+	const user = await getWithPasswordById(userId)
+	if (!user) return res.status(401).json({ message: "Invalid user Id" });
+
+	// Check if the password is correct
+	const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
+	if (!isPasswordCorrect) return res.status(401).json({ message: "Invalid email or password" });
+
+	// Update Password.
+	user.password = newPassword ? await bcrypt.hash(newPassword, 10) : user.password;
+	await user.save();
+
+	// Generate an access token with user data
+	const accessToken = jwt.sign(
+		{
+			userId: user.id,
+			companyId: user.company.id,
+			userName: user.first_name + " " + user.last_name,
+			email: user.email
+		},
+		secretHash as string,
+		{ expiresIn: "30d" }
+	);
+
+
+	const refreshToken = jwt.sign(
+		{
+			id: user.id,
+			companyId: user.company.id,
+			userName: user.first_name + " " + user.last_name,
+			email: user.email
+		},
+		secretHash as string,
+		{ expiresIn: "60d" }
+	);
+	// Return the access token and user data in the response
+	// return res.json({ accessToken, userInfo: user });
+	return res.json({
+		access: accessToken,
+		refresh: refreshToken,
+		userInfo: {
+			id: user.id,
+			first_name: user.first_name,
+			last_name: user.last_name,
+			email: user.email,
+			phone_number: user.phone_number,
+			role: user.role,
+			avatar: user.avatar,
+		},
+		company: user.company
+	});
+};
+
 
 router.route("/login").post(login);
 router.route("/register").post(register);
 router.route("/refresh").post(refreshToken);
+router.route("/password/change").post(checkAuth, changePassword);
+
 
 export { router as AuthRouter };
