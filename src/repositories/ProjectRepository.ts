@@ -61,6 +61,18 @@ export const getById = async (id: string) => {
     return project;
 };
 
+// // DONE
+// export const getWithGroupById = async (id: string) => {
+//     const projectRepository = getRepository(Project);
+//     const project = await projectRepository
+//         .createQueryBuilder("project")
+//         .where("project.id = :id", { id: id })
+//         .leftJoinAndSelect("project.group", "group")
+//         .getOne();
+//     return project;
+// };
+
+
 // DONE
 export const getAllByCompanyId = async (companyId: string) => {
     const projectRepository = getRepository(Project);

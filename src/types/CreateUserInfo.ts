@@ -13,9 +13,7 @@ export type CreateUserInfo = {
 	first_name: string;
 	last_name: string;
 	email: string;
-	password: string;
 	business_title?: string;
-	string_password?: string;
 	address?: string;
 	phone_number?: string;
 	contract_date?: string;
@@ -45,7 +43,6 @@ export type UpdateUserInfo = {
 	email: string;
 	password: string;
 	business_title?: string;
-	string_password?: string;
 	address?: string;
 	phone_number?: string;
 	contract_date?: Date;

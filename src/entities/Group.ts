@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
 import { Company } from './Company';
 import { Project } from './Project';
 import { Task } from './Task';
@@ -39,6 +39,7 @@ export class Group extends BaseEntity {
 	company: Company;
 
 	@OneToOne(() => Project, project => project.group, { onDelete: 'CASCADE' })
+	@JoinColumn()
 	project: Project;
 
 	@OneToMany(() => Task, task => task.group, { onDelete: 'CASCADE' })

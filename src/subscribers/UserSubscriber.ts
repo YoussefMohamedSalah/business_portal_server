@@ -1,6 +1,6 @@
-import { EventSubscriber, EntitySubscriberInterface, InsertEvent } from 'typeorm';
+import { EventSubscriber, EntitySubscriberInterface, InsertEvent, RemoveEvent } from 'typeorm';
 import { User } from '../entities/User';
-import { createNotification } from '../repositories/NotificationRepository';
+import { HandleEmployeesCount } from '../subscribersController/UserSubController';
 
 @EventSubscriber()
 export class UserSubscriber implements EntitySubscriberInterface<User> {
@@ -9,11 +9,10 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
     }
 
     afterInsert(event: InsertEvent<User>) {
-        console.log('User inserted:', event.entity);
-        // createNotification("Welcome to the app", "Welcome to the app", event.entity);
-        // i will create a function that takes term and value..
-        // for example, term = User, value = event.entity
-        // then i will decide what to do with the value
-        
+        HandleEmployeesCount('add', event.entity)
+    }
+
+    afterRemove(event: RemoveEvent<User>): void | Promise<any> {
+        if (event.entity) HandleEmployeesCount('remove', event.entity)
     }
 }

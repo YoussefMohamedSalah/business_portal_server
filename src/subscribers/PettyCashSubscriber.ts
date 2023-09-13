@@ -1,6 +1,6 @@
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent } from 'typeorm';
 import { PettyCashRequest } from '../entities/PettyCashRequest';
-import { handleNotification } from '../config/NotificationsCenter';
+import { handleRequestNotification } from '../subscribersController/RequestsSubController';
 
 @EventSubscriber()
 export class PettyCashSubscriber implements EntitySubscriberInterface<PettyCashRequest> {
@@ -9,6 +9,6 @@ export class PettyCashSubscriber implements EntitySubscriberInterface<PettyCashR
     }
 
     afterInsert(event: InsertEvent<PettyCashRequest>) {
-        handleNotification("PettyCashRequest", event.entity)
+        handleRequestNotification("PettyCashRequest", event.entity)
     }
 }

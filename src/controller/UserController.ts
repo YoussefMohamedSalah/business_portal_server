@@ -67,8 +67,6 @@ export const addUser = async (req: Request, res: Response) => {
 		last_name,
 		business_title,
 		email,
-		password: await bcrypt.hash(password, 10),
-		string_password,
 		phone_number,
 		contract_date,
 		contract_ex,
@@ -85,20 +83,6 @@ export const addUser = async (req: Request, res: Response) => {
 
 	const user = await createUser(paramsData);
 	if (!user) return res.status(409).json({ msg: "Field to Create Employee" });
-
-	if (gender) {
-		if (gender === 'Male') {
-			company.male_count++;
-			company.employee_count++;
-		} else if (gender === 'Female') {
-			company.female_count++;
-			company.employee_count++;
-		}
-	} else {
-		company.male_count++;
-		company.employee_count++;
-	}
-	await company.save();
 	return res.json(user);
 };
 
@@ -108,6 +92,14 @@ export const getUserById = async (req: Request, res: Response) => {
 	let isValidUUID = validateUUID(id);
 	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 	const user = await getById(id);
+	if (user) return res.json(user);
+	return res.status(404).json({ msg: "User not found" });
+};
+
+// DONE
+export const getCurrentUser = async (req: Request, res: Response) => {
+	const { userId } = req.userData!;
+	const user = await getById(userId);
 	if (user) return res.json(user);
 	return res.status(404).json({ msg: "User not found" });
 };
@@ -173,12 +165,13 @@ export const updateUser = async (req: Request, res: Response) => {
 		await company.save();
 	}
 
+
+
 	user.first_name = first_name ? first_name : user.first_name;
 	user.last_name = last_name ? last_name : user.last_name;
 	user.business_title = business_title ? business_title : user.business_title;
 	user.email = email ? email : user.email;
 	user.password = password ? await bcrypt.hash(password, 10) : user.password;
-	user.string_password = password ? password : user.password;
 	user.address = address ? address : user.address;
 	user.phone_number = phone_number ? phone_number : user.phone_number;
 	user.working_hours = working_hours ? working_hours : user.working_hours;

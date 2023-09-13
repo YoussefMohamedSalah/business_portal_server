@@ -58,7 +58,7 @@ export const login = async (req: Request, res: Response) => {
 			email: user.email,
 			phone_number: user.phone_number,
 			role: user.role,
-			picture: "",
+			avatar: user.avatar,
 		},
 		company: user.company
 	});
@@ -137,7 +137,7 @@ export const register = async (req: Request, res: Response) => {
 				email: user.email,
 				phone_number: user.phone_number,
 				role: user.role,
-				avatar: ""
+				avatar: user.avatar ? user.avatar : ''
 			},
 			company: user.company
 		});

@@ -13,7 +13,7 @@ import { connectToDataBase } from './config/db';
 import { AuthRouter } from './routes/Auth/Auth';
 import { NotificationRouter } from './routes/notification';
 import { CompanyRouter } from './routes/company';
-import { UserRouter } from './routes/user';
+// import { UserRouter } from './routes/user';
 import { StepperRouter } from './routes/stepper';
 import { CustomerRouter } from './routes/customer';
 import { InventoryRouter } from './routes/inventory';
@@ -67,7 +67,7 @@ try {
   app.use('/attendance', AttendanceRouter);
   app.use('/request', RequestRouter);
   app.use('/company', CompanyRouter);
-  app.use('/user', UserRouter);
+  // app.use('/user', UserRouter);
   app.use('/employee', EmployeeRouter)
   app.use('/stepper', StepperRouter);
   app.use('/department', DepartmentRouter);

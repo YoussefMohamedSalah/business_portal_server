@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
-import { getById as getGroupByProjectId } from '../repositories/GroupRepository';
+import { getGroupByProjectId } from '../repositories/GroupRepository';
 import { CreateTaskInput } from '../types/CreateTaskInput';
 import { createGeneralTask, createGroupTask, getAllByCompanyId, getAllByGroupId, getById } from '../repositories/TaskRepository';
 import { validateUUID } from '../utils/validateUUID';

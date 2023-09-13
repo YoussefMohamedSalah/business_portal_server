@@ -1,6 +1,6 @@
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent } from 'typeorm';
 import { MaterialRequest } from '../entities/MaterialRequest';
-import { handleNotification } from '../config/NotificationsCenter';
+import { handleRequestNotification } from '../subscribersController/RequestsSubController';
 
 @EventSubscriber()
 export class MaterialSubscriber implements EntitySubscriberInterface<MaterialRequest> {
@@ -9,6 +9,6 @@ export class MaterialSubscriber implements EntitySubscriberInterface<MaterialReq
     }
 
     afterInsert(event: InsertEvent<MaterialRequest>) {
-        handleNotification("MaterialRequest", event.entity)
+        handleRequestNotification("MaterialRequest", event.entity)
     }
 }

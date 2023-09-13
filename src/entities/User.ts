@@ -48,11 +48,6 @@ export class User extends BaseEntity {
 	@Column({
 		default: null
 	})
-	string_password: string;
-
-	@Column({
-		default: null
-	})
 	address: string;
 
 	@Column({

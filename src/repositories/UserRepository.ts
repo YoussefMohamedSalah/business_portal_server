@@ -3,8 +3,8 @@ import { Customer } from "../entities/Customer";
 import { Role } from "../enums/enums";
 import { User } from "../entities/User";
 
-import bcrypt from "bcrypt";
 import { CreateUserInfo, RegisterUserInfo } from "../types/CreateUserInfo";
+import { getGroupByProjectId } from './GroupRepository';
 import { getRoleFromString } from "../utils/getRoleFromString";
 import { Project } from "../entities/Project";
 import { Company } from "../entities/Company";
@@ -41,15 +41,13 @@ export const registerUser = async (
 	return user;
 };
 
-
+// DONE
 export const createUser = async (paramsData: CreateUserInfo) => {
 	const {
 		first_name,
 		last_name,
 		business_title,
 		email,
-		password,
-		string_password,
 		phone_number,
 		contract_date,
 		contract_ex,
@@ -75,10 +73,8 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	const userRepository = getRepository(User);
 	const user = new User();
 	user.email = email;
-	user.password = password;
 	user.first_name = first_name;
 	user.last_name = last_name;
-	string_password && (user.string_password = string_password);
 	business_title && (user.business_title = business_title);
 	phone_number && (user.phone_number = phone_number);
 	contract_date && (user.contract_date = contract_date);
@@ -95,32 +91,23 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	user.company = company;
 	await userRepository.save(user);
 
-	// update company employee count
-	const companyRepository = getRepository(Company);
-	company.employee_count = company.employee_count + 1;
-	if (user.gender === 'male') {
-		company.male_count = company.male_count + 1;
-	} else if (user.gender === 'female') {
-		company.female_count = company.female_count + 1
-	}
-	await companyRepository.save(company);
-
-	// ! FIX THIS ASAP
 	// now add this user to project members
-	// if (projects && projects.length > 0) {
-	// 	const projectRepository = getRepository(Project);
-	// 	for (let i = 0; i < projects.length; i++) {
-	// 		if (projects[i]) {
-	// 			projects[i].members_count = projects[i].members_count + 1;
-	// 			await projectRepository.save(projects[i]);
-	// 			const member_project = getRepository('project_members');
-	// 			await member_project.insert({
-	// 				project_id: projects[i].id,
-	// 				member_id: user.id
-	// 			});
-	// 		}
-	// 	}
-	// }
+	if (projects && projects.length > 0) {
+		for (let i = 0; i < projects.length; i++) {
+			if (projects[i]) {
+				const projectRepository = getRepository(Project);
+				projects[i].members_count = projects[i].members_count + 1;
+				await projectRepository.save(projects[i]);
+				// Now get the group by projectId
+				// then add this user to the group members
+				const group = await getGroupByProjectId(projects[i].id);
+				if (!group) return;
+				group.members_count = group.members_count + 1;
+				group.members.push({ id: user.id, name: user.first_name + ' ' + user.last_name });
+				await group.save();
+			}
+		}
+	}
 	return user;
 };
 
@@ -130,6 +117,16 @@ export const getByEmail = async (email: string) => {
 	const user = await userRepository
 		.createQueryBuilder("user")
 		.where("user.email = :email", { email: email })
+		.select([
+			"user.id",
+			"user.first_name",
+			"user.last_name",
+			"user.email",
+			"user.password",
+			"user.role",
+			"user.phone_number",
+			"user.avatar"
+		])
 		.leftJoinAndSelect(
 			"user.company",
 			"company"
@@ -144,6 +141,36 @@ export const getUserAndCompanyById = async (id: string) => {
 	const user = await userRepository
 		.createQueryBuilder("user")
 		.where("user.id = :id", { id: id })
+		.select([
+			"user.id",
+			"user.user_id",
+			"user.first_name",
+			"user.last_name",
+			"user.business_title",
+			"user.email",
+			"user.address",
+			"user.phone_number",
+			"user.working_hours",
+			"user.contract_date",
+			"user.contract_ex",
+			"user.renewal_of_residence",
+			"user.id_number",
+			"user.id_ex_date",
+			"user.salary_per_month",
+			"user.salary_per_hour",
+			"user.sign",
+			"user.avatar",
+			"user.file",
+			"user.permissions",
+			"user.role",
+			"user.is_manager",
+			"user.is_verified",
+			"user.shift_start",
+			"user.shift_end",
+			"user.gender",
+			"user.projects_info",
+			"user.department_info"
+		])
 		.leftJoinAndSelect(
 			"user.company",
 			"company"
@@ -158,6 +185,36 @@ export const getById = async (id: string) => {
 	const user = await userRepository
 		.createQueryBuilder("user")
 		.where("user.id = :id", { id: id })
+		.select([
+			"user.id",
+			"user.user_id",
+			"user.first_name",
+			"user.last_name",
+			"user.business_title",
+			"user.email",
+			"user.address",
+			"user.phone_number",
+			"user.working_hours",
+			"user.contract_date",
+			"user.contract_ex",
+			"user.renewal_of_residence",
+			"user.id_number",
+			"user.id_ex_date",
+			"user.salary_per_month",
+			"user.salary_per_hour",
+			"user.sign",
+			"user.avatar",
+			"user.file",
+			"user.permissions",
+			"user.role",
+			"user.is_manager",
+			"user.is_verified",
+			"user.shift_start",
+			"user.shift_end",
+			"user.gender",
+			"user.projects_info",
+			"user.department_info"
+		])
 		.getOne();
 	return user;
 };
@@ -168,11 +225,37 @@ export const getAllCompanyUsers = async (companyId: string) => {
 	const users = await userRepository
 		.createQueryBuilder("user")
 		.where("user.company = :companyId", { companyId: companyId })
+		.select([
+			"user.id",
+			"user.user_id",
+			"user.first_name",
+			"user.last_name",
+			"user.business_title",
+			"user.email",
+			"user.address",
+			"user.phone_number",
+			"user.working_hours",
+			"user.contract_date",
+			"user.contract_ex",
+			"user.renewal_of_residence",
+			"user.id_number",
+			"user.id_ex_date",
+			"user.salary_per_month",
+			"user.salary_per_hour",
+			"user.sign",
+			"user.avatar",
+			"user.file",
+			"user.permissions",
+			"user.role",
+			"user.is_manager",
+			"user.is_verified",
+			"user.shift_start",
+			"user.shift_end",
+			"user.gender",
+			"user.projects_info",
+			"user.department_info"
+		])
 		.orderBy("user.createdAt", "DESC")
-		// .leftJoinAndSelect(
-		// 	"user.project",
-		// 	"project"
-		// )
 		.getMany();
 	return users;
 };
@@ -183,6 +266,36 @@ export const getAllDepartmentUsers = async (departmentId: string) => {
 	const users = await userRepository
 		.createQueryBuilder("user")
 		.where("user.department = :departmentId", { departmentId: departmentId })
+		.select([
+			"user.id",
+			"user.user_id",
+			"user.first_name",
+			"user.last_name",
+			"user.business_title",
+			"user.email",
+			"user.address",
+			"user.phone_number",
+			"user.working_hours",
+			"user.contract_date",
+			"user.contract_ex",
+			"user.renewal_of_residence",
+			"user.id_number",
+			"user.id_ex_date",
+			"user.salary_per_month",
+			"user.salary_per_hour",
+			"user.sign",
+			"user.avatar",
+			"user.file",
+			"user.permissions",
+			"user.role",
+			"user.is_manager",
+			"user.is_verified",
+			"user.shift_start",
+			"user.shift_end",
+			"user.gender",
+			"user.projects_info",
+			"user.department_info"
+		])
 		.getMany();
 	return users;
 };
@@ -194,6 +307,36 @@ export const getAllUsers = async (companyId: string) => {
 		const users = await userRepository
 			.createQueryBuilder("user")
 			.where("user.role = :role", { role: Role.USER })
+			.select([
+				"user.id",
+				"user.user_id",
+				"user.first_name",
+				"user.last_name",
+				"user.business_title",
+				"user.email",
+				"user.address",
+				"user.phone_number",
+				"user.working_hours",
+				"user.contract_date",
+				"user.contract_ex",
+				"user.renewal_of_residence",
+				"user.id_number",
+				"user.id_ex_date",
+				"user.salary_per_month",
+				"user.salary_per_hour",
+				"user.sign",
+				"user.avatar",
+				"user.file",
+				"user.permissions",
+				"user.role",
+				"user.is_manager",
+				"user.is_verified",
+				"user.shift_start",
+				"user.shift_end",
+				"user.gender",
+				"user.projects_info",
+				"user.department_info"
+			])
 			.leftJoinAndSelect(
 				"user.company",
 				"company"
@@ -219,6 +362,36 @@ export const getAllManagers = async (companyId: string) => {
 		.createQueryBuilder("user")
 		.where("user.is_manager = :is_manager", { is_manager: true })
 		.andWhere("user.company = :companyId", { companyId: companyId })
+		.select([
+			"user.id",
+			"user.user_id",
+			"user.first_name",
+			"user.last_name",
+			"user.business_title",
+			"user.email",
+			"user.address",
+			"user.phone_number",
+			"user.working_hours",
+			"user.contract_date",
+			"user.contract_ex",
+			"user.renewal_of_residence",
+			"user.id_number",
+			"user.id_ex_date",
+			"user.salary_per_month",
+			"user.salary_per_hour",
+			"user.sign",
+			"user.avatar",
+			"user.file",
+			"user.permissions",
+			"user.role",
+			"user.is_manager",
+			"user.is_verified",
+			"user.shift_start",
+			"user.shift_end",
+			"user.gender",
+			"user.projects_info",
+			"user.department_info"
+		])
 		.getMany();
 	return users;
 }

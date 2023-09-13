@@ -22,7 +22,7 @@ export const dashboardAttendance = async (req: Request, res: Response) => {
     // getting Company Data
     const company = await getById(companyId);
     if (!company) return res.status(404).json({ msg: "Company not found" });
-    // employee_count = company.employee_count;
+    employee_count = company.employee_count;
     male_count = company.male_count;
     female_count = company.female_count;
 
@@ -36,7 +36,6 @@ export const dashboardAttendance = async (req: Request, res: Response) => {
         } else {
             old_employee_count++;
         }
-        employee_count++;
     });
 
     // getting Today Attendance List

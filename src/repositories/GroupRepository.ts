@@ -21,7 +21,17 @@ export const getById = async (id: string) => {
     const groupRepository = getRepository(Group);
     const group = await groupRepository
         .createQueryBuilder("group")
-        .where("group.projectId = :projectId", { projectId: id })
+        .where("group.id = :id", { id: id })
+        .getOne();
+    return group;
+};
+
+// DONE
+export const getGroupByProjectId = async (projectId: string) => {
+    const groupRepository = getRepository(Group);
+    const group = await groupRepository
+        .createQueryBuilder("group")
+        .where("group.projectId = :projectId", { projectId: projectId })
         .getOne();
     return group;
 };
@@ -34,5 +44,21 @@ export const getAllByCompanyId = async (companyId: string) => {
         .where("group.companyId = :companyId", { companyId: companyId })
         .orderBy("group.createdAt", "DESC")
         .getMany();
+    return group;
+};
+
+// DONE
+export const addMember = async (group: Group, userId: string, userName: string) => {
+    group.members.push({ id: userId, name: userName });
+    group.members_count++;
+    await group.save();
+    return group;
+};
+
+// DONE
+export const removeMember = async (group: Group, userId: string) => {
+    group.members = group.members.filter((member: { id: string, name: string }) => member.id !== userId);
+    group.members_count--;
+    await group.save();
     return group;
 };
