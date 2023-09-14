@@ -94,16 +94,13 @@ export class Project extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	comments: Array<{ id: number, userId: string, name: string, comment: string }>;
+	comments: Array<{ id: number, userId: string, userName: string, comment: string, createdAt: string }>;
 
 	@Column({ default: 0 })
 	comments_count: number;
 
 	@Column({ default: 0 })
 	members_count: number;
-
-	@Column({ default: 0 })
-	tasks_count: number;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

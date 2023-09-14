@@ -52,10 +52,6 @@ export const addProject = async (req: Request, res: Response) => {
     return res.json(project);
 };
 
-
-
-
-
 // DONEs
 export const getProjectById = async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -153,4 +149,33 @@ export const getAllProjectSiteRequests = async (req: Request, res: Response) => 
     const requests = await getAllProject_MaterialReq(projectId);
     if (!requests) return res.status(404).json({ msg: "Requests not found" });
     return res.json(requests);
+};
+
+
+// DONE
+export const createProjectComment = async (req: Request, res: Response) => {
+    const { userId, userName } = req.userData!;
+    const { id } = req.params;
+    console.log('inside')
+    console.log({ id })
+    console.log(userId, userName)
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
+    const project = await getById(id);
+    if (!project) {
+        return res.status(404).json({ msg: "project not found" });
+    }
+    console.log(project)
+    const { comment, createdAt } = req.body;
+    let newCommentObj = {
+        id: project.comments?.length! ? project.comments.length : 0,
+        comment,
+        createdAt,
+        userName,
+        userId
+    }
+    project.comments.unshift(newCommentObj);
+    project.comments_count = project.comments_count + 1;
+    await project.save();
+    return res.json(project);
 };

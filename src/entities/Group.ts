@@ -33,6 +33,9 @@ export class Group extends BaseEntity {
 	@Column({ default: 0 })
 	members_count: number;
 
+	@Column({ default: 0 })
+	tasks_count: number;
+
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@ManyToOne(() => Company, company => company.groups, { onDelete: 'CASCADE' })

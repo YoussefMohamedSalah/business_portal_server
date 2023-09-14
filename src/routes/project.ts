@@ -8,6 +8,7 @@ import {
     getAllProjectPcRequests,
     getAllProjectMaterialRequests,
     getAllProjectSiteRequests,
+    createProjectComment,
 } from "../controller/ProjectController";
 import { checkAuth } from "../middleware/checkAuth";
 import { getAllTasksByProjectId } from "../controller/TaskController";
@@ -15,7 +16,11 @@ import { getAllTasksByProjectId } from "../controller/TaskController";
 const router = Router();
 
 router.route("/").post(checkAuth, addProject);
+// TASK
 router.route("/tasks/:id").get(checkAuth, getAllTasksByProjectId);
+// COMMENTS
+router.route("/comment/:id").post(checkAuth, createProjectComment);
+
 router.route("/:id").get(checkAuth, getProjectById).patch(checkAuth, updateProject).delete(checkAuth, deleteProject);
 
 

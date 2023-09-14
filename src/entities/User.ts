@@ -11,6 +11,7 @@ import { Company } from "./Company";
 import { Department } from "./Department";
 import { Attendance } from "./Attendance";
 import { Notification } from "./Notification";
+import { Task } from "./Task";
 
 @Entity({ name: "user" })
 export class User extends BaseEntity {
@@ -177,6 +178,9 @@ export class User extends BaseEntity {
 
 	@ManyToOne(() => Department, department => department.users)
 	department: Department;
+
+	@OneToMany(() => Task, task => task.assigned_to, { onDelete: 'CASCADE' })
+	tasks: Task[];
 
 	@OneToMany(() => Attendance, attendance => attendance.user, { onDelete: "CASCADE" })
 	attendances: Attendance[];

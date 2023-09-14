@@ -1,14 +1,19 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { Company } from './Company';
-import { Project } from './Project';
 import { Group } from './Group';
+import { User } from './User';
+import { taskType } from '../enums/enums';
 
 @Entity({ name: 'task' })
 export class Task extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ nullable: true })
+	@Column({ 
+		type: 'enum',
+		default: taskType.GENERAL_TASK,
+		enum: taskType
+	})
 	task_type: string;
 
 	@Column({ nullable: true })
@@ -46,13 +51,13 @@ export class Task extends BaseEntity {
 		type: 'date',
 		default: () => 'CURRENT_TIMESTAMP'
 	})
-	start_at: Date;
+	start_at: string;
 
 	@Column({
 		type: 'date',
 		default: null,
 	})
-	end_at: Date;
+	end_at: string;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
@@ -61,6 +66,9 @@ export class Task extends BaseEntity {
 
 	@ManyToOne(() => Group, group => group.tasks, { onDelete: 'CASCADE' })
 	group: Group;
+
+	@ManyToOne(() => User, user => user.tasks, { onDelete: 'CASCADE' })
+	assigned_to: User;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

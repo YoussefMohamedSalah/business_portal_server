@@ -55,3 +55,9 @@ export enum DepartmentType {
 	Tender = 'tender',
 	IT = 'it',
 }
+
+export enum taskType {
+	GENERAL_TASK = 'general_task',
+	GROUP_TASK = 'group_task',
+	INDIVIDUAL_TASK = 'individual_task'
+}

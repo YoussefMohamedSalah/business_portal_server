@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getById as getProjectById } from '../repositories/ProjectRepository';
-import { addGroup, getAllByCompanyId, getById, addMember, removeMember } from '../repositories/GroupRepository';
+import { addGroup, getAllByCompanyId, getById, addMember, removeMember, getGroupByProjectId } from '../repositories/GroupRepository';
 import { validateUUID } from '../utils/validateUUID';
 
 // DONE
@@ -47,7 +47,7 @@ export const getGroupById = async (req: Request, res: Response) => {
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     // this id is Project Id
-    const group = await getById(id);
+    const group = await getGroupByProjectId(id);
     if (!group) return res.status(404).json({ msg: "Group not found" });
     return res.json(group);
 };

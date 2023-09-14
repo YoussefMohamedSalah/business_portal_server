@@ -8,6 +8,7 @@ interface Comment {
     comment: string;
     userId: string;
     name: string;
+    createdAt: string;
 }
 
 export type CreateProjectInfo = {
