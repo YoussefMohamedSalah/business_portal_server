@@ -30,25 +30,33 @@ export const addProject = async (req: Request, res: Response) => {
     const project = await createProject(createData, company);
     if (!project) return res.status(409).json({ msg: "Field To Create Project" });
 
+    let groupManagers = createData.project_managers ? createData.project_managers : [];
+    let groupMembers = createData.members ? createData.members : [];
     // we Need To create Group to add its id to the project
     let createGroupData = {}
-    if (createData.project_manager) {
+    if (groupManagers && groupManagers.length > 0) {
         createGroupData = {
-            name: `${project.name}'s Group - ${createData.project_manager}`,
-            description: `This is ${createData.project_manager}'s Group And This Group Responsible For 0 Members To Work On ${createData.name} Project`,
-            manager: createData.project_manager,
-            members: [],
+            name: `${project.name}'s Group`,
+            description: `This is ${project.name}'s Group And This Group Responsible For ${groupMembers.length} Members To Work On ${createData.name} Project`,
+            managers: groupManagers,
+            members: groupMembers,
+            company,
+            project
         }
     } else {
         createGroupData = {
-            name: `${project.name} Management Group`,
-            description: `This is ${project.name}'s Group And This Group Responsible For 0 Members.`,
-            manager: { id: "", name: "" },
-            members: [],
+            name: `${project.name}'s Group`,
+            description: `This is ${project.name}'s Group And This Group Responsible For ${groupMembers.length} Members.`,
+            managers: [],
+            members: groupMembers,
+            company,
+            project
         }
     }
-    const group = await addGroup(createGroupData, project);
+    const group = await addGroup(createGroupData);
     if (!group) return res.status(409).json({ msg: "Field To Create Group" });
+    project.group = group;
+    await group.save()
     return res.json(project);
 };
 
@@ -64,19 +72,19 @@ export const getProjectById = async (req: Request, res: Response) => {
 
 // DONE
 export const updateProject = async (req: Request, res: Response) => {
-    const { id } = req.params; let isValidUUID = validateUUID(id);
+    const { id } = req.params;
+    let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const project = await getById(id);
-    if (!project) {
-        return res.status(404).json({ msg: "project not found" });
-    }
+    if (!project) return res.status(404).json({ msg: "project not found" });
+
     const {
         name, description, latitude, longitude,
         bid_value, duration, delivery_date,
         contract_number, contract_date, po_budget,
         pc_budget, subcontractor_budget, staff_budget,
-        total_budget, project_manager, sites_count,
-        buildings_count, floors_count, comments,
+        total_budget, project_managers, sites_count,
+        buildings_count, floors_count,
     } = req.body;
     project.name = name ? name : project.name;
     project.description = description ? description : project.description;
@@ -92,17 +100,54 @@ export const updateProject = async (req: Request, res: Response) => {
     project.subcontractor_budget = subcontractor_budget ? subcontractor_budget : project.subcontractor_budget;
     project.staff_budget = staff_budget ? staff_budget : project.staff_budget;
     project.total_budget = total_budget ? total_budget : project.total_budget;
-    project.project_manager = project_manager ? project_manager : project.project_manager;
+    project.project_managers = project_managers ? project_managers : project.project_managers;
     project.sites_count = sites_count ? sites_count : project.sites_count;
     project.buildings_count = buildings_count ? buildings_count : project.buildings_count;
     project.floors_count = floors_count ? floors_count : project.floors_count;
-    if (comments) {
-        project.comments = comments;
-        project.comments_count = comments.length;
-    }
     await project.save();
     return res.json(project);
 };
+
+// New
+export const addProjectComment = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { userId, userName } = req.userData!;
+    const { comment, createdAt } = req.body;
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
+    const project = await getById(id);
+    if (!project) return res.status(404).json({ msg: "project not found" });
+    let newCommentObj = {
+        id: project.comments_count + 1,
+        userId,
+        userName,
+        comment,
+        createdAt
+    }
+    project.comments.unshift(newCommentObj)
+    project.comments_count = project.comments_count + 1;
+    await project.save();
+    return res.json(project);
+}
+
+// New
+export const removeProjectComment = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { commentId } = req.body;
+
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
+
+    const project = await getById(id);
+    if (!project) return res.status(404).json({ msg: "project not found" });
+
+    let filteredComments = project.comments.filter((comment: any) => comment.id !== commentId);
+
+    project.comments = filteredComments;
+    project.comments_count = project.comments_count - 1;
+    await project.save();
+    return res.json(project);
+}
 
 // DONE
 export const deleteProject = async (req: Request, res: Response) => {
@@ -149,33 +194,4 @@ export const getAllProjectSiteRequests = async (req: Request, res: Response) => 
     const requests = await getAllProject_MaterialReq(projectId);
     if (!requests) return res.status(404).json({ msg: "Requests not found" });
     return res.json(requests);
-};
-
-
-// DONE
-export const createProjectComment = async (req: Request, res: Response) => {
-    const { userId, userName } = req.userData!;
-    const { id } = req.params;
-    console.log('inside')
-    console.log({ id })
-    console.log(userId, userName)
-    let isValidUUID = validateUUID(id);
-    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
-    const project = await getById(id);
-    if (!project) {
-        return res.status(404).json({ msg: "project not found" });
-    }
-    console.log(project)
-    const { comment, createdAt } = req.body;
-    let newCommentObj = {
-        id: project.comments?.length! ? project.comments.length : 0,
-        comment,
-        createdAt,
-        userName,
-        userId
-    }
-    project.comments.unshift(newCommentObj);
-    project.comments_count = project.comments_count + 1;
-    await project.save();
-    return res.json(project);
 };

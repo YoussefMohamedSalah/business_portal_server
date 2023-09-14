@@ -5,13 +5,17 @@ import {
 	BaseEntity,
 	ManyToOne,
 	OneToMany,
-	BeforeInsert
+	BeforeInsert,
+	ManyToMany,
+	JoinTable
 } from "typeorm";
 import { Company } from "./Company";
 import { Department } from "./Department";
 import { Attendance } from "./Attendance";
 import { Notification } from "./Notification";
 import { Task } from "./Task";
+import { Group } from "./Group";
+import { Project } from "./Project";
 
 @Entity({ name: "user" })
 export class User extends BaseEntity {
@@ -171,6 +175,13 @@ export class User extends BaseEntity {
 	})
 	gender: string;
 
+	// @Column({ 
+	// 	type: 'json',
+	// 	nullable: true,
+	// 	default: []
+	// })
+	// groups: string[];
+
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	@ManyToOne(() => Company, company => company.users, { onDelete: "CASCADE" })
@@ -179,14 +190,22 @@ export class User extends BaseEntity {
 	@ManyToOne(() => Department, department => department.users)
 	department: Department;
 
-	@OneToMany(() => Task, task => task.assigned_to, { onDelete: 'CASCADE' })
-	tasks: Task[];
-
 	@OneToMany(() => Attendance, attendance => attendance.user, { onDelete: "CASCADE" })
 	attendances: Attendance[];
-
+	
 	@OneToMany(() => Notification, notification => notification.user, { onDelete: "CASCADE" })
 	notifications: Notification[];
+
+	@ManyToMany(() => Task, task => task.users)
+	tasks: Task[];
+	
+	@ManyToMany(() => Project, project => project.project_managers)
+	@JoinTable({ name: 'project_manager' })
+	projects: Project[];
+
+	@ManyToMany(() => Group, group => group.members)
+	@JoinTable({ name: 'group_member' })
+	groups: Group[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

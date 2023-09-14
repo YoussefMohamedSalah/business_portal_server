@@ -7,7 +7,7 @@ import { allCompanyProjects } from "../controller/ProjectController";
 import { checkAuth } from "../middleware/checkAuth";
 import { getCompanyUsers } from "../controller/UserController";
 import { getCompanyDepartments } from "../controller/DepartmentController";
-import { getAllTasksByCompanyId } from "../controller/TaskController";
+import { getTasksByCompanyId } from "../controller/TaskController";
 import { getCompanyTenders } from "../controller/TenderController";
 import { allCompanyGroups } from "../controller/GroupController";
 
@@ -18,11 +18,14 @@ router.route("/").get(checkAuth, getCompanyById).put(checkAuth, updateCompany).d
 router.route("/customer/").get(checkAuth, getAllCompanyCustomers);
 router.route("/inventory/").get(checkAuth, allCompanyInventories);
 router.route("/supplier/").get(checkAuth, allCompanySuppliers);
-router.route("/task/").get(checkAuth, getAllTasksByCompanyId)
-router.route("/project/").get(checkAuth, allCompanyProjects);
 router.route("/department/").get(checkAuth, getCompanyDepartments)
 router.route("/employee/").get(checkAuth, getCompanyUsers);
 router.route("/tender/").get(checkAuth, getCompanyTenders);
+
+
+router.route("/project/").get(checkAuth, allCompanyProjects);
+
 router.route("/group/").get(checkAuth, allCompanyGroups);
+router.route("/task/").get(checkAuth, getTasksByCompanyId)
 
 export { router as CompanyRouter };

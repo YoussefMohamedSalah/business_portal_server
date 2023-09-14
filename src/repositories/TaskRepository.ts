@@ -3,11 +3,14 @@ import { Company } from "../entities/Company";
 import { Task } from "../entities/Task";
 import { CreateTaskInput } from "../types/CreateTaskInput";
 import { Group } from "../entities/Group";
+import { taskType } from "../enums/enums";
 import { User } from "../entities/User";
 
+
 // DONE
-export const createGeneralTask = async (company: Company, createInput: CreateTaskInput) => {
-    const { name, description, task_priority, status, user, task_type, start_at, end_at } = createInput;
+// if company or group task type, users would be an empty array
+export const createTask = async (company: Company, group: Group | null, createInput: CreateTaskInput) => {
+    const { name, description, task_priority, status, creator, assigned_to, task_type, start_at, end_at } = createInput;
     // create Task
     const taskRepository = getRepository(Task);
     const task = new Task();
@@ -18,49 +21,82 @@ export const createGeneralTask = async (company: Company, createInput: CreateTas
     task.task_type = task_type;
     task.start_at = start_at;
     task.end_at = end_at;
-    task.user = user;
+    task.creator = creator;
     task.company = company;
+    if (task_type === taskType.GROUP_TASK && group) {
+        task.group = group;
+        task.users = [];
+    }
+    if (task_type === taskType.GENERAL_TASK) {
+        task.users = [];
+    }
+    if (task_type === taskType.INDIVIDUAL_TASK) {
+        task.users = assigned_to;
+    }
     await taskRepository.save(task);
     return task;
 };
 
-// DONE
-export const createGroupTask = async (group: Group, createInput: CreateTaskInput) => {
-    const { name, description, task_priority, status, user, task_type, start_at, end_at } = createInput;
-    // create Task
-    const taskRepository = getRepository(Task);
-    const task = new Task();
-    task.name = name;
-    task.description = description;
-    task.status = status;
-    task.task_priority = task_priority;
-    task.task_type = task_type;
-    task.start_at = start_at;
-    task.end_at = end_at;
-    task.user = user;
-    task.group = group;
-    await taskRepository.save(task);
-    return task;
-};
 
-// DONE
-export const createPersonalTask = async (assignedTo: User, createInput: CreateTaskInput) => {
-    const {  name, description, task_priority, status, user, task_type, start_at, end_at } = createInput;
-    // create Task
-    const taskRepository = getRepository(Task);
-    const task = new Task();
-    task.name = name;
-    task.description = description;
-    task.status = status;
-    task.task_priority = task_priority;
-    task.task_type = task_type;
-    task.start_at = start_at;
-    task.end_at = end_at;
-    task.user = user;
-    task.assigned_to = assignedTo;
-    await taskRepository.save(task);
-    return task;
-};
+
+// // DONE
+// export const createGeneralTask = async (company: Company, createInput: CreateTaskInput) => {
+//     const { name, description, task_priority, status, user, task_type, start_at, end_at } = createInput;
+//     // create Task
+//     const taskRepository = getRepository(Task);
+//     const task = new Task();
+//     task.name = name;
+//     task.description = description;
+//     task.task_priority = task_priority;
+//     task.status = status;
+//     task.task_type = task_type;
+//     task.start_at = start_at;
+//     task.end_at = end_at;
+//     task.creator = user;
+//     task.company = company;
+//     await taskRepository.save(task);
+//     return task;
+// };
+
+// // DONE
+// export const createGroupTask = async (company: Company, group: Group, createInput: CreateTaskInput) => {
+//     const { name, description, task_priority, status, user, task_type, start_at, end_at } = createInput;
+//     // create Task
+//     const taskRepository = getRepository(Task);
+//     const task = new Task();
+//     task.name = name;
+//     task.description = description;
+//     task.status = status;
+//     task.task_priority = task_priority;
+//     task.task_type = task_type;
+//     task.start_at = start_at;
+//     task.end_at = end_at;
+//     task.creator = user;
+//     task.group = group;
+//     task.company = company;
+//     await taskRepository.save(task);
+//     return task;
+// };
+
+// // DONE
+// export const createPersonalTask = async (company: Company, createInput: CreateTaskInput) => {
+//     const { name, description, task_priority, status,creator, assigned_to, task_type, start_at, end_at } = createInput;
+//     // create Task
+//     const taskRepository = getRepository(Task);
+//     const task = new Task();
+//     task.name = name;
+//     task.description = description;
+//     task.status = status;
+//     task.task_priority = task_priority;
+//     task.task_type = task_type;
+//     task.start_at = start_at;
+//     task.end_at = end_at;
+//     task.company = company;
+//     task.creator = creator;
+//     task.users = assigned_to; // ! SOLVE THIS
+//     await taskRepository.save(task);
+//     return task;
+// };
 
 
 // DONE
@@ -74,22 +110,37 @@ export const getById = async (id: string) => {
 };
 
 // DONE
-export const getAllByGroupId = async (groupId: string) => {
+export const getAllTasksByCompanyId = async (companyId: string) => {
+    const taskRepository = getRepository(Task);
+    const tasks = await taskRepository
+        .createQueryBuilder("task")
+        .where("task.companyId = :companyId", { companyId: companyId })
+        .andWhere('task.task_type = :task_type', { task_type: 'general_task' })
+        .orderBy("task.createdAt", "DESC")
+        .getMany();
+    return tasks;
+};
+
+
+// DONE
+export const getAllTasksByGroupId = async (groupId: string) => {
     const taskRepository = getRepository(Task);
     const tasks = await taskRepository
         .createQueryBuilder("task")
         .where("task.groupId = :groupId", { groupId: groupId })
+        .andWhere('task.task_type = :task_type', { task_type: 'group_task' })
         .getMany();
     return tasks;
 };
 
 // DONE
-export const getAllByCompanyId = async (companyId: string) => {
+export const getAllTasksByEmployeeId = async (userId: string) => {
     const taskRepository = getRepository(Task);
-    const tasks = await taskRepository
-        .createQueryBuilder("task")
-        .where("task.companyId = :companyId", { companyId: companyId })
-        .orderBy("task.createdAt", "DESC")
+    const TaskUsers = await taskRepository
+        .createQueryBuilder('task')
+        .innerJoinAndSelect('task.users', 'user')
+        .where('user.id = :userId', { userId })
         .getMany();
-    return tasks;
+
+    return TaskUsers;
 };

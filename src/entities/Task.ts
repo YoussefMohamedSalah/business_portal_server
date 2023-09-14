@@ -37,7 +37,7 @@ export class Task extends BaseEntity {
 		default: () => "'{}'",
 		nullable: false,
 	})
-	user: { id: string, name: string };
+	creator: { id: string, name: string };
 
 	@Column({
 		type: 'jsonb',
@@ -67,8 +67,9 @@ export class Task extends BaseEntity {
 	@ManyToOne(() => Group, group => group.tasks, { onDelete: 'CASCADE' })
 	group: Group;
 
-	@ManyToOne(() => User, user => user.tasks, { onDelete: 'CASCADE' })
-	assigned_to: User;
+	@ManyToMany(() => User, user => user.tasks)
+	@JoinTable({ name: 'user_task' })
+	users: User[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

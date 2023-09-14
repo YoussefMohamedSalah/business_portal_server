@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMan
 import { Company } from './Company';
 import { Project } from './Project';
 import { Task } from './Task';
+import { User } from './User';
 
 @Entity({ name: 'group' })
 export class Group extends BaseEntity {
@@ -17,18 +18,10 @@ export class Group extends BaseEntity {
 	@Column({
 		type: 'jsonb',
 		array: false,
-		default: () => "'{}'",
-		nullable: false,
-	})
-	manager: { id: string, name: string };
-
-	@Column({
-		type: 'jsonb',
-		array: false,
 		default: () => "'[]'",
 		nullable: false,
 	})
-	members: Array<{ id: string, name: string }>;
+	managers: User[];
 
 	@Column({ default: 0 })
 	members_count: number;
@@ -47,6 +40,9 @@ export class Group extends BaseEntity {
 
 	@OneToMany(() => Task, task => task.group, { onDelete: 'CASCADE' })
 	tasks: Task[];
+
+	@ManyToMany(() => User, user => user.groups)
+	members: User[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

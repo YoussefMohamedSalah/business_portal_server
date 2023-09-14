@@ -15,7 +15,7 @@ export const createProject = async (
         bid_value, duration, delivery_date,
         contract_number, contract_date, po_budget,
         pc_budget, subcontractor_budget, staff_budget,
-        total_budget, project_manager, sites_count,
+        total_budget, project_managers, sites_count,
         buildings_count, floors_count, project_status,
         customer
     } = createData;
@@ -36,7 +36,7 @@ export const createProject = async (
     project.subcontractor_budget = subcontractor_budget;
     project.staff_budget = staff_budget;
     project.total_budget = total_budget;
-    project.project_manager = project_manager;
+    project.project_managers = project_managers;
     project.sites_count = sites_count;
     project.buildings_count = buildings_count;
     project.floors_count = floors_count;
@@ -60,18 +60,6 @@ export const getById = async (id: string) => {
         .getOne();
     return project;
 };
-
-// // DONE
-// export const getWithGroupById = async (id: string) => {
-//     const projectRepository = getRepository(Project);
-//     const project = await projectRepository
-//         .createQueryBuilder("project")
-//         .where("project.id = :id", { id: id })
-//         .leftJoinAndSelect("project.group", "group")
-//         .getOne();
-//     return project;
-// };
-
 
 // DONE
 export const getAllByCompanyId = async (companyId: string) => {

@@ -8,7 +8,8 @@ import {
     getAllProjectPcRequests,
     getAllProjectMaterialRequests,
     getAllProjectSiteRequests,
-    createProjectComment,
+    addProjectComment,
+    removeProjectComment
 } from "../controller/ProjectController";
 import { checkAuth } from "../middleware/checkAuth";
 import { getAllTasksByProjectId } from "../controller/TaskController";
@@ -19,9 +20,8 @@ router.route("/").post(checkAuth, addProject);
 // TASK
 router.route("/tasks/:id").get(checkAuth, getAllTasksByProjectId);
 // COMMENTS
-router.route("/comment/:id").post(checkAuth, createProjectComment);
-
-router.route("/:id").get(checkAuth, getProjectById).patch(checkAuth, updateProject).delete(checkAuth, deleteProject);
+router.route("/comment/:id").put(checkAuth, addProjectComment);
+router.route("/comment/:id").delete(checkAuth, removeProjectComment);
 
 
 // ** requests **
@@ -29,5 +29,8 @@ router.route("/purchase_order/:projectId").get(checkAuth, getAllProjectPoRequest
 router.route("/petty_cash/:projectId").get(checkAuth, getAllProjectPcRequests);
 router.route("/material/:projectId").get(checkAuth, getAllProjectMaterialRequests);
 router.route("/site/:projectId").get(checkAuth, getAllProjectSiteRequests);
+
+
+router.route("/:id").get(checkAuth, getProjectById).patch(checkAuth, updateProject).delete(checkAuth, deleteProject);
 
 export { router as ProjectRouter };

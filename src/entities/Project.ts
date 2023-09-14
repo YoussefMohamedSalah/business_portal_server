@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, OneToOne, JoinColumn, ManyToMany } from 'typeorm';
 import { Company } from './Company';
 import { Customer } from './Customer';
 import { SiteRequest } from './SiteRequest';
@@ -7,6 +7,9 @@ import { MaterialRequest } from './MaterialRequest';
 import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Group } from './Group';
 import { Inventory } from './Inventory';
+import { User } from './User';
+
+
 @Entity({ name: 'project' })
 export class Project extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
@@ -50,9 +53,6 @@ export class Project extends BaseEntity {
 
 	@Column({ nullable: true })
 	contract_number: string;
-
-	@Column({ nullable: true })
-	project_manager: string; // user id
 
 	@Column({ nullable: true, default:0 })
 	sites_count: string;
@@ -110,7 +110,10 @@ export class Project extends BaseEntity {
 	@ManyToOne(() => Customer, customer => customer.projects)
 	customer: Customer;
 
-	@OneToOne(() => Group, group => group.project)
+	@ManyToMany(() => User, user => user.projects)
+	project_managers: User[];
+
+	@OneToOne(() => Group, group => group.project, { onDelete: 'CASCADE' })
 	@JoinColumn()
 	group: Group;
 

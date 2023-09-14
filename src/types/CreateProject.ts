@@ -21,7 +21,7 @@ export type CreateProjectInfo = {
     project_status: string;
     delivery_date: string;
     contract_number: string;
-    project_manager: string;
+    project_managers: User[];
     contract_date: string;
     po_budget: string;
     pc_budget: string;
@@ -31,6 +31,7 @@ export type CreateProjectInfo = {
     sites_count: string;
     buildings_count: string;
     floors_count: string;
+    members: User[];
     thumbnail?: string;
     customer: Customer;
     comments?: Comment[];

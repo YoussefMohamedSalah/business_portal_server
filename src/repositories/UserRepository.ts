@@ -103,7 +103,7 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 				const group = await getGroupByProjectId(projects[i].id);
 				if (!group) return;
 				group.members_count = group.members_count + 1;
-				group.members.push({ id: user.id, name: user.first_name + ' ' + user.last_name });
+				group.members.push(user);
 				await group.save();
 			}
 		}
@@ -215,6 +215,20 @@ export const getById = async (id: string) => {
 			"user.projects_info",
 			"user.department_info"
 		])
+		.getOne();
+	return user;
+};
+
+// DONE
+export const getWithGroupsById = async (id: string) => {
+	const userRepository = getRepository(User);
+	const user = await userRepository
+		.createQueryBuilder("user")
+		.where("user.id = :id", { id: id })
+        .leftJoinAndSelect(
+            "user.groups",
+            "group"
+        )
 		.getOne();
 	return user;
 };

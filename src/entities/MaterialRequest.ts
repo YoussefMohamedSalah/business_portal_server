@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, ManyToMany, JoinTable, OneToMany, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, BeforeInsert } from 'typeorm';
 import { Project } from './Project';
 import { Company } from './Company';
 import { Status } from '../enums/enums';
