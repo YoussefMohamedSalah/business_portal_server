@@ -60,7 +60,6 @@ export const deleteCustomer = async (req: Request, res: Response) => {
     const { id } = req.params; 
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
-    console.log({ id })
     const customer = await getById(id);
     if (!customer) {
         return res.status(404).json({ msg: "Customer not found" });

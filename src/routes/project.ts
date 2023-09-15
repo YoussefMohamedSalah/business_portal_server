@@ -20,8 +20,8 @@ router.route("/").post(checkAuth, addProject);
 // TASK
 router.route("/tasks/:id").get(checkAuth, getAllTasksByProjectId);
 // COMMENTS
-router.route("/comment/:id").put(checkAuth, addProjectComment);
-router.route("/comment/:id").delete(checkAuth, removeProjectComment);
+router.route("/comment/add/:id").put(checkAuth, addProjectComment);
+router.route("/comment/remove/:id").put(checkAuth, removeProjectComment);
 
 
 // ** requests **

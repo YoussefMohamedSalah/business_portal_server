@@ -2,14 +2,14 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMan
 import { Company } from './Company';
 import { Group } from './Group';
 import { User } from './User';
-import { taskType } from '../enums/enums';
+import { TaskProgressType, taskType } from '../enums/enums';
 
 @Entity({ name: 'task' })
 export class Task extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ 
+	@Column({
 		type: 'enum',
 		default: taskType.GENERAL_TASK,
 		enum: taskType
@@ -26,10 +26,14 @@ export class Task extends BaseEntity {
 	task_priority: string;
 
 	@Column({ nullable: true })
-	task_progress: string;
-
-	@Column({ nullable: true })
 	status: string;
+
+	@Column({
+		type: 'enum',
+		default: TaskProgressType.ToDo,
+		enum: TaskProgressType
+	})
+	task_progress: string;
 
 	@Column({
 		type: 'jsonb',

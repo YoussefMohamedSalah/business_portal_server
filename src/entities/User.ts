@@ -26,6 +26,14 @@ export class User extends BaseEntity {
 	user_id: string;
 
 	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'{}'",
+		nullable: false
+	})
+	company_info: { id: string, name: string };
+
+	@Column({
 		default: null
 	})
 	first_name: string;
@@ -192,13 +200,13 @@ export class User extends BaseEntity {
 
 	@OneToMany(() => Attendance, attendance => attendance.user, { onDelete: "CASCADE" })
 	attendances: Attendance[];
-	
+
 	@OneToMany(() => Notification, notification => notification.user, { onDelete: "CASCADE" })
 	notifications: Notification[];
 
 	@ManyToMany(() => Task, task => task.users)
 	tasks: Task[];
-	
+
 	@ManyToMany(() => Project, project => project.project_managers)
 	@JoinTable({ name: 'project_manager' })
 	projects: Project[];

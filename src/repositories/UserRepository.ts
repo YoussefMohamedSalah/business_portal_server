@@ -36,6 +36,7 @@ export const registerUser = async (
 	phone_number && (user.phone_number = phone_number);
 	user.is_manager = true;
 	user.role = Role.SUPERUSER;
+	user.company_info = { id: company.id, name: company.name }
 	user.company = company;
 	await userRepository.save(user);
 	return user;
@@ -87,6 +88,7 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	gender && (user.gender = gender);
 	user.projects_info = projects_info_arr,
 		user.department_info = { id: department.id, name: department.name };
+	user.company_info = { id: company.id, name: company.name }
 	user.department = department;
 	user.company = company;
 	await userRepository.save(user);
@@ -103,7 +105,7 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 				const group = await getGroupByProjectId(projects[i].id);
 				if (!group) return;
 				group.members_count = group.members_count + 1;
-				group.members.push(user);
+				group.members = [...group.members, user];
 				await group.save();
 			}
 		}
@@ -188,6 +190,7 @@ export const getById = async (id: string) => {
 		.select([
 			"user.id",
 			"user.user_id",
+			"user.company_info",
 			"user.first_name",
 			"user.last_name",
 			"user.business_title",
@@ -225,10 +228,10 @@ export const getWithGroupsById = async (id: string) => {
 	const user = await userRepository
 		.createQueryBuilder("user")
 		.where("user.id = :id", { id: id })
-        .leftJoinAndSelect(
-            "user.groups",
-            "group"
-        )
+		.leftJoinAndSelect(
+			"user.groups",
+			"group"
+		)
 		.getOne();
 	return user;
 };

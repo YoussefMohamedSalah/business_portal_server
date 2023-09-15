@@ -19,7 +19,7 @@ export class Notification extends BaseEntity {
     @Column({ nullable: true, default: '' })
     content: string;
 
-    @ManyToOne(() => User, user => user.notifications)
+    @ManyToOne(() => User, user => user.notifications, { onDelete: "CASCADE" })
     user: User;
 
     @Column({ nullable: true, default: false })

@@ -67,6 +67,7 @@ export const getAllByCompanyId = async (companyId: string) => {
     const project = await projectRepository
         .createQueryBuilder("project")
         .where("project.companyId = :companyId", { companyId: companyId })
+        .leftJoinAndSelect('project.group', 'group')
         .orderBy("project.createdAt", "DESC")
         .getMany();
     return project;

@@ -86,8 +86,8 @@ export const getTaskById = async (req: Request, res: Response) => {
 
 // DONE
 export const getAllTasksByProjectId = async (req: Request, res: Response) => {
-	const { projectId } = req.params;
-	const group = await getGroupByProjectId(projectId);
+	const { id } = req.params;
+	const group = await getGroupByProjectId(id);
 	if (!group) return res.json({ msg: "Project's Group not found" });
 	const tasks = await getAllTasksByGroupId(group.id);
 	if (!tasks) return res.json({ msg: "Tasks not found" });

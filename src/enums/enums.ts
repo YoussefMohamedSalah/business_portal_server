@@ -61,3 +61,10 @@ export enum taskType {
 	GROUP_TASK = 'group_task',
 	INDIVIDUAL_TASK = 'individual_task'
 }
+
+export enum TaskProgressType {
+	ToDo = "ToDo",
+	InProgress = "ON PROGRESS",
+	NeedReview = "REVIEW",
+	Completed = "COMPLETE",
+}

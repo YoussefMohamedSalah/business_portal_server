@@ -134,7 +134,6 @@ export const addProjectComment = async (req: Request, res: Response) => {
 export const removeProjectComment = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { commentId } = req.body;
-
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 

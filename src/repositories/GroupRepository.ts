@@ -46,6 +46,7 @@ export const getGroupByProjectId = async (projectId: string) => {
     const group = await groupRepository
         .createQueryBuilder("group")
         .where("group.projectId = :projectId", { projectId: projectId })
+        .leftJoinAndSelect('group.members', 'user')
         .getOne();
     return group;
 };
