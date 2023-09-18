@@ -63,10 +63,10 @@ export class SiteRequest extends BaseEntity {
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-    @ManyToOne(() => Project, project => project.SiteRequests)
+    @ManyToOne(() => Project, project => project.SiteRequests, { onDelete: 'CASCADE' })
     project: Project;
 
-    @ManyToOne(() => Company, company => company.SiteRequests)
+    @ManyToOne(() => Company, company => company.SiteRequests, { onDelete: 'CASCADE' })
     company: Company;
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     // BeforeInsert decorator to generate and increment CODE

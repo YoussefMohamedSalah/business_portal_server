@@ -4,10 +4,12 @@ import { CreateProjectInfo } from "src/types/CreateProject";
 import { Project } from "../entities/Project";
 import { InventoryType } from "../enums/enums";
 import { createInventory } from "./InventoryRepository";
+import { Customer } from "../entities/Customer";
 
 // DONE
 export const createProject = async (
     createData: CreateProjectInfo,
+    customer: Customer | null,
     company: Company
 ) => {
     const {
@@ -17,7 +19,6 @@ export const createProject = async (
         pc_budget, subcontractor_budget, staff_budget,
         total_budget, project_managers, sites_count,
         buildings_count, floors_count, project_status,
-        customer
     } = createData;
     // create Project
     const projectRepository = getRepository(Project);
@@ -42,7 +43,9 @@ export const createProject = async (
     project.floors_count = floors_count;
     project.project_status = project_status;
     project.company = company;
-    project.customer = customer;
+    if(customer){
+        project.customer = customer;
+    }
     await projectRepository.save(project);
 
     // Create the inventory for the company
@@ -60,6 +63,7 @@ export const getById = async (id: string) => {
         .getOne();
     return project;
 };
+
 
 // DONE
 export const getAllByCompanyId = async (companyId: string) => {

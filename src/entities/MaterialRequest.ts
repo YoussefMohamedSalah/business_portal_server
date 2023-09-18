@@ -71,10 +71,10 @@ export class MaterialRequest extends BaseEntity {
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-    @ManyToOne(() => Project, project => project.MaterialRequests)
+    @ManyToOne(() => Project, project => project.MaterialRequests, { onDelete: 'CASCADE' })
     project: Project;
 
-    @ManyToOne(() => Company, company => company.MaterialRequests)
+    @ManyToOne(() => Company, company => company.MaterialRequests, { onDelete: 'CASCADE' })
     company: Company;
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     // BeforeInsert decorator to generate and increment CODE

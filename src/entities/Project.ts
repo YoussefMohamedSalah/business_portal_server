@@ -118,20 +118,20 @@ export class Project extends BaseEntity {
 	group: Group;
 
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-	@OneToOne(() => Inventory, inventory => inventory.project)
+	@OneToOne(() => Inventory, inventory => inventory.project, { onDelete: 'CASCADE' })
 	@JoinColumn()
 	inventory: Inventory;
 
-	@OneToMany(() => SiteRequest, SiteRequest => SiteRequest.project)
+	@OneToMany(() => SiteRequest, SiteRequest => SiteRequest.project, { onDelete: 'CASCADE' })
 	SiteRequests: SiteRequest[];
 
-	@OneToMany(() => PettyCashRequest, PettyCashRequest => PettyCashRequest.project)
+	@OneToMany(() => PettyCashRequest, PettyCashRequest => PettyCashRequest.project, { onDelete: 'CASCADE' })
 	PettyCashRequests: PettyCashRequest[];
 
-	@OneToMany(() => MaterialRequest, MaterialRequest => MaterialRequest.project)
+	@OneToMany(() => MaterialRequest, MaterialRequest => MaterialRequest.project, { onDelete: 'CASCADE' })
 	MaterialRequests: MaterialRequest[];
 	// purchase_order
-	@OneToMany(() => PurchaseOrderRequest, purchaseOrderRequest => purchaseOrderRequest.project)
+	@OneToMany(() => PurchaseOrderRequest, purchaseOrderRequest => purchaseOrderRequest.project, { onDelete: 'CASCADE' })
 	PurchaseOrderRequests: PurchaseOrderRequest[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 

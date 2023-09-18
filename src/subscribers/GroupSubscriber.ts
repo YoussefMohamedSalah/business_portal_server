@@ -8,6 +8,6 @@ export class GroupSubscriber implements EntitySubscriberInterface<Group> {
 	}
 
 	afterInsert(event: InsertEvent<Group>) {
-		console.log('Group inserted:', event.entity);
+		// console.log('Group inserted:', event.entity);
 	}
 }

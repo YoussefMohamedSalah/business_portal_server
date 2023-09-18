@@ -8,6 +8,6 @@ export class ProjectSubscriber implements EntitySubscriberInterface<Project> {
 	}
 
 	afterInsert(event: InsertEvent<Project>) {
-		console.log('Project inserted:', event.entity);
+		// console.log('Project inserted:', event.entity);
 	}
 }

@@ -4,7 +4,8 @@ import {
 	getAllCompanyUsers,
 	getAllDepartmentUsers,
 	getById,
-	getAllManagers
+	getAllManagers,
+	getAllEmployeesWithGroups
 } from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
 import { getById as getCompanyById } from "../repositories/CompanyRepository";
@@ -25,7 +26,6 @@ export const addUser = async (req: Request, res: Response) => {
 		last_name,
 		business_title,
 		email,
-		string_password,
 		projects,
 		contract_date,
 		contract_ex,
@@ -35,7 +35,6 @@ export const addUser = async (req: Request, res: Response) => {
 		shift_start,
 		shift_end,
 		gender,
-		password,
 		salary_per_month,
 		departmentId,
 	} = req.body;
@@ -231,5 +230,11 @@ export const getDepartmentUsers = async (req: Request, res: Response) => {
 export const getManagers = async (req: Request, res: Response) => {
 	const { companyId } = req.userData!;
 	const users = await getAllManagers(companyId);
+	return res.json(users);
+}
+
+export const getAllWithGroups = async (req: Request, res: Response) => {
+	const { companyId } = req.userData!;
+	const users = await getAllEmployeesWithGroups(companyId);
 	return res.json(users);
 }

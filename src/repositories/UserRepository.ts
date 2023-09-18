@@ -103,7 +103,7 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 				// Now get the group by projectId
 				// then add this user to the group members
 				const group = await getGroupByProjectId(projects[i].id);
-				if (!group) return;
+				if (!group) continue;
 				group.members_count = group.members_count + 1;
 				group.members = [...group.members, user];
 				await group.save();
@@ -294,12 +294,38 @@ export const getAllCompanyUsers = async (companyId: string) => {
 			"user.shift_end",
 			"user.gender",
 			"user.projects_info",
-			"user.department_info"
+			"user.department_info",
 		])
 		.orderBy("user.createdAt", "DESC")
 		.getMany();
 	return users;
 };
+
+// DONE
+export const getAllEmployeesWithGroups = async (companyId: string) => {
+	const userRepository = getRepository(User);
+	const users = await userRepository
+		.createQueryBuilder("user")
+		.where("user.company = :companyId", { companyId: companyId })
+		.select([
+			"user.id",
+			"user.user_id",
+			"user.first_name",
+			"user.last_name",
+			"user.business_title",
+			"user.email",
+			"user.phone_number",
+			"user.avatar",
+			"user.permissions",
+			"user.role",
+			"user.is_manager",
+			"user.department_info",
+		])
+		.leftJoinAndSelect('user.groups', 'group')
+		.orderBy("user.createdAt", "DESC")
+		.getMany();
+	return users;
+}
 
 // DONE
 export const getAllDepartmentUsers = async (departmentId: string) => {

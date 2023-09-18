@@ -9,7 +9,8 @@ import {
     getAllProjectMaterialRequests,
     getAllProjectSiteRequests,
     addProjectComment,
-    removeProjectComment
+    removeProjectComment,
+    getAllEmployeesByProjectId
 } from "../controller/ProjectController";
 import { checkAuth } from "../middleware/checkAuth";
 import { getAllTasksByProjectId } from "../controller/TaskController";
@@ -22,6 +23,8 @@ router.route("/tasks/:id").get(checkAuth, getAllTasksByProjectId);
 // COMMENTS
 router.route("/comment/add/:id").put(checkAuth, addProjectComment);
 router.route("/comment/remove/:id").put(checkAuth, removeProjectComment);
+// EMPLOYEES
+router.route('/employees/:id').get(checkAuth, getAllEmployeesByProjectId)
 
 
 // ** requests **

@@ -69,10 +69,10 @@ export class PurchaseOrderRequest extends BaseEntity {
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-    @ManyToOne(() => Project, project => project.PurchaseOrderRequests)
+    @ManyToOne(() => Project, project => project.PurchaseOrderRequests, { onDelete: 'CASCADE' })
     project: Project;
 
-    @ManyToOne(() => Company, company => company.PurchaseOrderRequests)
+    @ManyToOne(() => Company, company => company.PurchaseOrderRequests, { onDelete: 'CASCADE' })
     company: Company;
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     // BeforeInsert decorator to generate and increment CODE

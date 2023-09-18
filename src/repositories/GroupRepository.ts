@@ -1,7 +1,5 @@
 import { getRepository } from "typeorm";
 import { Group } from "../entities/Group";
-import { Project } from "../entities/Project";
-import { Task } from "../entities/Task";
 import { User } from "../entities/User";
 
 // DONE
@@ -13,7 +11,6 @@ export const addGroup = async (createData: any) => {
     group.description = description;
     group.managers = project_managers;
     group.members = members;
-    group.project = project;
     group.company = company;
     await groupRepository.save(group);
     return group;
@@ -57,6 +54,7 @@ export const getAllByCompanyId = async (companyId: string) => {
     const group = await groupRepository
         .createQueryBuilder("group")
         .where("group.companyId = :companyId", { companyId: companyId })
+        .leftJoinAndSelect('group.members', 'user')
         .orderBy("group.createdAt", "DESC")
         .getMany();
     return group;
@@ -72,11 +70,27 @@ export const addMember = async (group: Group, user: User) => {
 };
 
 // DONE
-export const removeMember = async (group: Group, userId: string) => {
-    group.members = group.members.filter((member: User) => member.id !== userId);
-    group.members_count--;
-    await group.save();
-    return group;
+export const removeMember = async (group: Group, member: User) => {
+    const memberGroupRepository = getRepository(Group)
+    const record = await memberGroupRepository
+        .createQueryBuilder('group_member')
+        .where('userId = :userId', { userId: member.id })
+        .andWhere('groupId = :groupId', { groupId: group.id })
+        .delete()
+
+
+
+
+
+
+        
+    // user.groups = user.groups.filter(filtered => filtered.id !== group.id);
+
+    // group.members = group.members.filter((member: User) => member.id !== userId);
+    // group.members_count--;
+
+    // await group.save();
+    // return group;
 };
 
 

@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMan
 import { Company } from './Company';
 import { Group } from './Group';
 import { User } from './User';
-import { TaskProgressType, taskType } from '../enums/enums';
+import { TaskPriority, TaskProgressType, taskType } from '../enums/enums';
 
 @Entity({ name: 'task' })
 export class Task extends BaseEntity {
@@ -22,7 +22,11 @@ export class Task extends BaseEntity {
 	@Column({ nullable: true })
 	description: string;
 
-	@Column({ nullable: true })
+	@Column({
+		type: 'enum',
+		default: TaskPriority.LOW,
+		enum: TaskPriority
+	})
 	task_priority: string;
 
 	@Column({ nullable: true })

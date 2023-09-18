@@ -4,7 +4,7 @@ import { getGroupByProjectId } from '../repositories/GroupRepository';
 import { CreateTaskInput } from '../types/CreateTaskInput';
 import { createTask, getAllTasksByCompanyId, getById, getAllTasksByGroupId, getAllTasksByEmployeeId } from '../repositories/TaskRepository';
 import { validateUUID } from '../utils/validateUUID';
-import { taskType } from '../enums/enums';
+import { TaskProgressType, taskType } from '../enums/enums';
 import { Group } from '../entities/Group';
 import { getWithGroupsById as getUserWithGroupsById } from '../repositories/UserRepository'
 import { Task } from '../entities/Task';
@@ -22,23 +22,25 @@ export const addTask = async (req: Request, res: Response) => {
 	let group: Group | null = null;
 
 	if (task_type === taskType.GROUP_TASK) {
-		// then get group by project id
 		let groupData = await getGroupByProjectId(projectId);
 		if (!groupData) return res.json({ msg: "Project's Group not found" });
-		group = groupData;
+		groupData.tasks_count = groupData.tasks_count + 1;
+		let updatedGroup = await groupData.save()
+		group = updatedGroup;
 	}
 
 	const createInput: CreateTaskInput = {
 		name,
 		description,
 		task_priority,
-		status: 'Pending',
+		task_progress: TaskProgressType.ToDo,
 		task_type,
 		start_at,
 		end_at,
 		creator: { id: userId, name: userName },
 		assigned_to,
 	}
+
 	let task = await createTask(company, group, createInput);
 	if (!task) return res.json({ msg: "Task not created" });
 	return res.json(task);
@@ -46,7 +48,7 @@ export const addTask = async (req: Request, res: Response) => {
 
 // DONE
 export const updateTask = async (req: Request, res: Response) => {
-	const { name, description, task_priority, status } = req.body;
+	const { name, description, task_priority, task_progress } = req.body;
 	const { id } = req.params;
 
 	let isValidUUID = validateUUID(id);
@@ -58,7 +60,7 @@ export const updateTask = async (req: Request, res: Response) => {
 	task.name = name ? name : task.name;
 	task.description = description ? description : task.description;
 	task.task_priority = task_priority ? task_priority : task.task_priority;
-	task.status = status ? status : task.status;
+	task.task_progress = task_progress ? task_progress : task.task_progress;
 	await task.save();
 	return res.json(task);
 };
@@ -105,7 +107,7 @@ export const getTasksByCompanyId = async (req: Request, res: Response) => {
 // DONE
 export const getAllTasksByUserId = async (req: Request, res: Response) => {
 	const { userId, companyId } = req.userData!;
-	let CompanyTasks: Task[] = [];
+	let companyTasks: Task[] = [];
 	let groupsTasks: Task[] = [];
 	let individualTasks: any[] = [];
 
@@ -120,11 +122,11 @@ export const getAllTasksByUserId = async (req: Request, res: Response) => {
 		}
 	}
 
-	CompanyTasks = await getAllTasksByCompanyId(companyId)
+	companyTasks = await getAllTasksByCompanyId(companyId)
 	individualTasks = await getAllTasksByEmployeeId(userId)
 
 	const tasks = {
-		CompanyTasks,
+		companyTasks,
 		groupsTasks,
 		individualTasks
 	}

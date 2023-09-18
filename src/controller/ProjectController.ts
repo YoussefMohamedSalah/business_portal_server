@@ -2,9 +2,12 @@ import { Request, Response } from 'express';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { CreateProjectInfo } from '../types/CreateProject';
 import { createProject, getAllByCompanyId, getById } from '../repositories/ProjectRepository';
+import { getById as getGroupById } from '../repositories/GroupRepository';
 import { getAllProject_MaterialReq, getAllProject_PcReq, getAllProject_PoReq, getAllProject_SiteReq } from '../repositories/RequestsRepository';
-import { addGroup } from '../repositories/GroupRepository';
+import { addGroup, getGroupByProjectId } from '../repositories/GroupRepository';
 import { validateUUID } from '../utils/validateUUID';
+import { getById as getCustomerById } from '../repositories/CustomerRepository'
+import { Customer } from '../entities/Customer';
 
 
 // DONE
@@ -26,8 +29,15 @@ export const addProject = async (req: Request, res: Response) => {
     const company = await getCompanyById(companyId);
     if (!company) return res.status(404).json({ msg: "Company not found" });
 
+    let customer: Customer | null = null;
+    if (createData.customerId) {
+        let customerData = await getCustomerById(createData.customerId!)
+        if (!customerData) return res.status(404).json({ msg: "Customer not found" });
+        customer = customerData;
+    }
+
     // then create project
-    const project = await createProject(createData, company);
+    const project = await createProject(createData, customer, company);
     if (!project) return res.status(409).json({ msg: "Field To Create Project" });
 
     let groupManagers = createData.project_managers ? createData.project_managers : [];
@@ -55,8 +65,18 @@ export const addProject = async (req: Request, res: Response) => {
     }
     const group = await addGroup(createGroupData);
     if (!group) return res.status(409).json({ msg: "Field To Create Group" });
-    project.group = group;
-    await group.save()
+
+    const selectedProject = await getById(project.id)
+    if (selectedProject) {
+        selectedProject.group = group;
+        await selectedProject.save()
+    }
+    const selectedGroup = await getGroupById(group.id)
+    if (selectedGroup) {
+        selectedGroup.project = project;
+        await selectedGroup.save();
+    }
+
     return res.json(project);
 };
 
@@ -158,6 +178,16 @@ export const deleteProject = async (req: Request, res: Response) => {
     }
     await project.remove();
     return res.json({ msg: "Project deleted" });
+}
+
+// DONE
+export const getAllEmployeesByProjectId = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    let isValidUUID = validateUUID(id);
+    if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
+    const group = await getGroupByProjectId(id);
+    if (!group) return res.status(404).json({ msg: "Group Is Not Found" });
+    return res.json(group.members);
 }
 
 // ** This is Getting All Requests For The Project **

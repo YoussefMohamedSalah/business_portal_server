@@ -33,7 +33,7 @@ export type CreateProjectInfo = {
     floors_count: string;
     members: User[];
     thumbnail?: string;
-    customer: Customer;
+    customerId: string;
     comments?: Comment[];
 };
 

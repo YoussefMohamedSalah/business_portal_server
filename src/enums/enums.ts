@@ -68,3 +68,9 @@ export enum TaskProgressType {
 	NeedReview = "REVIEW",
 	Completed = "COMPLETE",
 }
+
+export enum TaskPriority {
+	LOW =  "Low",
+	MEDIUM =  'Medium',
+	HEIGHT = 'Height',
+}

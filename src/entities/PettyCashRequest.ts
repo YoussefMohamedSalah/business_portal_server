@@ -81,10 +81,10 @@ export class PettyCashRequest extends BaseEntity {
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-	@ManyToOne(() => Project, project => project.PettyCashRequests)
+	@ManyToOne(() => Project, project => project.PettyCashRequests, { onDelete: 'CASCADE' })
 	project: Project;
 
-	@ManyToOne(() => Company, company => company.PettyCashRequests)
+	@ManyToOne(() => Company, company => company.PettyCashRequests, { onDelete: 'CASCADE' })
 	company: Company;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 	// BeforeInsert decorator to generate and increment CODE
