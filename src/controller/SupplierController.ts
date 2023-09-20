@@ -8,19 +8,20 @@ import { validateUUID } from '../utils/validateUUID';
 export const addSupplier = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
     const createData: CreateSupplierInfo = req.body;
+    console.log({ createData })
     // first get company by id
-    if (companyId) return res.status(400).json({ msg: "Company id is required" });
+    if (!companyId) return res.status(400).json({ msg: "Company id is required" });
     const company = await getCompanyById(companyId);
     if (!company) return res.status(404).json({ msg: "Company not found" });
-    // then create project
-    const project = await createSupplier(createData, company);
-    if (!project) return res.status(409).json({ msg: "Field To Create Project" });
-    else return res.json(project);
+    // then create supplier
+    const supplier = await createSupplier(createData, company);
+    if (!supplier) return res.status(409).json({ msg: "Field To Create Supplier" });
+    else return res.json(supplier);
 };
 
 // DONE
 export const getSupplierById = async (req: Request, res: Response) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const supplier = await getById(id);
@@ -32,7 +33,7 @@ export const getSupplierById = async (req: Request, res: Response) => {
 
 // DONE
 export const updateSupplier = async (req: Request, res: Response) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const supplier = await getById(id);
@@ -73,7 +74,7 @@ export const updateSupplier = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteSupplier = async (req: Request, res: Response) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const supplier = await getById(id);

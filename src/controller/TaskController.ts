@@ -15,6 +15,7 @@ export const addTask = async (req: Request, res: Response) => {
 	const { task_type, name, description, task_priority, assigned_to, projectId, start_at, end_at } = req.body;
 	if (!task_type) return res.json({ msg: "Task type is required" });
 
+	console.log(task_priority)
 	// first get company by id
 	const company = await getCompanyById(companyId);
 	if (!company) return res.json({ msg: "Company not found" });
@@ -89,9 +90,26 @@ export const getTaskById = async (req: Request, res: Response) => {
 // DONE
 export const getAllTasksByProjectId = async (req: Request, res: Response) => {
 	const { id } = req.params;
+
+	let isValidUUID = validateUUID(id);
+	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
+
 	const group = await getGroupByProjectId(id);
 	if (!group) return res.json({ msg: "Project's Group not found" });
 	const tasks = await getAllTasksByGroupId(group.id);
+	if (!tasks) return res.json({ msg: "Tasks not found" });
+	return res.json(tasks);
+}
+
+
+// DONE
+export const getTasksByGroupId = async (req: Request, res: Response) => {
+	const { id } = req.params;
+
+	let isValidUUID = validateUUID(id);
+	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
+
+	const tasks = await getAllTasksByGroupId(id);
 	if (!tasks) return res.json({ msg: "Tasks not found" });
 	return res.json(tasks);
 }

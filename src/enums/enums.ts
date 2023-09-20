@@ -58,8 +58,8 @@ export enum DepartmentType {
 
 export enum taskType {
 	GENERAL_TASK = 'general_task',
-	GROUP_TASK = 'group_task',
-	INDIVIDUAL_TASK = 'individual_task'
+	GROUP_TASK = 'group_task', // project 
+	INDIVIDUAL_TASK = 'individual_task' // 
 }
 
 export enum TaskProgressType {
@@ -70,7 +70,8 @@ export enum TaskProgressType {
 }
 
 export enum TaskPriority {
-	LOW =  "Low",
-	MEDIUM =  'Medium',
-	HEIGHT = 'Height',
+	LOW = "Low",
+	MEDIUM = 'Medium',
+	HIGH = 'High',
+	CRITICAL = 'Critical'
 }

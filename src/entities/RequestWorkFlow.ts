@@ -12,7 +12,7 @@ export class RequestWorkFlow extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	site_request_flow: Array<{ userId: string, title: string, state: boolean, isRejected: boolean }>;
+	site_request_flow: Array<{ userId: string, name: string, title: string, state: boolean, isRejected: boolean, index: number }>;
 
 	@Column({
 		type: 'jsonb',
@@ -20,7 +20,7 @@ export class RequestWorkFlow extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	petty_cash_request_flow: Array<{ userId: string, title: string, state: boolean, isRejected: boolean }>;
+	petty_cash_request_flow: Array<{ userId: string, name: string, title: string, state: boolean, isRejected: boolean, index: number }>;
 
 	@Column({
 		type: 'jsonb',
@@ -28,7 +28,7 @@ export class RequestWorkFlow extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	material_request_flow: Array<{ userId: string, title: string, state: boolean, isRejected: boolean }>;
+	material_request_flow: Array<{ userId: string, name: string, title: string, state: boolean, isRejected: boolean, index: number }>;
 
 	@Column({
 		type: 'jsonb',
@@ -36,7 +36,7 @@ export class RequestWorkFlow extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	purchase_order_flow: Array<{ userId: string, title: string, state: boolean, isRejected: boolean }>;
+	purchase_order_flow: Array<{ userId: string, name: string, title: string, state: boolean, isRejected: boolean, index: number }>;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

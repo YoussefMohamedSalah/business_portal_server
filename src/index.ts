@@ -30,6 +30,7 @@ import { EmployeeRouter } from './routes/employee';
 import { TaskRouter } from './routes/task';
 import { TenderRouter } from './routes/tender';
 import { GroupRouter } from './routes/group';
+import { WorkFlowRouter } from './routes/workFlow';
 
 // constants
 dotenv.config();
@@ -80,10 +81,26 @@ try {
   app.use('/inventory_item', InventoryItemRouter);
   app.use('/project', ProjectRouter);
   app.use('/notifications', NotificationRouter);
+  app.use('/workflow', WorkFlowRouter);
 
-  // eventListeners 
-  // setInterval(runAtMidnight, 1000);
-
+  // ************************************************
+  const sleep = (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  const handleRunAtMidnight = async () => {
+    // getting the time and determine the exact time to wait
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0); // Set to next midnight
+    let nowInTime = now.getTime();
+    let midnightInTime = midnight.getTime();
+    const timeToMidnightInMS = midnightInTime - nowInTime; // Calculate time remaining until midnight
+    // console.log('remaining to midnight', { timeToMidnightInMS })
+    await sleep(timeToMidnightInMS);
+    // console.log('This is midnight');
+    runAtMidnight();
+  }
+  handleRunAtMidnight();
+  // ************************************************
 } catch (error) {
   console.error(error);
   throw new Error('Unable To Connect To Database');
