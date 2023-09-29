@@ -24,6 +24,8 @@ export const allCompanyProjects = async (req: Request, res: Response) => {
 export const addProject = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
     const createData: CreateProjectInfo = req.body;
+    const projectThumbnail = req.file!;
+
     // first get company by id
     if (!companyId) return res.status(400).json({ msg: "Company id is required" });
     const company = await getCompanyById(companyId);
@@ -36,8 +38,11 @@ export const addProject = async (req: Request, res: Response) => {
         customer = customerData;
     }
 
+
+    console.log(projectThumbnail)
+
     // then create project
-    const project = await createProject(createData, customer, company);
+    const project = await createProject(createData, projectThumbnail, customer, company);
     if (!project) return res.status(409).json({ msg: "Field To Create Project" });
 
     let groupManagers = createData.project_managers ? createData.project_managers : [];

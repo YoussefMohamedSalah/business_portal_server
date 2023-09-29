@@ -2,8 +2,6 @@ import 'reflect-metadata';
 import express from 'express';
 import Cors from 'cors';
 import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
-import multer from 'multer';
 // ************************************************
 import { entities } from './entities';
 import { subscribers } from './subscribers';
@@ -25,7 +23,6 @@ import { AttendanceRouter } from './routes/attendance';
 import { runAtMidnight } from './auto/CheckDayEnd';
 import { DepartmentRouter } from './routes/department';
 import { RequestRouter } from './routes/request';
-import fileUpload from 'express-fileupload';
 import { EmployeeRouter } from './routes/employee';
 import { TaskRouter } from './routes/task';
 import { TenderRouter } from './routes/tender';
@@ -38,7 +35,6 @@ const app = express();
 
 // Middleware
 app.use(Cors());
-// app.use(multer())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -49,18 +45,6 @@ try {
   );
 
   connectToDataBase(entities, subscribers);
-
-
-  // app.post('/upload',
-  //   fileUpload({
-  //     createParentPath: true,
-  //   }),
-  //   (req, res) => {
-  //     const file = req.file;
-  //     console.log(req.body);
-  //     res.json({ msg: 'ok' });
-  //   });
-
 
   // ROUTES
   app.use('/auth', AuthRouter);
@@ -82,8 +66,12 @@ try {
   app.use('/project', ProjectRouter);
   app.use('/notifications', NotificationRouter);
   app.use('/workflow', WorkFlowRouter);
-
   // ************************************************
+  app.use(express.static('uploads'));
+  app.use('/uploads', express.static('uploads'));
+  // ************************************************
+
+
   const sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -94,9 +82,7 @@ try {
     let nowInTime = now.getTime();
     let midnightInTime = midnight.getTime();
     const timeToMidnightInMS = midnightInTime - nowInTime; // Calculate time remaining until midnight
-    // console.log('remaining to midnight', { timeToMidnightInMS })
     await sleep(timeToMidnightInMS);
-    // console.log('This is midnight');
     runAtMidnight();
   }
   handleRunAtMidnight();

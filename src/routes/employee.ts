@@ -8,7 +8,6 @@ router.route("/").post(checkAuth, addUser);
 router.route("/").get(checkAuth, getCurrentUser);
 router.route("/groups/").get(checkAuth, getAllWithGroups);
 
-
 router.route("/task/").get(checkAuth, getAllTasksByUserId)
 router.route("/manager").get(checkAuth, getManagers);
 router.route("/department/:id").get(checkAuth, getDepartmentUsers);

@@ -75,3 +75,4 @@ export enum TaskPriority {
 	HIGH = 'High',
 	CRITICAL = 'Critical'
 }
+

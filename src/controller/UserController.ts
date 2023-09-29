@@ -14,8 +14,9 @@ import { User } from "../entities/User";
 import { getById as getDepartmentById } from "../repositories/DepartmentRepository";
 import { getById as getProjectById } from "../repositories/ProjectRepository";
 import { Project } from "../entities/Project";
-import { Company } from "src/entities/Company";
+import { Company } from "../entities/Company";
 import { validateUUID } from '../utils/validateUUID';
+import { sendEmail } from "../helpers/sendEmail";
 
 // DONE
 export const addUser = async (req: Request, res: Response) => {
@@ -79,7 +80,7 @@ export const addUser = async (req: Request, res: Response) => {
 		department,
 		company
 	}
-
+	sendEmail()
 	const user = await createUser(paramsData);
 	if (!user) return res.status(409).json({ msg: "Field to Create Employee" });
 	return res.json(user);

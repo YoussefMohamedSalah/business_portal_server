@@ -22,8 +22,6 @@ export const getAllCompany_PoReq = async (id: string,) => {
         .getOne();
     return company?.PurchaseOrderRequests;
 };
-
-// DONE
 export const getAllCompany_PcReq = async (id: string,) => {
     const companyRepository = getRepository(Company);
     const company = await companyRepository
@@ -36,8 +34,6 @@ export const getAllCompany_PcReq = async (id: string,) => {
         .getOne();
     return company?.PettyCashRequests;
 };
-
-// DONE
 export const getAllCompany_SiteReq = async (id: string,) => {
     const companyRepository = getRepository(Company);
     const company = await companyRepository
@@ -50,8 +46,6 @@ export const getAllCompany_SiteReq = async (id: string,) => {
         .getOne();
     return company?.SiteRequests;
 };
-
-// DONE
 export const getAllCompany_MaterialReq = async (id: string,) => {
     const companyRepository = getRepository(Company);
     const company = await companyRepository
@@ -65,6 +59,44 @@ export const getAllCompany_MaterialReq = async (id: string,) => {
     return company?.MaterialRequests;
 };
 
+// -------------------------------------------------------
+
+export const getAllCompany_pending_PoReq = async (companyId: string,) => {
+    const requestsRepository = getRepository(PurchaseOrderRequest);
+    const poRequests = await requestsRepository
+        .createQueryBuilder("purchase_order_request")
+        .where("purchase_order_request.companyId = :companyId", { companyId: companyId })
+        .andWhere('purchase_order_request.status = :status', {status: Status.PENDING})
+        .getMany();
+    return poRequests;
+};
+export const getAllCompany_pending_PcReq = async (companyId: string,) => {
+    const requestsRepository = getRepository(PettyCashRequest);
+    const pcRequests = await requestsRepository
+        .createQueryBuilder("petty_cash_request")
+        .where("petty_cash_request.companyId = :companyId", { companyId: companyId })
+        .andWhere('petty_cash_request.status = :status', {status: Status.PENDING})
+        .getMany();
+    return pcRequests;
+};
+export const getAllCompany_pending_SiteReq = async (companyId: string,) => {
+    const requestsRepository = getRepository(SiteRequest);
+    const siteRequests = await requestsRepository
+        .createQueryBuilder("site_request")
+        .where("site_request.companyId = :companyId", { companyId: companyId })
+        .andWhere('site_request.status = :status', {status: Status.PENDING})
+        .getMany();
+    return siteRequests;
+};
+export const getAllCompany_pending_MaterialReq = async (companyId: string,) => {
+    const requestsRepository = getRepository(MaterialRequest);
+    const materialRequests = await requestsRepository
+        .createQueryBuilder("material_request")
+        .where("material_request.companyId = :companyId", { companyId: companyId })
+        .andWhere('material_request.status = :status', {status: Status.PENDING})
+        .getMany();
+    return materialRequests;
+};
 // -------------------------------------------------------
 
 // ** This Is Getting All Requests For The Project **
@@ -81,8 +113,6 @@ export const getAllProject_PoReq = async (id: string,) => {
         .getOne();
     return project?.PurchaseOrderRequests;
 };
-
-// DONE
 export const getAllProject_PcReq = async (id: string,) => {
     const projectRepository = getRepository(Project);
     const project = await projectRepository
@@ -95,8 +125,6 @@ export const getAllProject_PcReq = async (id: string,) => {
         .getOne();
     return project?.PettyCashRequests;
 };
-
-// DONE
 export const getAllProject_SiteReq = async (id: string,) => {
     const projectRepository = getRepository(Project);
     const project = await projectRepository
@@ -109,8 +137,6 @@ export const getAllProject_SiteReq = async (id: string,) => {
         .getOne();
     return project?.SiteRequests;
 };
-
-// DONE
 export const getAllProject_MaterialReq = async (id: string,) => {
     const projectRepository = getRepository(Project);
     const project = await projectRepository

@@ -14,10 +14,11 @@ import {
 } from "../controller/ProjectController";
 import { checkAuth } from "../middleware/checkAuth";
 import { getAllTasksByProjectId } from "../controller/TaskController";
+import uploadThumbnail from "../middleware/upload/thumbnailUpload";
 
 const router = Router();
 
-router.route("/").post(checkAuth, addProject);
+router.route("/").post(checkAuth, uploadThumbnail.single('thumbnail'), addProject);
 // TASK
 router.route("/tasks/:id").get(checkAuth, getAllTasksByProjectId);
 // COMMENTS

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { updateUserPosition, verifyOtp, updateCompany, sendOtp } from "../controller/StepperController";
 import { checkAuth } from "../middleware/checkAuth";
+import uploadLogo from "../middleware/upload/logoUpload";
+
 
 const router = Router();
 
@@ -13,7 +15,7 @@ router.route("/otp/:token").post(checkAuth, verifyOtp);
 router.route("/otp").post(checkAuth, sendOtp);
 
 // this is for company info.. in stepper
-router.route("/company").put(checkAuth, updateCompany);
+router.route("/company").put(checkAuth, uploadLogo.single('logo'), updateCompany);
 
 
 export { router as StepperRouter };

@@ -9,6 +9,7 @@ import { Customer } from "../entities/Customer";
 // DONE
 export const createProject = async (
     createData: CreateProjectInfo,
+    projectThumbnail: any,
     customer: Customer | null,
     company: Company
 ) => {
@@ -42,8 +43,9 @@ export const createProject = async (
     project.buildings_count = buildings_count;
     project.floors_count = floors_count;
     project.project_status = project_status;
+    project.thumbnail = projectThumbnail ? projectThumbnail.path : '';
     project.company = company;
-    if(customer){
+    if (customer) {
         project.customer = customer;
     }
     await projectRepository.save(project);

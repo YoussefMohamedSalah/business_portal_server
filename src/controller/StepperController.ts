@@ -2,43 +2,14 @@ import dotenv from "dotenv";
 import { Request, Response } from 'express';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { getById as getUserById } from '../repositories/UserRepository';
-import * as nodemailer from 'nodemailer';
-import * as speakeasy from 'speakeasy';
+
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-    service: 'your_email_service_provider',
-    auth: {
-        user: 'your_email',
-        pass: 'your_password',
-    },
-});
 
 // DONE
 export const sendOtp = async (req: Request, res: Response) => {
     const { email } = req.body;
-    const otp = speakeasy.totp({
-        secret: 'heo2e36de354dd354dd3842',
-        digits: 6,
-    });
-
-    const mailOptions: nodemailer.SendMailOptions = {
-        from: 'portal_cp',
-        to: email,
-        subject: 'OTP Verification',
-        text: `Your OTP: ${otp}`,
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Error sending email:', error);
-            res.status(500).send('Failed to send OTP');
-        } else {
-            console.log('Email sent:', info.response);
-            res.send('OTP sent successfully');
-        }
-    });
 };
 
 // DONE
@@ -98,17 +69,13 @@ export const updateCompany = async (req: Request, res: Response) => {
     const company = await getCompanyById(companyId);
     if (!company) return res.status(404).json({ msg: "Company not found" });
 
-    const formData = req.body;
-    const name = formData.name;
-    const address = formData.address;
-    const logo = formData.logo;
-    const size = formData.size;
+    const { name, address, size } = req.body;
     company.name = name ? name : company.name;
     company.address = address ? address : company.address;
-    company.logo = logo ? logo : company.logo;
     company.size = size ? size : company.size;
-
-
+    if (req.file) {
+        company.logo = req.file.path ? req.file.path : company.logo;
+    }
     // this is automatic when user reach this point
     company.stepper_state = true;
     company.stepper_step = 3;
