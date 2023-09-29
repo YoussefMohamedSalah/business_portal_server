@@ -12,6 +12,7 @@ export type RegisterUserInfo = {
 export type CreateUserInfo = {
 	first_name: string;
 	last_name: string;
+	password?:string;
 	email: string;
 	business_title?: string;
 	address?: string;
@@ -25,7 +26,7 @@ export type CreateUserInfo = {
 	salary_per_hour?: string;
 	role?: string;
 	sign?: string;
-	picture?: string;
+	avatar?: string;
 	file?: string;
 	permissions?: any;
 	is_verified?: boolean;

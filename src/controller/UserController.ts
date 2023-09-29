@@ -17,6 +17,7 @@ import { Project } from "../entities/Project";
 import { Company } from "../entities/Company";
 import { validateUUID } from '../utils/validateUUID';
 import { sendEmail } from "../helpers/sendEmail";
+import { generateTempPassword } from "../utils/generateTempPassword";
 
 // DONE
 export const addUser = async (req: Request, res: Response) => {
@@ -39,6 +40,7 @@ export const addUser = async (req: Request, res: Response) => {
 		salary_per_month,
 		departmentId,
 	} = req.body;
+	console.log(projects)
 
 	// Check if the user already exists
 	const existingUser = await User.findOne({ where: { email } });
@@ -53,13 +55,16 @@ export const addUser = async (req: Request, res: Response) => {
 	if (!department) return res.status(404).json({ msg: "Department not found" });
 
 	let projects_arr: Project[] = [];
-	if (projects && projects.length > 0) {
+	if (projects && Array.isArray(projects) && projects.length > 0) {
 		for (let i = 0; i < projects?.length; i++) {
 			let project = await getProjectById(projects[i]);
 			if (!project) return res.status(404).json({ msg: "Project not found" });
 			projects_arr.push(project);
 		}
 	}
+
+	let avatar = req.file!;
+	const tempPassword = `${generateTempPassword()}`;
 
 	// Input Data
 	const paramsData: CreateUserInfo = {
@@ -78,10 +83,13 @@ export const addUser = async (req: Request, res: Response) => {
 		shift_end,
 		gender,
 		department,
-		company
+		company,
+		password: await bcrypt.hash(tempPassword, 10)
 	}
-	sendEmail()
-	const user = await createUser(paramsData);
+
+	const user = await createUser(paramsData, avatar);
+	sendEmail(email, 'Temp Password', `your Account Just created, logIn to our portal using email:${email} password:${tempPassword}`)
+
 	if (!user) return res.status(409).json({ msg: "Field to Create Employee" });
 	return res.json(user);
 };

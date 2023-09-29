@@ -43,7 +43,7 @@ export const registerUser = async (
 };
 
 // DONE
-export const createUser = async (paramsData: CreateUserInfo) => {
+export const createUser = async (paramsData: CreateUserInfo, avatar: any) => {
 	const {
 		first_name,
 		last_name,
@@ -55,12 +55,13 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 		projects,
 		id_number,
 		id_ex_date,
+		salary_per_month,
 		shift_start,
 		shift_end,
 		gender,
+		department,
 		company,
-		salary_per_month,
-		department
+		password
 	} = paramsData;
 
 	let projects_info_arr = [];
@@ -86,9 +87,11 @@ export const createUser = async (paramsData: CreateUserInfo) => {
 	shift_start && (user.shift_start = shift_start);
 	shift_end && (user.shift_end = shift_end);
 	gender && (user.gender = gender);
+	password && (user.password = password);
 	user.projects_info = projects_info_arr,
 		user.department_info = { id: department.id, name: department.name };
 	user.company_info = { id: company.id, name: company.name }
+	user.avatar = avatar ? avatar.path : '';
 	user.department = department;
 	user.company = company;
 	await userRepository.save(user);

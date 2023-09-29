@@ -2,9 +2,10 @@ import { Router } from "express";
 import { getUserById, getCurrentUser, updateUser, deleteUser, getManagers, getDepartmentUsers, addUser, getAllWithGroups } from "../controller/UserController";
 import { checkAuth } from "../middleware/checkAuth";
 import { getAllTasksByUserId } from "../controller/TaskController";
+import uploadAvatar from "../middleware/upload/avatarUpload";
 
 const router = Router();
-router.route("/").post(checkAuth, addUser);
+router.route("/").post(checkAuth, uploadAvatar.single('avatar'), addUser);
 router.route("/").get(checkAuth, getCurrentUser);
 router.route("/groups/").get(checkAuth, getAllWithGroups);
 

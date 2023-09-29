@@ -38,9 +38,6 @@ export const addProject = async (req: Request, res: Response) => {
         customer = customerData;
     }
 
-
-    console.log(projectThumbnail)
-
     // then create project
     const project = await createProject(createData, projectThumbnail, customer, company);
     if (!project) return res.status(409).json({ msg: "Field To Create Project" });
