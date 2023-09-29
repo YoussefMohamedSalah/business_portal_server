@@ -11,7 +11,6 @@ declare global {
 			DATABASE_PASSWORD?: string;
 			NODE_ENV?: string;
 			OTP_SECRET_KEY?: string;
-			ABSOLUTE_PATH?: string;
 		}
 	}
 }
