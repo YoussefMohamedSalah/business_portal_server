@@ -16,6 +16,8 @@ import { Notification } from "./Notification";
 import { Task } from "./Task";
 import { Group } from "./Group";
 import { Project } from "./Project";
+import { Role } from '../enums/enums';
+
 
 @Entity({ name: "user" })
 export class User extends BaseEntity {
@@ -33,6 +35,7 @@ export class User extends BaseEntity {
 	})
 	company_info: { id: string, name: string };
 
+	// GENERAL INFO *************************************
 	@Column({
 		default: null
 	})
@@ -46,17 +49,23 @@ export class User extends BaseEntity {
 	@Column({
 		default: null
 	})
-	business_title: string;
-
-	@Column({
-		default: null
-	})
 	email: string;
 
 	@Column({
 		default: null
 	})
 	password: string;
+
+	@Column({
+		default: 'uploads\placeholders\person.jpg',
+		nullable: true
+	})
+	avatar: string;
+
+	@Column({
+		default: null
+	})
+	gender: string;
 
 	@Column({
 		default: null
@@ -67,6 +76,53 @@ export class User extends BaseEntity {
 		default: null
 	})
 	phone_number: string;
+
+	@Column({
+		type: "date",
+		default: () => "CURRENT_TIMESTAMP"
+	})
+	renewal_of_residence: string;
+
+	@Column({
+		nullable: true
+	})
+	id_number: string;
+
+	@Column({
+		nullable: true
+	})
+	id_ex_date: string;
+
+	// BUSINESS INFO *************************************
+	@Column({
+		default: null
+	})
+	business_title: string;
+
+	@Column({
+		type: 'enum',
+		default: Role.USER,
+		enum: Role
+	})
+	role: string;  // enum           <Superuser, "User", "Manager", "Director">
+
+	// @Column({
+	// 	default: false
+	// })
+	// is_manager: boolean; // useless
+
+	// @Column({
+	// 	type: 'json',
+	// 	nullable: true
+	// })
+	// permissions: string[]; // useless
+
+	// to be added     <KPI>
+
+	@Column({
+		default: 0
+	})
+	kpi: number;
 
 	@Column({
 		default: null
@@ -86,43 +142,6 @@ export class User extends BaseEntity {
 	contract_ex: string;
 
 	@Column({
-		type: "date",
-		default: () => "CURRENT_TIMESTAMP"
-	})
-	renewal_of_residence: string;
-
-	@Column({
-		default: false
-	})
-	is_manager: boolean;
-
-	@Column({
-		type: 'jsonb',
-		array: false,
-		default: () => "'{}'",
-		nullable: false,
-	})
-	department_info: { id: string, name: string };
-
-	@Column({
-		type: 'jsonb',
-		array: false,
-		default: () => "'[]'",
-		nullable: false,
-	})
-	projects_info: Array<{ id: string, name: string }>;
-
-	@Column({
-		nullable: true
-	})
-	id_number: string;
-
-	@Column({
-		nullable: true
-	})
-	id_ex_date: string;
-
-	@Column({
 		nullable: true
 	})
 	salary_per_month: string;
@@ -133,36 +152,9 @@ export class User extends BaseEntity {
 	salary_per_hour: string;
 
 	@Column({
-		default: "user"
-	})
-	role: string;
-
-	@Column({
 		default: null
 	})
 	sign: string;
-
-	@Column({
-		default: 'https://gravatar.com/avatar/f42228ef47a296bebf07d1228e2eabd6?s=400&d=robohash&r=x',
-		nullable: true
-	})
-	avatar: string;
-
-	@Column({
-		default: null
-	})
-	file: string;
-
-	@Column({
-		type: 'json',
-		nullable: true
-	})
-	permissions: string[];
-
-	@Column({
-		default: false
-	})
-	is_verified: boolean;
 
 	@Column({
 		type: 'time',
@@ -181,14 +173,29 @@ export class User extends BaseEntity {
 	@Column({
 		default: null
 	})
-	gender: string;
+	file: string;
 
-	// @Column({ 
-	// 	type: 'json',
-	// 	nullable: true,
-	// 	default: []
-	// })
-	// groups: string[];
+	@Column({
+		default: false
+	})
+	is_verified: boolean;
+
+	// UTILS INFO *************************************
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'{}'",
+		nullable: false,
+	})
+	department_info: { id: string, name: string };
+
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'[]'",
+		nullable: false,
+	})
+	projects_info: Array<{ id: string, name: string }>;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

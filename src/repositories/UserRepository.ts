@@ -1,17 +1,11 @@
 import { getRepository } from "typeorm";
-import { Customer } from "../entities/Customer";
-import { Role } from "../enums/enums";
 import { User } from "../entities/User";
-
-import { CreateUserInfo, RegisterUserInfo } from "../types/CreateUserInfo";
-import { getGroupByProjectId } from './GroupRepository';
-import { getRoleFromString } from "../utils/getRoleFromString";
 import { Project } from "../entities/Project";
 import { Company } from "../entities/Company";
-// import dotenv from "dotenv";
+import { Role } from "../enums/enums";
+import { CreateUserInfo, RegisterUserInfo } from "../types/CreateUserInfo";
+import { getGroupByProjectId } from './GroupRepository';
 
-// dotenv.config();
-// const secretHash = process.env.SECRET_HASH;
 
 // *New* - This is a new method that we are adding to the repository
 export const registerUser = async (
@@ -34,7 +28,6 @@ export const registerUser = async (
 	user.first_name = first_name;
 	user.last_name = last_name;
 	phone_number && (user.phone_number = phone_number);
-	user.is_manager = true;
 	user.role = Role.SUPERUSER;
 	user.company_info = { id: company.id, name: company.name }
 	user.company = company;
@@ -130,7 +123,8 @@ export const getByEmail = async (email: string) => {
 			"user.password",
 			"user.role",
 			"user.phone_number",
-			"user.avatar"
+			"user.avatar",
+			"user.department_info",
 		])
 		.leftJoinAndSelect(
 			"user.company",
@@ -166,9 +160,7 @@ export const getUserAndCompanyById = async (id: string) => {
 			"user.sign",
 			"user.avatar",
 			"user.file",
-			"user.permissions",
 			"user.role",
-			"user.is_manager",
 			"user.is_verified",
 			"user.shift_start",
 			"user.shift_end",
@@ -211,9 +203,7 @@ export const getById = async (id: string) => {
 			"user.sign",
 			"user.avatar",
 			"user.file",
-			"user.permissions",
 			"user.role",
-			"user.is_manager",
 			"user.is_verified",
 			"user.shift_start",
 			"user.shift_end",
@@ -289,9 +279,7 @@ export const getAllCompanyUsers = async (companyId: string) => {
 			"user.sign",
 			"user.avatar",
 			"user.file",
-			"user.permissions",
 			"user.role",
-			"user.is_manager",
 			"user.is_verified",
 			"user.shift_start",
 			"user.shift_end",
@@ -319,9 +307,7 @@ export const getAllEmployeesWithGroups = async (companyId: string) => {
 			"user.email",
 			"user.phone_number",
 			"user.avatar",
-			"user.permissions",
 			"user.role",
-			"user.is_manager",
 			"user.department_info",
 		])
 		.leftJoinAndSelect('user.groups', 'group')
@@ -356,9 +342,7 @@ export const getAllDepartmentUsers = async (departmentId: string) => {
 			"user.sign",
 			"user.avatar",
 			"user.file",
-			"user.permissions",
 			"user.role",
-			"user.is_manager",
 			"user.is_verified",
 			"user.shift_start",
 			"user.shift_end",
@@ -397,9 +381,7 @@ export const getAllUsers = async (companyId: string) => {
 				"user.sign",
 				"user.avatar",
 				"user.file",
-				"user.permissions",
 				"user.role",
-				"user.is_manager",
 				"user.is_verified",
 				"user.shift_start",
 				"user.shift_end",
@@ -430,7 +412,7 @@ export const getAllManagers = async (companyId: string) => {
 	const userRepository = getRepository(User);
 	const users = await userRepository
 		.createQueryBuilder("user")
-		.where("user.is_manager = :is_manager", { is_manager: true })
+		.where("user.role != :role", { role: Role.USER })
 		.andWhere("user.company = :companyId", { companyId: companyId })
 		.select([
 			"user.id",
@@ -452,9 +434,7 @@ export const getAllManagers = async (companyId: string) => {
 			"user.sign",
 			"user.avatar",
 			"user.file",
-			"user.permissions",
 			"user.role",
-			"user.is_manager",
 			"user.is_verified",
 			"user.shift_start",
 			"user.shift_end",

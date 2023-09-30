@@ -60,6 +60,7 @@ export const login = async (req: Request, res: Response) => {
 			phone_number: user.phone_number,
 			role: user.role,
 			avatar: user.avatar,
+			department_info: user.department_info
 		},
 		company: user.company
 	});
@@ -138,7 +139,8 @@ export const register = async (req: Request, res: Response) => {
 				email: user.email,
 				phone_number: user.phone_number,
 				role: user.role,
-				avatar: user.avatar ? user.avatar : ''
+				avatar: user.avatar ? user.avatar : '',
+				department_info: user.department_info ? user.department_info : {}
 			},
 			company: user.company
 		});

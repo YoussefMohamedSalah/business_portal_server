@@ -27,12 +27,8 @@ export const addInitialData = async () => {
     let departmentsList = [];
     const departments = await getDepartments();
     if (!departments || departments && departments.length === 0) {
-        let initialDepartments = [
-            'HR', 'Finance', 'Marketing', 'Customer_supplier', 'Construction', 'Tender', 'Procurement', 'IT'
-        ]
-        let initialPermissions = [
-            'can_read', 'can_write', 'can_update', 'can_delete'
-        ]
+        let initialDepartments = ['Projects', 'HR', 'Finance', 'Marketing', 'Tender', 'Procurement']
+        let initialPermissions = ['can_read', 'can_write', 'can_update', 'can_delete']
         try {
             for (let index = 0; index < initialDepartments.length; index++) {
                 const department = Department.create({

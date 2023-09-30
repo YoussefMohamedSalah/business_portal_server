@@ -1,9 +1,10 @@
+// used
 export enum Status {
 	APPROVED = "Approved",
 	PENDING = "Pending",
 	REJECTED = "Rejected",
 }
-
+// used
 export enum RequestType {
 	PURCHASE_ORDER = "purchase_order_request",
 	PETTY_CASH = "petty_cash_request",
@@ -20,40 +21,36 @@ export enum FuncType {
 	FUNCTION = "function",
 	AGGREGATE = "aggregate"
 }
-
-
+// used
 export enum Role {
-	SUPERUSER = 'superuser',
-	OWNER = 'owner',
-	ADMIN = 'admin',
-	USER = 'user',
+	SUPERUSER = 'Superuser',
+	USER = 'User',
+	MANAGER = 'Manager',
+	DIRECTOR = 'Director',
 }
-
+// used
 export enum CustomerType {
 	Company = 'Company',
 	Individual = 'Individual',
 }
-
+// used
 export enum SupplierType {
 	Company = 'Company',
 	Individual = 'Individual',
 }
-
+// used
 export enum InventoryType {
 	MASTER = 'master_inventory',
 	PROJECT = 'project_inventory',
 }
-
+// used
 export enum DepartmentType {
-	Management = 'management',
-	Financial = 'financial',
-	Procurement = 'procurement',
-	Construction = 'construction',
-	Marketing = 'marketing',
-	Customer_supplier = 'customer_supplier',
-	HR = 'hr',
-	Tender = 'tender',
-	IT = 'it',
+	PROJECTS = 'Projects',
+	HR = 'HR',
+	FINANCE = 'Finance',
+	MARKETING = 'Marketing',
+	TENDER = 'Tender',
+	PROCUREMENT = 'Procurement',
 }
 
 export enum taskType {

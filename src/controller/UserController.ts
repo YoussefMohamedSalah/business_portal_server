@@ -200,7 +200,7 @@ export const updateUser = async (req: Request, res: Response) => {
 	user.avatar = avatar ? avatar : user.avatar;
 	user.gender = gender ? gender : user.gender;
 	user.file = file ? file : user.file;
-	user.permissions = permissions ? permissions : user.permissions;
+	// user.permissions = permissions ? permissions : user.permissions;
 	user.role = role ? role : user.role;
 	if (departmentId && department) {
 		user.department = department ? department : user.department;
