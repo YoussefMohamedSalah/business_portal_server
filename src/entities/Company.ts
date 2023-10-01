@@ -72,6 +72,21 @@ export class Company extends BaseEntity {
     })
     female_count: number;
 
+    @Column({
+		type: 'time',
+		nullable: true,
+		default: null
+	})
+	shift_start: string;
+
+	@Column({
+		type: 'time',
+		nullable: true,
+		default: null
+	})
+	shift_end: string;
+
+
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     @OneToMany(() => Project, project => project.company, { cascade: true, onDelete: 'CASCADE' })

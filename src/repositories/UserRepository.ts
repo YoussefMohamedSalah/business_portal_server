@@ -125,6 +125,8 @@ export const getByEmail = async (email: string) => {
 			"user.phone_number",
 			"user.avatar",
 			"user.department_info",
+			"user.shift_start",
+			"user.shift_end",
 		])
 		.leftJoinAndSelect(
 			"user.company",

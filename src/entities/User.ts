@@ -57,7 +57,7 @@ export class User extends BaseEntity {
 	password: string;
 
 	@Column({
-		default: 'uploads\placeholders\person.jpg',
+		default: 'uploads/placeholders/person.jpg',
 		nullable: true
 	})
 	avatar: string;
