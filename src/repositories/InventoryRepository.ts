@@ -9,7 +9,7 @@ import { Project } from "../entities/Project";
 export const createInventory = async (
     createData: CreateInventoryInfo,
     company: Company,
-    project?:Project
+    project?: Project
 ) => {
     const { type, items_count, items_value } = createData;
     // create inventory
@@ -18,8 +18,11 @@ export const createInventory = async (
     inventory.type = type ? type : InventoryType.MASTER;
     inventory.items_count = items_count ? items_count : 0;
     inventory.items_value = items_value ? items_value : 0;
+    if (project) {
+        inventory.project = project;
+        inventory.project_info = { id: project.id, name: project.name }
+    };
     inventory.company = company;
-    if(project) inventory.project = project;
     await inventoryRepository.save(inventory);
     return inventory;
 };
@@ -35,6 +38,20 @@ export const getById = async (id: string) => {
 };
 
 // DONE
+export const getWithItemsById = async (id: string) => {
+    const inventoryRepository = getRepository(Inventory);
+    const inventory = await inventoryRepository
+        .createQueryBuilder("inventory")
+        .where("inventory.id = :id", { id: id })
+        .leftJoinAndSelect(
+            "inventory.items",
+            "items"
+        )
+        .getOne();
+    return inventory;
+};
+
+// DONE
 export const getAllByCompanyId = async (companyId: string) => {
     const inventoryRepository = getRepository(Inventory);
     const inventory = await inventoryRepository
@@ -43,19 +60,4 @@ export const getAllByCompanyId = async (companyId: string) => {
         .getMany();
     return inventory;
 };
-
-
-
-// export const getInventoryItemsById = async (id: string) => {
-//     const inventoryRepository = getRepository(Inventory);
-//     const inventory = await inventoryRepository
-//         .createQueryBuilder("inventory")
-//         .where("inventory.id = :id", { id: id })
-//         .leftJoinAndSelect(
-//             "inventory.items",
-//             "items"
-//         )
-//         .getOne();
-//     return inventory;
-// };
 

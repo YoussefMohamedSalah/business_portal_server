@@ -24,7 +24,7 @@ export const createCompany = async (
     await companyRepository.save(company);
 
     // Create the inventory for the company
-    const createInventoryData = { type: InventoryType.MASTER, items_count: 0, items_value: 0 }
+    const createInventoryData = { type: InventoryType.MASTER, items_count: 0, items_value: 0}
     await createInventory(createInventoryData, company);
     return company;
 };

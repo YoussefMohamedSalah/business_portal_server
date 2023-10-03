@@ -3,8 +3,8 @@ import { Inventory } from './Inventory';
 
 @Entity({ name: 'inventory_item' })
 export class InventoryItem extends BaseEntity {
-	@PrimaryGeneratedColumn('increment')
-	id: number;
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
 	@Column()
 	name: string;
@@ -12,15 +12,22 @@ export class InventoryItem extends BaseEntity {
 	@Column()
 	price: number;
 
+	@Column({
+		default: 0
+	})
+	total_value: number;
+
 	@Column()
 	count: number;
 
-	@Column()
+	@Column({
+		nullable: true
+	})
 	thumbnail: string;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-	@ManyToOne(() => Inventory, inventory => inventory.inventory_items, { onDelete: 'CASCADE' })
+	@ManyToOne(() => Inventory, inventory => inventory.items, { onDelete: 'CASCADE' })
 	inventory: Inventory;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 

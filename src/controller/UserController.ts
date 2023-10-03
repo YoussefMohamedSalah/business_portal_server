@@ -39,8 +39,8 @@ export const addUser = async (req: Request, res: Response) => {
 		gender,
 		salary_per_month,
 		departmentId,
+		role
 	} = req.body;
-	console.log(projects)
 
 	// Check if the user already exists
 	const existingUser = await User.findOne({ where: { email } });
@@ -81,6 +81,7 @@ export const addUser = async (req: Request, res: Response) => {
 		salary_per_month,
 		shift_start,
 		shift_end,
+		role,
 		gender,
 		department,
 		company,

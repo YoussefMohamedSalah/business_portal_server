@@ -54,7 +54,8 @@ export const createUser = async (paramsData: CreateUserInfo, avatar: any) => {
 		gender,
 		department,
 		company,
-		password
+		password,
+		role
 	} = paramsData;
 
 	let projects_info_arr = [];
@@ -80,6 +81,7 @@ export const createUser = async (paramsData: CreateUserInfo, avatar: any) => {
 	shift_start && (user.shift_start = shift_start);
 	shift_end && (user.shift_end = shift_end);
 	gender && (user.gender = gender);
+	role && (user.role = role);
 	password && (user.password = password);
 	user.projects_info = projects_info_arr,
 		user.department_info = { id: department.id, name: department.name };

@@ -9,8 +9,8 @@ import { Project } from './Project';
 
 @Entity({ name: 'inventory' })
 export class Inventory extends BaseEntity {
-	@PrimaryGeneratedColumn('increment')
-	id: number;
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
 	@Column({
 		type: 'enum',
@@ -18,6 +18,14 @@ export class Inventory extends BaseEntity {
 		enum: InventoryType
 	})
 	type: string;
+
+	@Column({
+	type: 'jsonb',
+	array: false,
+	default: () => "'{}'",
+	nullable: false,
+	})
+	project_info: { id: string, name: string };
 
 	@Column({
 		default: 0
@@ -35,10 +43,10 @@ export class Inventory extends BaseEntity {
 	company: Company;
 
 	@OneToOne(() => Project, project => project.inventory, { cascade: true, onDelete: 'CASCADE' })
-    project: Project;
+	project: Project;
 
 	@OneToMany(() => InventoryItem, inventoryItem => inventoryItem.inventory, { cascade: true, onDelete: 'CASCADE' })
-	inventory_items: InventoryItem[];
+	items: InventoryItem[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({
