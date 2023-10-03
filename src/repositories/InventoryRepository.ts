@@ -57,6 +57,7 @@ export const getAllByCompanyId = async (companyId: string) => {
     const inventory = await inventoryRepository
         .createQueryBuilder("inventory")
         .where("inventory.companyId = :companyId", { companyId: companyId })
+        .orderBy("inventory.createdAt", "ASC")
         .getMany();
     return inventory;
 };

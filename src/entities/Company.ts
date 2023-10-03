@@ -14,6 +14,7 @@ import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Task } from './Task';
 import { Tender } from './Tender';
 import { Group } from './Group';
+import { SubcontractorInvoice } from './SubcontractorInvoice';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
@@ -137,7 +138,8 @@ export class Company extends BaseEntity {
     @JoinColumn()
     workFlow: RequestWorkFlow;
 
-
+    @OneToMany(() => SubcontractorInvoice, subcontractorInvoice => subcontractorInvoice.project, { onDelete: 'CASCADE' })
+	subcontractorInvoices: SubcontractorInvoice[];
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
     @Column({

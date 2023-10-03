@@ -8,6 +8,7 @@ import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Group } from './Group';
 import { Inventory } from './Inventory';
 import { User } from './User';
+import { SubcontractorInvoice } from './SubcontractorInvoice';
 
 
 @Entity({ name: 'project' })
@@ -27,7 +28,7 @@ export class Project extends BaseEntity {
 	@Column({ nullable: true })
 	latitude: string;
 
-	@Column({ nullable: true, default: 'https://cdn.pixabay.com/photo/2018/06/17/20/35/chain-3481377_1280.jpg' })
+	@Column({ nullable: true })
 	thumbnail: string;
 
 	@Column({ nullable: true })
@@ -54,38 +55,38 @@ export class Project extends BaseEntity {
 	@Column({ nullable: true })
 	contract_number: string;
 
-	@Column({ nullable: true, default:0 })
+	@Column({ nullable: true, default: 0 })
 	sites_count: string;
 
-	@Column({ nullable: true, default:0 })
+	@Column({ nullable: true, default: 0 })
 	buildings_count: string;
 
-	@Column({ nullable: true, default:0 })
+	@Column({ nullable: true, default: 0 })
 	floors_count: string;
 
 	// -----------------------------------------------
-	@Column({ default:0, nullable: true })
+	@Column({ default: 0, nullable: true })
 	total_budget: string;
 
-	@Column({ default:0, nullable: true })
+	@Column({ default: 0, nullable: true })
 	po_budget: string;
 
-	@Column({ default:0, nullable: true })
+	@Column({ default: 0, nullable: true })
 	po_expenses: string;
 
-	@Column({ default:0, nullable: true })
+	@Column({ default: 0, nullable: true })
 	pc_budget: string;
 
-	@Column({ default:0, nullable: true })
+	@Column({ default: 0, nullable: true })
 	pc_expenses: string;
 
-	@Column({ default:0, nullable: true })
+	@Column({ default: 0, nullable: true })
 	staff_budget: string;
-	
-	@Column({ default:0, nullable: true })
+
+	@Column({ default: 0, nullable: true })
 	staff_expenses: string;
 
-	@Column({ default:0, nullable: true })
+	@Column({ default: 0, nullable: true })
 	subcontractor_budget: string;
 
 	@Column({
@@ -133,6 +134,9 @@ export class Project extends BaseEntity {
 	// purchase_order
 	@OneToMany(() => PurchaseOrderRequest, purchaseOrderRequest => purchaseOrderRequest.project, { onDelete: 'CASCADE' })
 	PurchaseOrderRequests: PurchaseOrderRequest[];
+
+	@OneToMany(() => SubcontractorInvoice, subcontractorInvoice => subcontractorInvoice.project, { onDelete: 'CASCADE' })
+	subcontractorInvoices: SubcontractorInvoice[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

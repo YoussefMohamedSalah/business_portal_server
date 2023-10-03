@@ -37,6 +37,14 @@ export class RequestWorkFlow extends BaseEntity {
 		nullable: false,
 	})
 	purchase_order_flow: Array<{ userId: string, name: string, title: string, state: boolean, isRejected: boolean, index: number }>;
+	
+	@Column({
+		type: 'jsonb',
+		array: false,
+		default: () => "'[]'",
+		nullable: false,
+	})
+	subcontractor_invoice_flow: Array<{ userId: string, name: string, title: string, state: boolean, isRejected: boolean, index: number }>;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

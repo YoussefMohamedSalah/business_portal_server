@@ -15,6 +15,7 @@ import {
 import { checkAuth } from "../middleware/checkAuth";
 import { getAllTasksByProjectId } from "../controller/TaskController";
 import uploadThumbnail from "../middleware/upload/thumbnailUpload";
+import { getAllInvoicesByProject } from "../controller/SubcontractorInvoiceController";
 
 const router = Router();
 
@@ -33,6 +34,7 @@ router.route("/purchase_order/:projectId").get(checkAuth, getAllProjectPoRequest
 router.route("/petty_cash/:projectId").get(checkAuth, getAllProjectPcRequests);
 router.route("/material/:projectId").get(checkAuth, getAllProjectMaterialRequests);
 router.route("/site/:projectId").get(checkAuth, getAllProjectSiteRequests);
+router.route("/subcontractor_invoice/:projectId").get(checkAuth, getAllInvoicesByProject);
 
 
 router.route("/:id").get(checkAuth, getProjectById).patch(checkAuth, updateProject).delete(checkAuth, deleteProject);

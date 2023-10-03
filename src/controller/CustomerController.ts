@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { createCustomer, getAllByCompanyId, getById } from '../repositories/CustomerRepository';
-import { CreateCustomerInfo } from 'src/types/CreateCustomerInfo';
+import { CreateCustomerInfo } from '../types/CreateCustomerInfo';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { validateUUID } from '../utils/validateUUID';
 
