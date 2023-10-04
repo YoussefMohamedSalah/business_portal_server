@@ -29,7 +29,7 @@ import { TenderRouter } from './routes/tender';
 import { GroupRouter } from './routes/group';
 import { WorkFlowRouter } from './routes/workFlow';
 import { SubcontractorRouter } from './routes/subcontractor';
-import { SubcontractorInvoiceRouter } from './routes/subcontractorInvoice';
+import { SubcontractorContractRouter } from './routes/subcontractorContract';
 
 // constants
 dotenv.config();
@@ -64,7 +64,7 @@ try {
   app.use('/supplier', SupplierRouter);
   app.use('/customer', CustomerRouter);
   app.use('/subcontractor', SubcontractorRouter);
-  app.use('/subcontractor_invoice', SubcontractorInvoiceRouter);
+  app.use('/subcontractor_contract', SubcontractorContractRouter);
   app.use('/inventory', InventoryRouter);
   app.use('/inventory_item', InventoryItemRouter);
   app.use('/project', ProjectRouter);

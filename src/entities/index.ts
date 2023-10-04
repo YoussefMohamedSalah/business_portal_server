@@ -22,8 +22,8 @@ import { Attendance } from './Attendance'
 import { Task } from "./Task";
 import { Group } from "./Group";
 import { Tender } from "./Tender";
-import {SubcontractorInvoice} from './SubcontractorInvoice';
-import {Subcontractor} from './Subcontractor';
+import { SubcontractorContract } from './SubcontractorContract';
+import { Subcontractor } from './Subcontractor';
 
 
 export const entities = [
@@ -47,7 +47,7 @@ export const entities = [
 	Task,
 	Group,
 	Tender,
-	SubcontractorInvoice,
+	SubcontractorContract,
 	Subcontractor
 	// UserDepartment,
 ];

@@ -4,8 +4,8 @@ import { Company } from './Company';
 import { Subcontractor } from './Subcontractor';
 import { Status } from '../enums/enums';
 
-@Entity({ name: 'subcontractor_invoice' })
-export class SubcontractorInvoice extends BaseEntity {
+@Entity({ name: 'subcontractor_contract' })
+export class SubcontractorContract extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -79,7 +79,6 @@ export class SubcontractorInvoice extends BaseEntity {
     @Column({ nullable: true, default: 0 })
     vat: number;
 
-
     @Column({
         type: 'jsonb',
         array: false,
@@ -90,13 +89,13 @@ export class SubcontractorInvoice extends BaseEntity {
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-    @ManyToOne(() => Project, project => project.subcontractorInvoices, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Project, project => project.subcontractorContracts, { onDelete: 'CASCADE' })
     project: Project;
 
-    @ManyToOne(() => Company, company => company.subcontractorInvoices, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Company, company => company.subcontractorContracts, { onDelete: 'CASCADE' })
     company: Company;
 
-    @ManyToOne(() => Subcontractor, subcontractor => subcontractor.subcontractorInvoices)
+    @ManyToOne(() => Subcontractor, subcontractor => subcontractor.subcontractorContracts)
     subcontractor: Subcontractor;
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     // BeforeInsert decorator to generate and increment CODE

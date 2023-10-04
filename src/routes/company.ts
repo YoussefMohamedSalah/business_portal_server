@@ -11,7 +11,7 @@ import { getCompanyDepartments } from "../controller/DepartmentController";
 import { getTasksByCompanyId } from "../controller/TaskController";
 import { getCompanyTenders } from "../controller/TenderController";
 import { allCompanyGroups } from "../controller/GroupController";
-import { getAllInvoicesByCompany } from "../controller/SubcontractorInvoiceController";
+import { getAllContractsByCompany } from "../controller/SubcontractorContractController";
 
 const router = Router();
 router.route("/").post(checkAuth, addCompany);
@@ -19,7 +19,7 @@ router.route("/").get(checkAuth, getCompanyById).put(checkAuth, updateCompany).d
 // **************************************************
 router.route("/customer/").get(checkAuth, getAllCompanyCustomers);
 router.route("/subcontractor/").get(checkAuth, getAllCompanySubcontractors);
-router.route("/subcontractor_invoice/").get(checkAuth, getAllInvoicesByCompany);
+router.route("/subcontractor_contract/").get(checkAuth, getAllContractsByCompany);
 router.route("/inventory/").get(checkAuth, allCompanyInventories);
 router.route("/supplier/").get(checkAuth, allCompanySuppliers);
 router.route("/department/").get(checkAuth, getCompanyDepartments)

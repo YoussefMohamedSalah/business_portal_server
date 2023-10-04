@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity, ManyToOne } from 'typeorm';
 import { CustomerType } from '../enums/enums';
 import { Company } from './Company';
-import { SubcontractorInvoice } from './SubcontractorInvoice';
+import { SubcontractorContract } from './SubcontractorContract';
 
 @Entity({ name: 'subcontractor' })
 export class Subcontractor extends BaseEntity {
@@ -77,8 +77,8 @@ export class Subcontractor extends BaseEntity {
     @ManyToOne(() => Company, company => company.customers, { onDelete: 'CASCADE' })
     company: Company;
 
-    @OneToMany(() => SubcontractorInvoice, subcontractorInvoice => subcontractorInvoice.subcontractor, { cascade: true, onDelete: 'CASCADE' })
-    subcontractorInvoices: SubcontractorInvoice[];
+    @OneToMany(() => SubcontractorContract, subcontractorContract => subcontractorContract.subcontractor, { cascade: true, onDelete: 'CASCADE' })
+    subcontractorContracts: SubcontractorContract[];
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
     @Column({

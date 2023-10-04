@@ -14,7 +14,7 @@ import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Task } from './Task';
 import { Tender } from './Tender';
 import { Group } from './Group';
-import { SubcontractorInvoice } from './SubcontractorInvoice';
+import { SubcontractorContract } from './SubcontractorContract';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
@@ -74,18 +74,18 @@ export class Company extends BaseEntity {
     female_count: number;
 
     @Column({
-		type: 'time',
-		nullable: true,
-		default: null
-	})
-	shift_start: string;
+        type: 'time',
+        nullable: true,
+        default: null
+    })
+    shift_start: string;
 
-	@Column({
-		type: 'time',
-		nullable: true,
-		default: null
-	})
-	shift_end: string;
+    @Column({
+        type: 'time',
+        nullable: true,
+        default: null
+    })
+    shift_end: string;
 
 
     // Relations
@@ -138,8 +138,8 @@ export class Company extends BaseEntity {
     @JoinColumn()
     workFlow: RequestWorkFlow;
 
-    @OneToMany(() => SubcontractorInvoice, subcontractorInvoice => subcontractorInvoice.company, { onDelete: 'CASCADE' })
-	subcontractorInvoices: SubcontractorInvoice[];
+    @OneToMany(() => SubcontractorContract, subcontractorContract => subcontractorContract.company, { onDelete: 'CASCADE' })
+    subcontractorContracts: SubcontractorContract[];
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
     @Column({
