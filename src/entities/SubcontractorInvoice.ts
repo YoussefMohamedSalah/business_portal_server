@@ -24,7 +24,7 @@ export class SubcontractorInvoice extends BaseEntity {
         default: () => "'[]'",
         nullable: false,
     })
-    conditions: Array<{ No: number, content: string }>;
+    conditions: string[];
 
     @Column({
         type: 'jsonb',
@@ -32,7 +32,7 @@ export class SubcontractorInvoice extends BaseEntity {
         default: () => "'[]'",
         nullable: false,
     })
-    items: Array<{ No: number, item: string, description: string, count: number, price: number, total: number }>;
+    items: Array<{ item: string, description: string, count: number, price: number, total: number }>;
 
     @Column({ default: 0 })
     total_value: number;
@@ -54,6 +54,14 @@ export class SubcontractorInvoice extends BaseEntity {
     project_details: { id: string, name: string };
 
     @Column({
+        type: 'jsonb',
+        array: false,
+        default: () => "'{}'",
+        nullable: false,
+    })
+    subcontractor_details: { id: string, name: string };
+
+    @Column({
         type: 'enum',
         default: Status.PENDING,
         enum: Status
@@ -68,9 +76,17 @@ export class SubcontractorInvoice extends BaseEntity {
     })
     work_flow: Array<{ userId: string, title: string, state: boolean, isRejected: boolean }>;
 
-
     @Column({ nullable: true, default: 0 })
     vat: number;
+
+
+    @Column({
+        type: 'jsonb',
+        array: false,
+        default: () => "'[]'",
+        nullable: false,
+    })
+    files: string[];
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

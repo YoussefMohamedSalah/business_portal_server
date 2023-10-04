@@ -1,15 +1,14 @@
 import { getRepository } from "typeorm";
 import { Company } from "../entities/Company";
 import { Project } from "../entities/Project";
-import { PurchaseOrderRequest } from "../entities/PurchaseOrderRequest";
 import { User } from "../entities/User";
 import { Status } from "../enums/enums";
 import { SubcontractorInvoice } from "../entities/SubcontractorInvoice";
 
 
 //** Create New Request **
-export const createInvoice = async (data: any, company: Company, user: User, project: Project) => {
-    const { items, conditions, date, total_value, vat } = data;
+export const createInvoice = async (data: any, company: Company, project: Project, user: User) => {
+    const { items, conditions, date, total_value, vat, subcontractor, filesNameSetArray } = data;
     const invoiceRepository = getRepository(SubcontractorInvoice);
     const invoice = new SubcontractorInvoice();
     invoice.date = date;
@@ -19,6 +18,7 @@ export const createInvoice = async (data: any, company: Company, user: User, pro
     invoice.vat = vat;
     invoice.status = Status.PENDING;
     invoice.work_flow = company.workFlow.subcontractor_invoice_flow;
+    if (filesNameSetArray) invoice.files = filesNameSetArray;
     invoice.user = {
         id: user.id,
         name: `${user.first_name} ${user.last_name}`,
@@ -27,8 +27,13 @@ export const createInvoice = async (data: any, company: Company, user: User, pro
         id: project.id,
         name: project.name,
     };
-    invoice.project = project;
+    invoice.subcontractor_details = {
+        id: subcontractor.id,
+        name: subcontractor.representative ? subcontractor.representative : subcontractor.company_name,
+    };
     invoice.company = company;
+    invoice.project = project;
+    invoice.subcontractor = subcontractor;
     await invoiceRepository.save(invoice);
     return invoice;
 }

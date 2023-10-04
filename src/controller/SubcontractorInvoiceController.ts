@@ -8,15 +8,40 @@ import { createInvoice, getAllCompanySubcontractorInvoices, getById, getAllProje
 
 export const addInvoice = async (req: Request, res: Response) => {
     const { projectId } = req.params;
+    let isValidUUID = validateUUID(projectId);
+    if (!isValidUUID) return res.status(400).json({ msg: "project Id is not valid" });
     const { companyId, userId } = req.userData!;
-    const { items, conditions, date, total_value, vat } = req.body;
-    let data = {
-        date,
-        total_value,
-        items,
-        conditions,
-        vat
+    const { subcontractor, items, conditions, date, vat, total_value, filesNameSet } = req.body;
+
+    const invoiceFiles = req.files!;
+
+    let conditionsObj;
+    let itemsObj;
+    let subcontractorObj;
+    let filesNameSetArray;
+
+    if (invoiceFiles) {
+        conditionsObj = JSON.parse(conditions);
+        itemsObj = JSON.parse(items);
+        subcontractorObj = JSON.parse(subcontractor);
+        if (filesNameSet) filesNameSetArray = filesNameSet.split(',')
+    } else {
+        conditionsObj = conditions;
+        itemsObj = items;
+        subcontractorObj = subcontractor;
+        filesNameSetArray = []
     }
+
+    let createInput = {
+        subcontractor: subcontractorObj,
+        items: itemsObj,
+        conditions: conditionsObj,
+        date,
+        vat,
+        total_value,
+        filesNameSetArray
+    }
+
     const company = await getCompanyWithWorkflow(companyId);
     if (!company) return res.status(404).json({ msg: "Company not found" });
 
@@ -26,7 +51,7 @@ export const addInvoice = async (req: Request, res: Response) => {
     const project = await getProjectById(projectId);
     if (!project) return res.status(404).json({ msg: "Project not found" });
 
-    const invoice = await createInvoice(data, company, user, project)
+    const invoice = await createInvoice(createInput, company, project, user)
     if (!invoice) return res.status(404).json({ msg: "Field To Create Invoice" });
     return res.json(invoice);
 };
@@ -49,7 +74,7 @@ export const getAllInvoicesByProject = async (req: Request, res: Response) => {
 
 // DONE
 export const getInvoiceById = async (req: Request, res: Response) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const invoice = await getById(id);
@@ -61,7 +86,7 @@ export const getInvoiceById = async (req: Request, res: Response) => {
 
 // DONE
 export const deleteInvoice = async (req: Request, res: Response) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const invoice = await getById(id);
@@ -72,7 +97,7 @@ export const deleteInvoice = async (req: Request, res: Response) => {
 
 // DONE
 export const updateInvoice = async (req: Request, res: Response) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 

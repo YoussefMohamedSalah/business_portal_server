@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { Subcontractor } from "../entities/Subcontractor";
-import { CreateSubcontractorInfo } from 'src/types/CreateSubContractorInfo';
-import { Company } from "src/entities/Company";
+import { Company } from "../entities/Company";
+import { CreateSubcontractorInfo } from "../types/CreateSubContractorInfo";
 
 // DONE
 export const createSubcontractor = async (

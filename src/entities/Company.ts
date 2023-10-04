@@ -138,7 +138,7 @@ export class Company extends BaseEntity {
     @JoinColumn()
     workFlow: RequestWorkFlow;
 
-    @OneToMany(() => SubcontractorInvoice, subcontractorInvoice => subcontractorInvoice.project, { onDelete: 'CASCADE' })
+    @OneToMany(() => SubcontractorInvoice, subcontractorInvoice => subcontractorInvoice.company, { onDelete: 'CASCADE' })
 	subcontractorInvoices: SubcontractorInvoice[];
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
