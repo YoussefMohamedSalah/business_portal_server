@@ -1,11 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, BeforeInsert, OneToMany } from 'typeorm';
 import { Project } from './Project';
 import { Company } from './Company';
 import { Subcontractor } from './Subcontractor';
 import { Status } from '../enums/enums';
+import { Invoice } from './Invoice';
 
-@Entity({ name: 'subcontractor_contract' })
-export class SubcontractorContract extends BaseEntity {
+@Entity({ name: 'contract' })
+export class Contract extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -34,8 +35,14 @@ export class SubcontractorContract extends BaseEntity {
     })
     items: Array<{ item: string, description: string, count: number, price: number, total: number }>;
 
-    @Column({ default: 0 })
-    total_value: number;
+    @Column({ nullable: true })
+    total_amount: number;
+
+    @Column({ nullable: true })
+    paid_amount: number;
+
+    @Column({ nullable: true })
+    remaining_amount: number;
 
     @Column({
         type: 'jsonb',
@@ -87,20 +94,34 @@ export class SubcontractorContract extends BaseEntity {
     })
     files: string[];
 
+    @Column({
+        type: 'jsonb',
+        array: false,
+        default: () => "'[]'",
+        nullable: false,
+    })
+    comments: Array<{ id: number, userId: string, userName: string, comment: string, createdAt: string }>;
+
+    @Column({ default: 0 })
+    comments_count: number;
+
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
-    @ManyToOne(() => Project, project => project.subcontractorContracts, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Project, project => project.Contracts, { onDelete: 'CASCADE' })
     project: Project;
 
-    @ManyToOne(() => Company, company => company.subcontractorContracts, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Company, company => company.Contracts, { onDelete: 'CASCADE' })
     company: Company;
 
-    @ManyToOne(() => Subcontractor, subcontractor => subcontractor.subcontractorContracts)
+    @ManyToOne(() => Subcontractor, subcontractor => subcontractor.Contracts, { onDelete: 'CASCADE' })
     subcontractor: Subcontractor;
+
+    @OneToMany(() => Invoice, invoice => invoice.contract, { onDelete: 'CASCADE' })
+    invoices: Invoice[];
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
     // BeforeInsert decorator to generate and increment CODE
     @BeforeInsert()
     incrementTenderId() {
-        this.code = `PC-${Math.floor(Math.random() * 10000) + 1}`;
+        this.code = `CON-${Math.floor(Math.random() * 10000) + 1}`;
     }
 }

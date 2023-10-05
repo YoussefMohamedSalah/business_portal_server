@@ -44,7 +44,7 @@ export class RequestWorkFlow extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	subcontractor_contract_flow: Array<{ userId: string, name: string, title: string, state: boolean, isRejected: boolean, index: number }>;
+	contract_flow: Array<{ userId: string, name: string, title: string, state: boolean, isRejected: boolean, index: number }>;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

@@ -3,21 +3,22 @@ import { Company } from "../entities/Company";
 import { Project } from "../entities/Project";
 import { User } from "../entities/User";
 import { Status } from "../enums/enums";
-import { SubcontractorContract } from "../entities/SubcontractorContract";
+import { Contract } from "../entities/Contract";
 
 
 //** Create New Request **
 export const createContract = async (data: any, company: Company, project: Project, user: User) => {
-    const { items, conditions, date, total_value, vat, subcontractor, filesNameSetArray } = data;
-    const contractRepository = getRepository(SubcontractorContract);
-    const contract = new SubcontractorContract();
+    const { items, conditions, date, total_amount, vat, subcontractor, filesNameSetArray } = data;
+    const contractRepository = getRepository(Contract);
+    const contract = new Contract();
     contract.date = date;
     contract.conditions = conditions;
     contract.items = items;
-    contract.total_value = total_value;
+    contract.total_amount = total_amount;
+    contract.remaining_amount = total_amount;
     contract.vat = vat;
     contract.status = Status.PENDING;
-    contract.work_flow = company.workFlow.subcontractor_contract_flow;
+    contract.work_flow = company.workFlow.contract_flow;
     if (filesNameSetArray) contract.files = filesNameSetArray;
     contract.user = {
         id: user.id,
@@ -38,47 +39,60 @@ export const createContract = async (data: any, company: Company, project: Proje
     return contract;
 }
 
-export const getAllCompanySubcontractorContracts = async (id: string,) => {
+export const getAllCompanyContracts = async (id: string,) => {
     const companyRepository = getRepository(Company);
     const company = await companyRepository
         .createQueryBuilder("company")
         .where("company.id = :id", { id: id })
         .leftJoinAndSelect(
-            "company.subcontractorContracts",
-            "subcontractor_contract"
+            "company.Contracts",
+            "contract"
         )
         .getOne();
-    return company?.subcontractorContracts;
+    return company?.Contracts;
 };
 
-export const getAllCompany_pending_subcontractorContracts = async (companyId: string,) => {
-    const subcontractorContractRepository = getRepository(SubcontractorContract);
-    const contracts = await subcontractorContractRepository
-        .createQueryBuilder("subcontractor_contract")
-        .where("subcontractor_contract.companyId = :companyId", { companyId: companyId })
-        .andWhere('subcontractor_contract.status = :status', { status: Status.PENDING })
+export const getAllCompany_pending_Contracts = async (companyId: string,) => {
+    const ContractRepository = getRepository(Contract);
+    const contracts = await ContractRepository
+        .createQueryBuilder("contract")
+        .where("contract.companyId = :companyId", { companyId: companyId })
+        .andWhere('contract.status = :status', { status: Status.PENDING })
         .getMany();
     return contracts;
 };
 
-export const getAllProjectSubcontractorContracts = async (id: string,) => {
+export const getAllProjectContracts = async (id: string,) => {
     const projectRepository = getRepository(Project);
     const project = await projectRepository
         .createQueryBuilder("project")
         .where("project.id = :id", { id: id })
         .leftJoinAndSelect(
-            "project.subcontractorContracts",
-            "subcontractor_contract"
+            "project.Contracts",
+            "contract"
         )
         .getOne();
-    return project?.subcontractorContracts;
+    return project?.Contracts;
 };
 
 export const getById = async (id: string) => {
-    const subcontractorContractRepository = getRepository(SubcontractorContract);
-    const contract = await subcontractorContractRepository
-        .createQueryBuilder("subcontractor_contract")
-        .where("subcontractor_contract.id = :id", { id: id })
+    const ContractRepository = getRepository(Contract);
+    const contract = await ContractRepository
+        .createQueryBuilder("contract")
+        .where("contract.id = :id", { id: id })
+        .leftJoinAndSelect(
+            "contract.invoices",
+            "invoice"
+        ).leftJoinAndSelect(
+            'contract.company',
+            'company'
+        ).leftJoinAndSelect(
+            'contract.project',
+            'project'
+        ).leftJoinAndSelect(
+            'contract.subcontractor',
+            'subcontractor'
+        )
         .getOne();
     return contract;
 }

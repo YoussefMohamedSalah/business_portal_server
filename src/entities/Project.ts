@@ -8,7 +8,8 @@ import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Group } from './Group';
 import { Inventory } from './Inventory';
 import { User } from './User';
-import { SubcontractorContract } from './SubcontractorContract';
+import { Contract } from './Contract';
+import { Invoice } from './Invoice';
 
 
 @Entity({ name: 'project' })
@@ -135,8 +136,11 @@ export class Project extends BaseEntity {
 	@OneToMany(() => PurchaseOrderRequest, purchaseOrderRequest => purchaseOrderRequest.project, { onDelete: 'CASCADE' })
 	PurchaseOrderRequests: PurchaseOrderRequest[];
 
-	@OneToMany(() => SubcontractorContract, subcontractorContract => subcontractorContract.project, { onDelete: 'CASCADE' })
-	subcontractorContracts: SubcontractorContract[];
+	@OneToMany(() => Contract, Contract => Contract.project, { onDelete: 'CASCADE' })
+	Contracts: Contract[];
+
+	@OneToMany(() => Invoice, invoice => invoice.project, { onDelete: 'CASCADE' })
+	invoices: Invoice[];
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

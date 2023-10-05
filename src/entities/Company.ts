@@ -14,7 +14,8 @@ import { PurchaseOrderRequest } from './PurchaseOrderRequest';
 import { Task } from './Task';
 import { Tender } from './Tender';
 import { Group } from './Group';
-import { SubcontractorContract } from './SubcontractorContract';
+import { Contract } from './Contract';
+import { Invoice } from './Invoice';
 
 @Entity({ name: 'company' })
 export class Company extends BaseEntity {
@@ -132,14 +133,17 @@ export class Company extends BaseEntity {
 
     @OneToMany(() => PurchaseOrderRequest, purchaseOrderRequest => purchaseOrderRequest.company)
     PurchaseOrderRequests: PurchaseOrderRequest[];
+
+    @OneToMany(() => Invoice, invoice => invoice.company, { onDelete: 'CASCADE' })
+    invoices: Invoice[];
     // -----------------------------------------------
 
     @OneToOne(() => RequestWorkFlow, RequestWorkFlow => RequestWorkFlow.company, { cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()
     workFlow: RequestWorkFlow;
 
-    @OneToMany(() => SubcontractorContract, subcontractorContract => subcontractorContract.company, { onDelete: 'CASCADE' })
-    subcontractorContracts: SubcontractorContract[];
+    @OneToMany(() => Contract, Contract => Contract.company, { onDelete: 'CASCADE' })
+    Contracts: Contract[];
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
     @Column({
