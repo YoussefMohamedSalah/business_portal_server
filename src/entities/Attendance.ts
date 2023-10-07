@@ -83,7 +83,7 @@ export class Attendance extends BaseEntity {
 	@ManyToOne(() => Company, company => company.attendances, { onDelete: 'CASCADE' })
 	company: Company;
 
-	@ManyToOne(() => User, user => user.attendances)
+	@ManyToOne(() => User, user => user.attendances, { onDelete: 'CASCADE' })
 	user: User;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 }

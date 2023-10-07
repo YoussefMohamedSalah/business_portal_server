@@ -73,3 +73,7 @@ export enum TaskPriority {
 	CRITICAL = 'Critical'
 }
 
+export enum ErrorMessages {
+	NaN_ERROR = 'Is Not A Number',
+	INVALID_INPUT = 'Invalid Input',
+}

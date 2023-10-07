@@ -2,7 +2,7 @@
 export type CreateSupplierInfo = {
     supplier_type: string;
     company_name: string;
-    vat_on: string;
+    vat_on: number;
     representative: string;
     name: string;
     phone_number: string;
@@ -12,5 +12,5 @@ export type CreateSupplierInfo = {
     area: string;
     street: string;
     building_number: string;
-    postal_code: string;
+    postal_code: number;
 };

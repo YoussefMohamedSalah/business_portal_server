@@ -48,7 +48,7 @@ export class Tender extends BaseEntity {
         default: () => "'[]'",
         nullable: false,
     })
-    files: File[];
+    files: string[];
 
     @Column({
         type: 'jsonb',

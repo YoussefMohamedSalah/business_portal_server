@@ -2,95 +2,126 @@ import { getRepository } from "typeorm";
 import { Group } from "../entities/Group";
 import { User } from "../entities/User";
 
-// DONE
+// useless
 export const addGroup = async (createData: any) => {
-    const { name, description, project_managers, members, company, project } = createData;
-    const groupRepository = getRepository(Group);
-    const group = new Group();
-    group.name = name;
-    group.description = description;
-    group.managers = project_managers;
-    group.members = members;
-    group.company = company;
-    await groupRepository.save(group);
-    return group;
+    const { name, description, project_managers, members, company } = createData;
+    try {
+        const groupRepository = getRepository(Group);
+        const group = new Group();
+        group.name = name;
+        group.description = description;
+        group.managers = project_managers;
+        group.members = members;
+        group.company = company;
+        await groupRepository.save(group);
+        return group;
+    } catch (error) {
+        // Handle the error
+        console.error("Error Adding Group:", error);
+        return;
+    }
 };
 
-// DONE
 export const getById = async (id: string) => {
-    const groupRepository = getRepository(Group);
-    const group = await groupRepository
-        .createQueryBuilder("group")
-        .where("group.id = :id", { id: id })
-        .getOne();
-    return group;
+    try {
+        const groupRepository = getRepository(Group);
+        const group = await groupRepository
+            .createQueryBuilder("group")
+            .where("group.id = :id", { id: id })
+            .getOne();
+        return group;
+    } catch (error) {
+        // Handle the error
+        console.error("Error retrieving Group:", error);
+        return;
+    }
 };
 
-// DONE
 export const getWithMembersById = async (id: string) => {
-    const groupRepository = getRepository(Group);
-    const group = await groupRepository
-        .createQueryBuilder("group")
-        .where("group.id = :id", { id: id })
-        .leftJoinAndSelect('group.members', 'user')
-        .getOne();
-    return group;
+    try {
+        const groupRepository = getRepository(Group);
+        const group = await groupRepository
+            .createQueryBuilder("group")
+            .where("group.id = :id", { id: id })
+            .leftJoinAndSelect('group.members', 'user')
+            .getOne();
+        return group;
+    } catch (error) {
+        // Handle the error
+        console.error("Error retrieving Group:", error);
+        return;
+    }
 };
 
-// DONE
 export const getGroupByProjectId = async (projectId: string) => {
-    const groupRepository = getRepository(Group);
-    const group = await groupRepository
-        .createQueryBuilder("group")
-        .where("group.projectId = :projectId", { projectId: projectId })
-        .leftJoinAndSelect('group.members', 'user')
-        .getOne();
-    return group;
+    try {
+        const groupRepository = getRepository(Group);
+        const group = await groupRepository
+            .createQueryBuilder("group")
+            .where("group.projectId = :projectId", { projectId: projectId })
+            .leftJoinAndSelect('group.members', 'user')
+            .getOne();
+        return group;
+    } catch (error) {
+        // Handle the error
+        console.error("Error retrieving Group:", error);
+        return;
+    }
 };
 
-// DONE
 export const getAllByCompanyId = async (companyId: string) => {
-    const groupRepository = getRepository(Group);
-    const group = await groupRepository
-        .createQueryBuilder("group")
-        .where("group.companyId = :companyId", { companyId: companyId })
-        .leftJoinAndSelect('group.members', 'user')
-        .orderBy("group.createdAt", "DESC")
-        .getMany();
-    return group;
+    try {
+        const groupRepository = getRepository(Group);
+        const group = await groupRepository
+            .createQueryBuilder("group")
+            .where("group.companyId = :companyId", { companyId: companyId })
+            .leftJoinAndSelect('group.members', 'user')
+            .orderBy("group.createdAt", "DESC")
+            .getMany();
+        return group;
+    } catch (error) {
+        // Handle the error
+        console.error("Error retrieving Group:", error);
+        return;
+    }
 };
 
-
-// DONE
-export const addMember = async (group: Group, user: User) => {
-    group.members.push(user);
-    group.members_count++;
-    await group.save();
-    return group;
+export const addMember = async (addInput: { member: User, group: Group }) => {
+    const { member, group } = addInput;
+    try {
+        group.members.push(member);
+        group.members_count++;
+        await group.save();
+        return group;
+    } catch (error) {
+        // Handle the error
+        console.error("Error retrieving Group:", error);
+        return;
+    }
 };
 
-// DONE
-export const removeMember = async (group: Group, member: User) => {
-    const memberGroupRepository = getRepository(Group)
-    const record = await memberGroupRepository
-        .createQueryBuilder('group_member')
-        .where('userId = :userId', { userId: member.id })
-        .andWhere('groupId = :groupId', { groupId: group.id })
-        .delete()
+export const removeMember = async (removeInput: { member: User, group: Group }) => {
+    const { member, group } = removeInput;
+    try {
+        const memberGroupRepository = getRepository(Group)
+        const record = await memberGroupRepository
+            .createQueryBuilder('group_member')
+            .where('userId = :userId', { userId: member.id })
+            .andWhere('groupId = :groupId', { groupId: group.id })
+            .delete()
 
+        // user.groups = user.groups.filter(filtered => filtered.id !== group.id);
 
+        // group.members = group.members.filter((member: User) => member.id !== userId);
+        // group.members_count--;
 
-
-
-
-        
-    // user.groups = user.groups.filter(filtered => filtered.id !== group.id);
-
-    // group.members = group.members.filter((member: User) => member.id !== userId);
-    // group.members_count--;
-
-    // await group.save();
-    // return group;
+        // await group.save();
+        // return group;
+    } catch (error) {
+        // Handle the error
+        console.error("Error retrieving Group:", error);
+        return;
+    }
 };
 
 

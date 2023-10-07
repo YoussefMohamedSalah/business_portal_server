@@ -5,21 +5,20 @@ import {
 	getAllDepartmentUsers,
 	getById,
 	getAllManagers,
-	getAllEmployeesWithGroups
+	getAllEmployeesWithGroups,
+	getByEmail
 } from "../repositories/UserRepository";
 import bcrypt from "bcrypt";
 import { getById as getCompanyById } from "../repositories/CompanyRepository";
 import { CreateUserInfo } from "../types/CreateUserInfo";
-import { User } from "../entities/User";
 import { getById as getDepartmentById } from "../repositories/DepartmentRepository";
 import { getById as getProjectById } from "../repositories/ProjectRepository";
 import { Project } from "../entities/Project";
-import { Company } from "../entities/Company";
 import { validateUUID } from '../utils/validateUUID';
 import { sendEmail } from "../helpers/sendEmail";
 import { generateTempPassword } from "../utils/generateTempPassword";
+import { Role } from "../enums/enums";
 
-// DONE
 export const addUser = async (req: Request, res: Response) => {
 	const { companyId } = req.userData!;
 	// permissions is an array of permission ids
@@ -42,84 +41,110 @@ export const addUser = async (req: Request, res: Response) => {
 		role
 	} = req.body;
 
-	// Check if the user already exists
-	const existingUser = await User.findOne({ where: { email } });
-	if (existingUser) {
-		return res.status(400).json({ message: "User with same email already exists" });
-	}
-
-	const company = await getCompanyById(companyId);
-	if (!company) return res.status(404).json({ msg: "Company not found" });
-
-	const department = await getDepartmentById(departmentId);
-	if (!department) return res.status(404).json({ msg: "Department not found" });
-
-	let projects_arr: Project[] = [];
-	if (projects && Array.isArray(projects) && projects.length > 0) {
-		for (let i = 0; i < projects?.length; i++) {
-			let project = await getProjectById(projects[i]);
-			if (!project) return res.status(404).json({ msg: "Project not found" });
-			projects_arr.push(project);
+	try {
+		// Check if the user already exists
+		const existingUser = await getByEmail(email);
+		if (existingUser) {
+			return res.status(400).json({ msg: "User with same email already exists" });
 		}
+
+		const company = await getCompanyById(companyId);
+		if (!company) return res.status(404).json({ msg: "Company not found" });
+
+		const department = await getDepartmentById(departmentId);
+		if (!department) return res.status(404).json({ msg: "Department not found" });
+
+		let projects_arr: Project[] = [];
+		if (projects && Array.isArray(projects) && projects.length > 0) {
+			for (let i = 0; i < projects?.length; i++) {
+				let project = await getProjectById(projects[i]);
+				if (!project) return res.status(404).json({ msg: "Project not found" });
+				projects_arr.push(project);
+			}
+		}
+
+		let avatar = req.file!;
+		const tempPassword = `${generateTempPassword()}`;
+
+		// Input Data
+		const paramsData: CreateUserInfo = {
+			first_name,
+			last_name,
+			business_title,
+			email,
+			phone_number,
+			contract_date,
+			contract_ex,
+			projects: projects_arr,
+			id_number,
+			id_ex_date,
+			salary_per_month,
+			shift_start,
+			shift_end,
+			role,
+			gender,
+			department,
+			company,
+			password: await bcrypt.hash(tempPassword, 10)
+		}
+
+		const user = await createUser(paramsData, avatar);
+		sendEmail(email, 'Verify your email for Portal-CP',
+			` Hello ${first_name} ${last_name},
+  your Account Just Has been created,
+  login to our portal using 
+  email:${email}
+  password:${tempPassword}
+
+  Thanks,
+  Your Portal-CP Team.`
+		)
+
+		if (!user) return res.status(409).json({ 
+			msg: "Field to Create Employee"
+		});
+		console.log(user)
+		return res.json(user);
+	} catch (error) {
+		// Handle the error
+		console.error("Error Creating User:", error);
+		return res.status(500).json({ msg: "Internal server error" });
 	}
-
-	let avatar = req.file!;
-	const tempPassword = `${generateTempPassword()}`;
-
-	// Input Data
-	const paramsData: CreateUserInfo = {
-		first_name,
-		last_name,
-		business_title,
-		email,
-		phone_number,
-		contract_date,
-		contract_ex,
-		projects: projects_arr,
-		id_number,
-		id_ex_date,
-		salary_per_month,
-		shift_start,
-		shift_end,
-		role,
-		gender,
-		department,
-		company,
-		password: await bcrypt.hash(tempPassword, 10)
-	}
-
-	const user = await createUser(paramsData, avatar);
-	sendEmail(email, 'Temp Password', `your Account Just created, logIn to our portal using email:${email} password:${tempPassword}`)
-
-	if (!user) return res.status(409).json({ msg: "Field to Create Employee" });
-	return res.json(user);
 };
 
-// DONE
 export const getUserById = async (req: Request, res: Response) => {
 	const { id } = req.params;
 	let isValidUUID = validateUUID(id);
 	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
-	const user = await getById(id);
-	if (user) return res.json(user);
-	return res.status(404).json({ msg: "User not found" });
+	try {
+		const user = await getById(id);
+		if (user) return res.json(user);
+		return res.status(404).json({ msg: "User not found" });
+	} catch (error) {
+		// Handle the error
+		console.error("Error Retrieving User:", error);
+		return res.status(500).json({ msg: "Internal server error" });
+	}
 };
 
-// DONE
 export const getCurrentUser = async (req: Request, res: Response) => {
 	const { userId } = req.userData!;
-	const user = await getById(userId);
-	if (user) return res.json(user);
-	return res.status(404).json({ msg: "User not found" });
+	try {
+		const user = await getById(userId);
+		if (user) return res.json(user);
+		return res.status(404).json({ msg: "User not found" });
+	} catch (error) {
+		// Handle the error
+		console.error("Error Retrieving User:", error);
+		return res.status(500).json({ msg: "Internal server error" });
+	}
 };
 
-//DONE
 export const updateUser = async (req: Request, res: Response) => {
 	const { id } = req.params;
 	let isValidUUID = validateUUID(id);
 	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 	const { companyId } = req.userData!;
-
 	const user = await getById(id);
 	if (!user) {
 		return res.status(404).json({ msg: "User not found" });
@@ -156,7 +181,7 @@ export const updateUser = async (req: Request, res: Response) => {
 	}
 
 	if (gender && user.gender !== gender) {
-		let company: Company | null = await getCompanyById(companyId)
+		let company = await getCompanyById(companyId)
 		if (!company) return res.status(404).json({ msg: "Company not found" });
 		if (user.gender === null && gender === 'Male') {
 			company.male_count++;
@@ -173,8 +198,6 @@ export const updateUser = async (req: Request, res: Response) => {
 		}
 		await company.save();
 	}
-
-
 
 	user.first_name = first_name ? first_name : user.first_name;
 	user.last_name = last_name ? last_name : user.last_name;
@@ -211,40 +234,69 @@ export const updateUser = async (req: Request, res: Response) => {
 	return res.json(user);
 };
 
-// DONE
 export const deleteUser = async (req: Request, res: Response) => {
 	const { id } = req.params;
 	let isValidUUID = validateUUID(id);
 	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
-	const user = await getById(id);
-	if (!user) return res.status(404).json({ msg: "User not found" });
-	await user.remove();
-	return res.json({ msg: "User deleted" });
+	try {
+		const user = await getById(id);
+		if (!user) return res.status(404).json({ msg: "User not found" });
+		await user.remove();
+		return res.json({ msg: "User deleted" });
+	} catch (error) {
+		// Handle the error
+		console.error("Error Deleting User:", error);
+		return res.status(500).json({ msg: "Internal server error" });
+	}
 };
 
-// DONE
 export const getCompanyUsers = async (req: Request, res: Response) => {
-	const { companyId } = req.userData!;
-	const users = await getAllCompanyUsers(companyId);
-	return res.json(users);
+	const { companyId, userId } = req.userData!;
+	try {
+		const users = await getAllCompanyUsers(companyId);
+		let usersToReturn = users.filter((user) => user.id !== userId && user.role !== Role.SUPERUSER)
+		return res.json(usersToReturn);
+	} catch (error) {
+		// Handle the error
+		console.error("Error Retrieving Users:", error);
+		return res.status(500).json({ msg: "Internal server error" });
+	}
 };
 
-// DONE
 export const getDepartmentUsers = async (req: Request, res: Response) => {
 	const { departmentId } = req.params;
-	const users = await getAllDepartmentUsers(departmentId);
-	return res.json(users);
+	let isValidUUID = validateUUID(departmentId);
+	if (!isValidUUID) return res.status(400).json({ msg: "Department Id is not valid" });
+	try {
+		const users = await getAllDepartmentUsers(departmentId);
+		return res.json(users);
+	} catch (error) {
+		// Handle the error
+		console.error("Error Retrieving Users:", error);
+		return res.status(500).json({ msg: "Internal server error" });
+	}
 };
 
-// DONE
 export const getManagers = async (req: Request, res: Response) => {
 	const { companyId } = req.userData!;
-	const users = await getAllManagers(companyId);
-	return res.json(users);
+	try {
+		const users = await getAllManagers(companyId);
+		return res.json(users);
+	} catch (error) {
+		// Handle the error
+		console.error("Error Retrieving Managers:", error);
+		return res.status(500).json({ msg: "Internal server error" });
+	}
 }
 
 export const getAllWithGroups = async (req: Request, res: Response) => {
 	const { companyId } = req.userData!;
-	const users = await getAllEmployeesWithGroups(companyId);
-	return res.json(users);
+	try {
+		const users = await getAllEmployeesWithGroups(companyId);
+		return res.json(users);
+	} catch (error) {
+		// Handle the error
+		console.error("Error Retrieving Users:", error);
+		return res.status(500).json({ msg: "Internal server error" });
+	}
 }

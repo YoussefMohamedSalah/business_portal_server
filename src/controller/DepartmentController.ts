@@ -3,25 +3,30 @@ import { getAllDepartments, getById } from '../repositories/DepartmentRepository
 import { validateUUID } from '../utils/validateUUID';
 
 
-
-// DONE
 export const getDepartmentById = async (req: Request, res: Response) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
-    const department = await getById(id);
-    if (department) {
+    try {
+        const department = await getById(id);
+        if (!department) return res.status(404).json({ msg: "Department not found" });
         return res.json(department);
+    } catch (error) {
+        console.error("Error Retrieving Department:", error);
+        return res.status(500).json({ msg: "Internal server error" });
     }
-    return res.status(404).json({ msg: "Department not found" });
-};
 
-// DONE
+};
 export const getCompanyDepartments = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
-    const departments = await getAllDepartments(companyId);
-    if (departments) {
-        return res.json(departments);
+    try {
+        const departments = await getAllDepartments(companyId);
+        if (departments) {
+            return res.json(departments);
+        }
+        return res.status(404).json({ msg: "Departments not found" });
+    } catch (error) {
+        console.error("Error Retrieving Departments:", error);
+        return res.status(500).json({ msg: "Internal server error" });
     }
-    return res.status(404).json({ msg: "Departments not found" });
 };

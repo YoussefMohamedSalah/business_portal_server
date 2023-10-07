@@ -24,7 +24,7 @@ export class Subcontractor extends BaseEntity {
     @Column({
         default: null
     })
-    vat_on: string;
+    vat_on: number;
 
     @Column({
         default: null
@@ -71,7 +71,7 @@ export class Subcontractor extends BaseEntity {
         default: null,
         nullable: true
     })
-    postal_code: string;
+    postal_code: number;
 
     // Relations
     // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

@@ -58,57 +58,64 @@ export const createUser = async (paramsData: CreateUserInfo, avatar: any) => {
 		role
 	} = paramsData;
 
-	let projects_info_arr = [];
-	if (projects && projects.length > 0) {
-		for (let i = 0; i < projects?.length; i++) {
-			projects_info_arr.push({ id: projects[i].id, name: projects[i].name });
-		}
-	}
-
-	// adding New User info + company newly created
-	const userRepository = getRepository(User);
-	const user = new User();
-	user.email = email;
-	user.first_name = first_name;
-	user.last_name = last_name;
-	business_title && (user.business_title = business_title);
-	phone_number && (user.phone_number = phone_number);
-	contract_date && (user.contract_date = contract_date);
-	contract_ex && (user.contract_ex = contract_ex);
-	id_number && (user.id_number = id_number);
-	id_ex_date && (user.id_ex_date = id_ex_date);
-	salary_per_month && (user.salary_per_month = salary_per_month);
-	shift_start && (user.shift_start = shift_start);
-	shift_end && (user.shift_end = shift_end);
-	gender && (user.gender = gender);
-	role && (user.role = role);
-	password && (user.password = password);
-	user.projects_info = projects_info_arr,
-		user.department_info = { id: department.id, name: department.name };
-	user.company_info = { id: company.id, name: company.name }
-	user.avatar = avatar ? avatar.path : '';
-	user.department = department;
-	user.company = company;
-	await userRepository.save(user);
-
-	// now add this user to project members
-	if (projects && projects.length > 0) {
-		for (let i = 0; i < projects.length; i++) {
-			if (projects[i]) {
-				const projectRepository = getRepository(Project);
-				projects[i].members_count = projects[i].members_count + 1;
-				await projectRepository.save(projects[i]);
-				// Now get the group by projectId
-				// then add this user to the group members
-				const group = await getGroupByProjectId(projects[i].id);
-				if (!group) continue;
-				group.members_count = group.members_count + 1;
-				group.members = [...group.members, user];
-				await group.save();
+	try {
+		let projects_info_arr = [];
+		if (projects && projects.length > 0) {
+			for (let i = 0; i < projects?.length; i++) {
+				projects_info_arr.push({ id: projects[i].id, name: projects[i].name });
 			}
 		}
+
+		// adding New User info + company newly created
+		const userRepository = getRepository(User);
+		const user = new User();
+		user.email = email;
+		user.first_name = first_name;
+		user.last_name = last_name;
+		business_title && (user.business_title = business_title);
+		phone_number && (user.phone_number = phone_number);
+		contract_date && (user.contract_date = contract_date);
+		contract_ex && (user.contract_ex = contract_ex);
+		id_number && (user.id_number = id_number);
+		id_ex_date && (user.id_ex_date = id_ex_date);
+		salary_per_month && (user.salary_per_month = salary_per_month);
+		shift_start && (user.shift_start = shift_start);
+		shift_end && (user.shift_end = shift_end);
+		gender && (user.gender = gender);
+		role && (user.role = role);
+		password && (user.password = password);
+		user.projects_info = projects_info_arr,
+			user.department_info = { id: department.id, name: department.name };
+		user.company_info = { id: company.id, name: company.name }
+		user.avatar = avatar ? avatar.path : '';
+		user.department = department;
+		user.company = company;
+		await userRepository.save(user);
+
+		// now add this user to project members
+		if (projects && projects.length > 0) {
+			for (let i = 0; i < projects.length; i++) {
+				if (projects[i]) {
+					const projectRepository = getRepository(Project);
+					projects[i].members_count = projects[i].members_count + 1;
+					await projectRepository.save(projects[i]);
+					// Now get the group by projectId
+					// then add this user to the group members
+					const group = await getGroupByProjectId(projects[i].id);
+					if (!group) continue;
+					group.members_count = group.members_count + 1;
+					group.members = [...group.members, user];
+					await group.save();
+				}
+			}
+		}
+		return user;
+	} catch (error) {
+		// Handle the error
+		console.error("Error Creating Employee:", error);
+		return;
 	}
-	return user;
+
 };
 
 // DONE

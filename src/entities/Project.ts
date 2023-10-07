@@ -24,18 +24,18 @@ export class Project extends BaseEntity {
 	description: string;
 
 	@Column({ nullable: true, default: null })
-	longitude: string;
+	longitude: number;
 
 	@Column({ nullable: true })
-	latitude: string;
+	latitude: number;
 
 	@Column({ nullable: true })
 	thumbnail: string;
 
 	@Column({ nullable: true })
-	bid_value: string;
+	bid_value: number;
 
-	@Column({ nullable: true })
+	@Column({ nullable: true, default: 0 })
 	duration: number; // in days
 
 	@Column({ nullable: true, default: 'In Progress' })
@@ -57,38 +57,38 @@ export class Project extends BaseEntity {
 	contract_number: string;
 
 	@Column({ nullable: true, default: 0 })
-	sites_count: string;
+	sites_count: number;
 
 	@Column({ nullable: true, default: 0 })
-	buildings_count: string;
+	buildings_count: number;
 
 	@Column({ nullable: true, default: 0 })
-	floors_count: string;
+	floors_count: number;
 
 	// -----------------------------------------------
 	@Column({ default: 0, nullable: true })
-	total_budget: string;
+	total_budget: number;
 
 	@Column({ default: 0, nullable: true })
-	po_budget: string;
+	po_budget: number;
 
 	@Column({ default: 0, nullable: true })
-	po_expenses: string;
+	po_expenses: number;
 
 	@Column({ default: 0, nullable: true })
-	pc_budget: string;
+	pc_budget: number;
 
 	@Column({ default: 0, nullable: true })
-	pc_expenses: string;
+	pc_expenses: number;
 
 	@Column({ default: 0, nullable: true })
-	staff_budget: string;
+	staff_budget: number;
 
 	@Column({ default: 0, nullable: true })
-	staff_expenses: string;
+	staff_expenses: number;
 
 	@Column({ default: 0, nullable: true })
-	subcontractor_budget: string;
+	subcontractor_budget: number;
 
 	@Column({
 		type: 'jsonb',
@@ -98,10 +98,10 @@ export class Project extends BaseEntity {
 	})
 	comments: Array<{ id: number, userId: string, userName: string, comment: string, createdAt: string }>;
 
-	@Column({ default: 0 })
+	@Column({ default: 0, nullable: true })
 	comments_count: number;
 
-	@Column({ default: 0 })
+	@Column({ default: 0, nullable: true })
 	members_count: number;
 
 	// Relations

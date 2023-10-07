@@ -3,7 +3,7 @@ import { CustomerType } from "../enums/enums";
 export type CreateSubcontractorInfo = {
     subcontractor_type?: CustomerType;
     company_name?: string;
-    vat_on?: string;
+    vat_on?: number;
     representative?: string;
     phone_number?: string;
     email?: string;
@@ -12,5 +12,5 @@ export type CreateSubcontractorInfo = {
     area?: string;
     street?: string;
     building_number?: string;
-    postal_code?: string;
+    postal_code?: number;
 };

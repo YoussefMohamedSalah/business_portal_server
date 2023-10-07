@@ -37,6 +37,6 @@ router.route("/site/:projectId").get(checkAuth, getAllProjectSiteRequests);
 router.route("/contract/:projectId").get(checkAuth, getAllContractsByProject);
 
 
-router.route("/:id").get(checkAuth, getProjectById).patch(checkAuth, updateProject).delete(checkAuth, deleteProject);
+router.route("/:id").get(checkAuth, getProjectById).patch(checkAuth, uploadThumbnail.single('thumbnail'), updateProject).delete(checkAuth, deleteProject);
 
 export { router as ProjectRouter };
