@@ -100,7 +100,7 @@ export const addUser = async (req: Request, res: Response) => {
   Your Portal-CP Team.`
 		)
 
-		if (!user) return res.status(409).json({ 
+		if (!user) return res.status(409).json({
 			msg: "Field to Create Employee"
 		});
 		console.log(user)

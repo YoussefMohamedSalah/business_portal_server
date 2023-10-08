@@ -68,6 +68,7 @@ export class Company extends BaseEntity {
         nullable: true
     })
     male_count: number;
+
     @Column({
         default: 0,
         nullable: true
