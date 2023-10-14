@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { Socket } from "socket.io";
 
 // constants
 dotenv.config();
@@ -59,4 +60,6 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
 	return;
 };
 
+
 export { checkAuth };
+

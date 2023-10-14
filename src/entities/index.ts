@@ -21,6 +21,8 @@ import { Tender } from "./Tender";
 import { Contract } from './Contract';
 import { Subcontractor } from './Subcontractor';
 import { Invoice } from './Invoice';
+import { Chat } from "./Chat";
+import { ChatMessage } from "./ChatMessage";
 
 
 export const entities = [
@@ -46,6 +48,8 @@ export const entities = [
 	Tender,
 	Contract,
 	Subcontractor,
-	Invoice
+	Invoice,
+	Chat,
+	ChatMessage
 	// UserDepartment,
 ];

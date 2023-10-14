@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import express from 'express';
 import Cors from 'cors';
 import dotenv from 'dotenv';
+import http from 'http';
 // ************************************************
 import { entities } from './entities';
 import { subscribers } from './subscribers';
@@ -11,7 +12,6 @@ import { connectToDataBase } from './config/db';
 import { AuthRouter } from './routes/Auth/Auth';
 import { NotificationRouter } from './routes/notification';
 import { CompanyRouter } from './routes/company';
-// import { UserRouter } from './routes/user';
 import { StepperRouter } from './routes/stepper';
 import { CustomerRouter } from './routes/customer';
 import { InventoryRouter } from './routes/inventory';
@@ -31,10 +31,15 @@ import { WorkFlowRouter } from './routes/workFlow';
 import { SubcontractorRouter } from './routes/subcontractor';
 import { ContractRouter } from './routes/contract';
 import { InvoiceRouter } from './routes/invoice';
+import { ChatAppRouter } from './routes/chatApp';
+
+
 
 // constants
 dotenv.config();
 const app = express();
+const server = http.createServer(app);
+
 
 // Middleware
 app.use(Cors());
@@ -43,10 +48,9 @@ app.use(express.urlencoded({ extended: true }));
 
 
 try {
-  app.listen(process.env.SERVER_PORT, () =>
+  server.listen(process.env.SERVER_PORT, () =>
     console.log(`Server Running on port : ${process.env.SERVER_PORT}`)
   );
-
   connectToDataBase(entities, subscribers);
 
   // ROUTES
@@ -69,17 +73,25 @@ try {
   app.use('/inventory', InventoryRouter);
   app.use('/inventory_item', InventoryItemRouter);
   app.use('/project', ProjectRouter);
-  app.use('/notifications', NotificationRouter);
   app.use('/workflow', WorkFlowRouter);
+  // app.use('/notifications', NotificationRouter);
   // ************************************************
   app.use(express.static('uploads'));
   app.use('/uploads', express.static('uploads'));
   // ************************************************
+  app.use('/chat', ChatAppRouter);
 
 
+
+
+
+
+
+  // ************************************************
   const sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
+  };
+
   const handleRunAtMidnight = async () => {
     // getting the time and determine the exact time to wait
     const now = new Date();
@@ -89,7 +101,7 @@ try {
     const timeToMidnightInMS = midnightInTime - nowInTime; // Calculate time remaining until midnight
     await sleep(timeToMidnightInMS);
     runAtMidnight();
-  }
+  };
   handleRunAtMidnight();
   // ************************************************
 } catch (error) {

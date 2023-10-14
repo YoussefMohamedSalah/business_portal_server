@@ -2,7 +2,7 @@ import { getRepository } from "typeorm";
 import { User } from "../entities/User";
 import { Project } from "../entities/Project";
 import { Company } from "../entities/Company";
-import { Role } from "../enums/enums";
+import { GenderEnum, Role, RoleEnum } from "../enums/enums";
 import { CreateUserInfo, RegisterUserInfo } from "../types/CreateUserInfo";
 import { getGroupByProjectId } from './GroupRepository';
 
@@ -82,7 +82,8 @@ export const createUser = async (paramsData: CreateUserInfo, avatar: any) => {
 		shift_start && (user.shift_start = shift_start);
 		shift_end && (user.shift_end = shift_end);
 		gender && (user.gender = gender);
-		role && (user.role = role);
+		user.gender = gender ? gender : GenderEnum.MALE;
+		user.role = role ? role : RoleEnum.USER;
 		password && (user.password = password);
 		user.projects_info = projects_info_arr,
 			user.department_info = { id: department.id, name: department.name };
@@ -221,6 +222,24 @@ export const getById = async (id: string) => {
 			"user.gender",
 			"user.projects_info",
 			"user.department_info"
+		])
+		.getOne();
+	return user;
+};
+
+// DONE
+export const getForChatById = async (id: string) => {
+	const userRepository = getRepository(User);
+	const user = await userRepository
+		.createQueryBuilder("user")
+		.where("user.id = :id", { id: id })
+		.select([
+			"user.id",
+			"user.first_name",
+			"user.last_name",
+			"user.business_title",
+			"user.avatar",
+			"user.role",
 		])
 		.getOne();
 	return user;

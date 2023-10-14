@@ -90,14 +90,17 @@ export const addUser = async (req: Request, res: Response) => {
 
 		const user = await createUser(paramsData, avatar);
 		sendEmail(email, 'Verify your email for Portal-CP',
-			` Hello ${first_name} ${last_name},
-  your Account Just Has been created,
-  login to our portal using 
-  email:${email}
-  password:${tempPassword}
+			`Hi ${first_name} ${last_name},
+Your Management Account At ${company.name} Has been created,
 
-  Thanks,
-  Your Portal-CP Team.`
+Your Email: ${email}
+Your Password Is: ${tempPassword}
+
+Please Change your password to more secure one.
+Change your Password from Profile Page.
+
+Thanks,
+Your Portal-CP Team.`
 		)
 
 		if (!user) return res.status(409).json({

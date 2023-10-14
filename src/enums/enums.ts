@@ -77,3 +77,15 @@ export enum ErrorMessages {
 	NaN_ERROR = 'Is Not A Number',
 	INVALID_INPUT = 'Invalid Input',
 }
+
+export enum GenderEnum {
+	MALE = 'Male',
+	FEMALE = 'Female',
+  };
+
+  export enum RoleEnum {
+	SUPERUSER = 'Superuser',
+	USER = 'User',
+	MANAGER = 'Manager',
+	DIRECTOR = 'Director',
+  };

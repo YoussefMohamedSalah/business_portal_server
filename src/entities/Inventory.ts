@@ -20,10 +20,10 @@ export class Inventory extends BaseEntity {
 	type: string;
 
 	@Column({
-	type: 'jsonb',
-	array: false,
-	default: () => "'{}'",
-	nullable: false,
+		type: 'jsonb',
+		array: false,
+		default: () => "'{}'",
+		nullable: false,
 	})
 	project_info: { id: string, name: string };
 

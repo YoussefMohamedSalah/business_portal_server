@@ -17,6 +17,7 @@ import { Task } from "./Task";
 import { Group } from "./Group";
 import { Project } from "./Project";
 import { Role } from '../enums/enums';
+import { Chat } from "./Chat";
 
 
 @Entity({ name: "user" })
@@ -179,6 +180,9 @@ export class User extends BaseEntity {
 		default: false
 	})
 	is_verified: boolean;
+
+	@ManyToMany(() => Chat, chat => chat.users)
+	chats: Chat[];
 
 	// UTILS INFO *************************************
 	@Column({

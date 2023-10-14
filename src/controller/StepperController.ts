@@ -66,19 +66,25 @@ export const updateUserPosition = async (req: Request, res: Response) => {
 // DONE **
 export const updateCompany = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
-    const company = await getCompanyById(companyId);
-    if (!company) return res.status(404).json({ msg: "Company not found" });
+    console.log(companyId)
+    try {
+        const company = await getCompanyById(companyId);
+        if (!company) return res.status(404).json({ msg: "Company not found" });
+        const { name, address, size } = req.body;
+        console.log(req.body)
+        console.log(req.file?.path!)
+        company.name = name ? name : company.name;
+        company.address = address ? address : company.address;
+        company.size = size ? size : company.size;
+        if (req.file) company.logo = req.file.path ? req.file.path : company.logo;
 
-    const { name, address, size } = req.body;
-    company.name = name ? name : company.name;
-    company.address = address ? address : company.address;
-    company.size = size ? size : company.size;
-    if (req.file) {
-        company.logo = req.file.path ? req.file.path : company.logo;
+        // this is automatic when user reach this point
+        company.stepper_state = true;
+        company.stepper_step = 3;
+        await company.save();
+        return res.json(company);
+    } catch (error) {
+        console.error("Error Updating Company:", error);
+        return res.status(500).json({ msg: "Internal server error" });
     }
-    // this is automatic when user reach this point
-    company.stepper_state = true;
-    company.stepper_step = 3;
-    await company.save();
-    return res.json(company);
 };

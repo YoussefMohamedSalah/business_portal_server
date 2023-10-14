@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { UserSubscriber } from "../subscribers/UserSubscriber";
-import { createConnection } from 'typeorm';
+import { createConnection, getConnectionOptions  } from 'typeorm';
 
 // constants
 dotenv.config();
