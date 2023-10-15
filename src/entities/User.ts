@@ -181,6 +181,11 @@ export class User extends BaseEntity {
 	})
 	is_verified: boolean;
 
+	@Column({
+		nullable: true
+	})
+	temp_otp: number;
+
 	@ManyToMany(() => Chat, chat => chat.users)
 	chats: Chat[];
 

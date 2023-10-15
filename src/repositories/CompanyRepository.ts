@@ -1,6 +1,6 @@
 import { getRepository } from "typeorm";
 import { Company } from "../entities/Company";
-import { addInitialData } from "./InitialDataRepository";
+import { addInitialDepartments, addInitialWorkFlow } from "./InitialDataRepository";
 import { createInventory } from "./InventoryRepository";
 import { InventoryType } from "../enums/enums";
 
@@ -9,23 +9,28 @@ export const createCompany = async (name: string) => {
     // First make sure that initial data exists.
     // Then create the company and add the initial data to it 
     try {
-        const data = await addInitialData();
-        const { departmentsList, workflow } = data;
-        if (!departmentsList || !workflow) return console.log('Error, Initial data does not exists');
+        const departmentsList = await addInitialDepartments();
+        if (!departmentsList) return console.log('Error, Initial Departments does not exists')
+
         // Create the company
         const companyRepository = getRepository(Company);
         const company = new Company();
         company.name = name;
         company.departments = departmentsList;
-        company.workFlow = workflow;
+        // company.workFlow = workflow;
         await companyRepository.save(company);
+
+        // Create the Workflow for the company
+        await addInitialWorkFlow(company)
+
         // Create the inventory for the company
         const createInventoryData = { type: InventoryType.MASTER, items_count: 0, items_value: 0 }
         await createInventory(createInventoryData, company);
+
         return company;
     } catch (error) {
         // Handle the error
-        console.error("Error retrieving contracts:", error);
+        console.error("Error Adding Initial Data:", error);
         return;
     }
 };

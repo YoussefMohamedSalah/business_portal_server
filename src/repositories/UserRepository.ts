@@ -221,7 +221,8 @@ export const getById = async (id: string) => {
 			"user.shift_end",
 			"user.gender",
 			"user.projects_info",
-			"user.department_info"
+			"user.department_info",
+			"user.temp_otp",
 		])
 		.getOne();
 	return user;

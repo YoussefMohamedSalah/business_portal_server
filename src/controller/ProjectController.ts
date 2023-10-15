@@ -129,8 +129,9 @@ export const updateProject = async (req: Request, res: Response) => {
         const {
             name, description, latitude, longitude,
             bid_value, duration, delivery_date,
-            contract_number, contract_date, po_budget,
-            pc_budget, subcontractor_budget, staff_budget,
+            contract_number,
+            contract_date, po_budget, pc_budget,
+            subcontractor_budget, staff_budget,
             total_budget, project_managers, sites_count,
             buildings_count, floors_count
         } = req.body;
@@ -150,6 +151,7 @@ export const updateProject = async (req: Request, res: Response) => {
             sites_count: sites_count && processNumber('sites_count', sites_count!),
             floors_count: floors_count && processNumber('floors_count', floors_count!),
         };
+
         for (const property in toCheckType) {
             if (typeof toCheckType[property] === 'string') {
                 return { msg: toCheckType[property] };
@@ -175,7 +177,7 @@ export const updateProject = async (req: Request, res: Response) => {
         project.contract_number = contract_number ? contract_number : project.contract_number;
         project.contract_date = contract_date ? contract_date : project.contract_date;
         project.project_managers = project_managers ? project_managers : project.project_managers;
-        project.thumbnail = projectThumbnail.path ? projectThumbnail.path : project.thumbnail;
+        project.thumbnail = projectThumbnail ? projectThumbnail.path : project.thumbnail;
         await project.save();
         return res.json(project);
     } catch (error) {

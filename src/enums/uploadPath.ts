@@ -3,5 +3,5 @@ export enum UploadPath {
     LOGO = 'uploads\\logo\\',
     REQUEST = 'uploads\\request\\',
     THUMBNAIL = 'uploads\\thumbnail\\',
-    FILES = 'uploads\\files\\'
+    FILE = 'uploads\\file\\'
 }

@@ -74,7 +74,7 @@ try {
   app.use('/inventory_item', InventoryItemRouter);
   app.use('/project', ProjectRouter);
   app.use('/workflow', WorkFlowRouter);
-  // app.use('/notifications', NotificationRouter);
+  app.use('/notifications', NotificationRouter);
   // ************************************************
   app.use(express.static('uploads'));
   app.use('/uploads', express.static('uploads'));

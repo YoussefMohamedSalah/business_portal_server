@@ -106,7 +106,6 @@ Your Portal-CP Team.`
 		if (!user) return res.status(409).json({
 			msg: "Field to Create Employee"
 		});
-		console.log(user)
 		return res.json(user);
 	} catch (error) {
 		// Handle the error
