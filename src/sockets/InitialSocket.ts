@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { sendMessage } from '../controller/ChatController';
+import { sendDualMessage, sendGroupMessage } from '../controller/ChatController';
 
 export const initSocketServer = async (io: Server) => {
     console.log('io server is Now Running on port 8081');
@@ -17,22 +17,40 @@ export const initSocketServer = async (io: Server) => {
             socket.join(chatId);
         });
 
-        socket.on("send_message", async (data) => {
-            console.log(data)
+        socket.on("send_dual_message", async (data) => {
             const { content, chatId, senderId, recipientId } = JSON.parse(data);
-            console.log(`send_message: ${content}`);
 
             try {
                 const createMessageInput = { content, chatId, senderId, recipientId };
-                const message = await sendMessage(createMessageInput);
+                const message = await sendDualMessage(createMessageInput);
 
                 if (message) {
-                    socket.to(data.chatId).emit("received_message", message); // Emit to all sockets in the chat room except the sender
-                    socket.broadcast.emit("received_message", message); // Emit the message to the sender
+                    socket.to(data.chatId).emit("received_dual_message", message); // Emit to all sockets in the chat room except the sender
+                    socket.broadcast.emit("received_dual_message", message); // Emit the message to the sender
                 }
             } catch (error) {
                 console.error('Error sending message:', error);
             }
         });
+
+
+        socket.on("send_group_message", async (data) => {
+            const { content, chatId, senderId } = JSON.parse(data);
+
+            try {
+                const createMessageInput = { content, chatId, senderId };
+                const message = await sendGroupMessage(createMessageInput);
+
+                if (message) {
+                    socket.to(data.chatId).emit("received_group_message", message); // Emit to all sockets in the chat room except the sender
+                    socket.broadcast.emit("received_group_message", message); // Emit the message to the sender
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        });
+
+
+
     });
 };

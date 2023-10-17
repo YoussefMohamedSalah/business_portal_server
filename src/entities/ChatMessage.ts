@@ -17,7 +17,9 @@ export class ChatMessage extends BaseEntity {
     @Column()
     senderId: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     recipientId: string;
 
     @Column({

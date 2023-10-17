@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import { Chat } from '../entities/Chat';
-import { getUserChats, getChatById, getChatMessagesById, createMessage } from '../repositories/ChatRepository';
+import { getDualUserChats, getChatById, getChatMessagesById, createMessage, getGroupUserChats, getChatByGroupId } from '../repositories/ChatRepository';
 import { getForChatById } from "../repositories/UserRepository";
 import { validateUUID } from '../utils/validateUUID';
 
-export const sendMessage = async (sendMessageInput: { content: string, chatId: string, senderId: string, recipientId: string }) => {
+
+
+export const sendDualMessage = async (sendMessageInput: { content: string, chatId: string, senderId: string, recipientId: string }) => {
 	const { content, chatId, senderId, recipientId } = sendMessageInput;
 
 	try {
@@ -61,31 +63,75 @@ export const sendMessage = async (sendMessageInput: { content: string, chatId: s
 	}
 };
 
-export const getChats = async (req: Request, res: Response) => {
+export const sendGroupMessage = async (sendMessageInput: { content: string, chatId: string, senderId: string }) => {
+	const { content, chatId, senderId } = sendMessageInput;
+
+	try {
+		// If chatId is provided, it means there is already a chat between the users
+		let isValidUUID = validateUUID(chatId);
+		if (!isValidUUID) return ({ msg: "Chat Id is not valid" });
+
+		const chat = await getChatById(chatId);
+		if (!chat) return ({ msg: 'Chat Is Not Found' })
+
+		const createMessageInput = { content, chat, senderId, recipientId: '' };
+		const message = await createMessage(createMessageInput);
+
+		chat.last_message = { content, status: false };
+		await chat.save();
+		return message;
+	} catch (error) {
+		console.error('Error creating chat:', error);
+		return { msg: 'Internal server error' };
+	}
+};
+
+
+// Dual Chats
+export const getDualChats = async (req: Request, res: Response) => {
 	const { userId } = req.userData!;
 
 	try {
-		const chats = await getUserChats(userId);
-		let dataToReturn = {
-			userId,
-			chats
-		}
-		return res.json(dataToReturn);
+		const chats = await getDualUserChats(userId);
+		return res.json(chats);
 	} catch (error) {
 		console.error('Error retrieving chat Messages:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 };
 
+// Groups Chat
+export const getGroupChats = async (req: Request, res: Response) => {
+	const { userId } = req.userData!;
+
+	try {
+		const groups = await getGroupUserChats(userId);
+
+		let chats = []
+		if (groups && groups[0].id) {
+			for (let i = 0; i < groups?.length; i++) {
+				let chat = await getChatByGroupId(groups[i].id);
+				let data = { name: groups[i].name, chat }
+				if (chat) chats.push(data);
+			}
+		}
+
+		return res.json(chats);
+	} catch (error) {
+		console.error('Error Retrieving Groups Chats:', error);
+		return res.status(500).json({ message: 'Internal server error' });
+	}
+};
+
+// **************************************************************************
+
 export const getChatMessages = async (req: Request, res: Response) => {
 	const { id } = req.params!;
-	console.log(id)
 	try {
 		const messages = await getChatMessagesById(id);
-		console.log(messages)
 		return res.json(messages);
 	} catch (error) {
-		console.error('Error retrieving chat Messages:', error);
+		console.error('Error Retrieving Chat Messages:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 };

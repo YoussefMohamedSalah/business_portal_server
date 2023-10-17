@@ -18,6 +18,8 @@ import { validateUUID } from '../utils/validateUUID';
 import { sendEmail } from "../helpers/sendEmail";
 import { generateTempPassword } from "../utils/generateTempPassword";
 import { Role } from "../enums/enums";
+import { getRepository } from "typeorm";
+import { getGroupByProjectId } from "../repositories/GroupRepository";
 
 export const addUser = async (req: Request, res: Response) => {
 	const { companyId } = req.userData!;
@@ -171,10 +173,12 @@ export const updateUser = async (req: Request, res: Response) => {
 		sign,
 		avatar,
 		file,
-		permissions,
+		projects,
 		departmentId,
 		gender,
 	} = req.body;
+
+	console.log(req.body)
 
 	let department;
 	if (departmentId) {
@@ -200,6 +204,39 @@ export const updateUser = async (req: Request, res: Response) => {
 		}
 		await company.save();
 	}
+
+	let projects_arr: Project[] = [];
+	let projects_info_arr = [];
+	if (projects && Array.isArray(projects) && projects.length > 0) {
+		for (let i = 0; i < projects?.length; i++) {
+			let project = await getProjectById(projects[i]);
+			if (!project) return res.status(404).json({ msg: "Project not found" });
+			projects_arr.push(project);
+			projects_info_arr.push({ id: projects[i].id, name: projects[i].name });
+		}
+	};
+
+
+
+	// now add this user to project members
+	if (projects_arr && projects_arr.length > 0) {
+		for (let i = 0; i < projects_arr.length; i++) {
+			if (projects_arr[i]) {
+				const projectRepository = getRepository(Project);
+				projects_arr[i].members_count = projects_arr[i].members_count + 1;
+				await projectRepository.save(projects_arr[i]);
+				// Now get the group by projectId
+				// then add this user to the group members
+				const group = await getGroupByProjectId(projects_arr[i].id);
+				if (!group) continue;
+				group.members_count = group.members_count + 1;
+				group.members = [...group.members, user];
+				await group.save();
+			}
+		}
+	}
+
+
 
 	user.first_name = first_name ? first_name : user.first_name;
 	user.last_name = last_name ? last_name : user.last_name;
@@ -232,6 +269,10 @@ export const updateUser = async (req: Request, res: Response) => {
 		user.department = department ? department : user.department;
 		user.department_info = department ? department : user.department_info;
 	}
+	user.projects_info = projects_info_arr,
+
+
+
 	await user.save();
 	return res.json(user);
 };

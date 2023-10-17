@@ -1,15 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany, Column, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany, Column, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
 import { User } from './User';
 import { ChatMessage } from './ChatMessage';
+import { Group } from './Group';
 
 @Entity({ name: 'chat' })
 export class Chat extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToMany(() => User, user => user.chats)
-  @JoinTable()
-  users: User[];
 
   @OneToMany(() => ChatMessage, chatMessage => chatMessage.chat)
   messages: ChatMessage[];
@@ -29,6 +27,17 @@ export class Chat extends BaseEntity {
     nullable: false,
   })
   last_message: { content: string, status: boolean };
+
+  // Relations
+  // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
+  @ManyToMany(() => User, user => user.chats)
+  @JoinTable()
+  users: User[];
+
+  @OneToOne(() => Group, group => group.chat, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  group: Group;
+  // -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
   @Column({
     type: 'timestamp',

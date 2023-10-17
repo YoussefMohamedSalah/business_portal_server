@@ -3,6 +3,7 @@ import { Company } from './Company';
 import { Project } from './Project';
 import { Task } from './Task';
 import { User } from './User';
+import { Chat } from './Chat';
 
 @Entity({ name: 'group' })
 export class Group extends BaseEntity {
@@ -43,6 +44,9 @@ export class Group extends BaseEntity {
 
 	@ManyToMany(() => User, user => user.groups, { onDelete: 'CASCADE' })
 	members: User[];
+
+	@OneToOne(() => Chat, chat => chat.group, { cascade: true, onDelete: 'CASCADE' })
+	chat: Chat;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 
 	@Column({

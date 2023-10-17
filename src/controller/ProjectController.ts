@@ -8,6 +8,7 @@ import { validateUUID } from '../utils/validateUUID';
 import { getById as getCustomerById } from '../repositories/CustomerRepository'
 import { Customer } from '../entities/Customer';
 import { processNumber } from '../utils/checkAndParse';
+import { createChat } from '../repositories/ChatRepository';
 
 
 export const allCompanyProjects = async (req: Request, res: Response) => {
@@ -82,6 +83,9 @@ export const addProject = async (req: Request, res: Response) => {
 
         const group = await addGroup(createGroupData);
         if (!group) return res.status(409).json({ msg: "Field To Create Group" });
+
+        const chat = await createChat(group);
+        if (!chat) return res.status(409).json({ msg: "Field To Create Group Chat" });
 
         const selectedProject = await getById(project.id)
         if (selectedProject) {

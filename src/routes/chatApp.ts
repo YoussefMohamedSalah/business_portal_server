@@ -1,13 +1,16 @@
 import { Router } from 'express';
 import { checkAuth } from '../middleware/checkAuth';
-import { getChats, getChatMessages } from '../controller/ChatController';
+import { getDualChats, getChatMessages, getGroupChats } from '../controller/ChatController';
 import uploadFile from '../middleware/upload/uploadFile';
 
 const router = Router();
 
 
-router.route('/chats/').get(checkAuth,getChats);
-router.route('/chat/:id').get(checkAuth,getChatMessages);
+router.route('/dual/chats/').get(checkAuth, getDualChats);
+router.route('/chat/:id').get(checkAuth, getChatMessages);
+
+router.route('/group/chats/').get(checkAuth, getGroupChats);
+router.route('/chat/:id').get(checkAuth, getChatMessages);
 
 
 // router.route('/send/').post(checkAuth, uploadFile.single('file'), (req, res) => {
