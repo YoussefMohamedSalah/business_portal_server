@@ -204,7 +204,7 @@ export class User extends BaseEntity {
 		default: () => "'[]'",
 		nullable: false,
 	})
-	projects_info: Array<{ id: string, name: string }>;
+	projects_info: Array<{ id: string, name: string, longitude: number, latitude: number }>;
 
 	// Relations
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*

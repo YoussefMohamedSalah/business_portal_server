@@ -45,7 +45,7 @@ export class Group extends BaseEntity {
 	@ManyToMany(() => User, user => user.groups, { onDelete: 'CASCADE' })
 	members: User[];
 
-	@OneToOne(() => Chat, chat => chat.group, { cascade: true, onDelete: 'CASCADE' })
+	@OneToOne(() => Chat, chat => chat.group, { onDelete: 'CASCADE' })
 	chat: Chat;
 	// -----*-----*-----*-----*-----*-----*-----*-----*-----*-----*
 

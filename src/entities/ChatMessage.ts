@@ -11,7 +11,7 @@ export class ChatMessage extends BaseEntity {
     })
     content: string;
 
-    @ManyToOne(() => Chat, chat => chat.messages)
+    @ManyToOne(() => Chat, chat => chat.messages, { onDelete: 'CASCADE' })
     chat: Chat;
 
     @Column()

@@ -103,20 +103,11 @@ export const addMember = async (addInput: { member: User, group: Group }) => {
 export const removeMember = async (removeInput: { member: User, group: Group }) => {
     const { member, group } = removeInput;
     try {
-        const memberGroupRepository = getRepository(Group)
-        const record = await memberGroupRepository
-            .createQueryBuilder('group_member')
-            .where('userId = :userId', { userId: member.id })
-            .andWhere('groupId = :groupId', { groupId: group.id })
-            .delete()
-
-        // user.groups = user.groups.filter(filtered => filtered.id !== group.id);
-
-        // group.members = group.members.filter((member: User) => member.id !== userId);
-        // group.members_count--;
-
-        // await group.save();
-        // return group;
+        const groupMembers: User[] = group.members;
+        let memberToBeRemoved = groupMembers.find(selectedMember => selectedMember.id === member.id)
+        let newMembersArray = groupMembers.filter((member) => member !== memberToBeRemoved)
+        group.members = [...newMembersArray];
+        await group.save();
     } catch (error) {
         // Handle the error
         console.error("Error retrieving Group:", error);

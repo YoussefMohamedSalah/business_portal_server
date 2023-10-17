@@ -23,10 +23,10 @@ export class Project extends BaseEntity {
 	@Column({ nullable: true })
 	description: string;
 
-	@Column({ nullable: true, default: null })
+	@Column({ nullable: true, type: 'numeric' })
 	longitude: number;
 
-	@Column({ nullable: true })
+	@Column({ nullable: true, type: 'numeric' })
 	latitude: number;
 
 	@Column({ nullable: true })

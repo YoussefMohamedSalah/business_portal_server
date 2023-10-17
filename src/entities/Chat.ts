@@ -9,7 +9,7 @@ export class Chat extends BaseEntity {
   id: string;
 
 
-  @OneToMany(() => ChatMessage, chatMessage => chatMessage.chat)
+  @OneToMany(() => ChatMessage, chatMessage => chatMessage.chat, { onDelete: 'CASCADE' })
   messages: ChatMessage[];
 
   @Column({

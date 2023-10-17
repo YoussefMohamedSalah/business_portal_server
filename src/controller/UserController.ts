@@ -12,7 +12,7 @@ import bcrypt from "bcrypt";
 import { getById as getCompanyById } from "../repositories/CompanyRepository";
 import { CreateUserInfo } from "../types/CreateUserInfo";
 import { getById as getDepartmentById } from "../repositories/DepartmentRepository";
-import { getById as getProjectById } from "../repositories/ProjectRepository";
+import { getById as getProjectById, getProjectWithGroupById } from "../repositories/ProjectRepository";
 import { Project } from "../entities/Project";
 import { validateUUID } from '../utils/validateUUID';
 import { sendEmail } from "../helpers/sendEmail";
@@ -145,14 +145,15 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
+	const { companyId } = req.userData!;
 	const { id } = req.params;
+
 	let isValidUUID = validateUUID(id);
 	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
-	const { companyId } = req.userData!;
+
 	const user = await getById(id);
-	if (!user) {
-		return res.status(404).json({ msg: "User not found" });
-	}
+	if (!user) return res.status(404).json({ msg: "User not found" });
+
 	const {
 		first_name,
 		last_name,
@@ -169,6 +170,8 @@ export const updateUser = async (req: Request, res: Response) => {
 		id_ex_date,
 		salary_per_month,
 		salary_per_hour,
+		shift_start,
+		shift_end,
 		role,
 		sign,
 		avatar,
@@ -207,14 +210,36 @@ export const updateUser = async (req: Request, res: Response) => {
 
 	let projects_arr: Project[] = [];
 	let projects_info_arr = [];
+
 	if (projects && Array.isArray(projects) && projects.length > 0) {
 		for (let i = 0; i < projects?.length; i++) {
-			let project = await getProjectById(projects[i]);
+			let project = await getProjectWithGroupById(projects[i]);
 			if (!project) return res.status(404).json({ msg: "Project not found" });
+			// if user is already was a member and project id exists,
+			// that means we should remove this user from project group, and remove connection
+
+			if (projects.includes(project.id)) {
+				console.log(true, 'project.id', project.id)
+				// that means we need to delete user from group chat
+				project.group.members = []
+				project.group.members_count = 0
+				await project.group.save()
+			}
+
+			// let projectToBeRemoved = member.projects_info.find(selectedProject => selectedProject.id === project.id);
+			// let newProjectsArray = member.projects_info.filter((project) => project !== projectToBeRemoved)
+			// member.projects_info = [...newProjectsArray];
+
+
 			projects_arr.push(project);
-			projects_info_arr.push({ id: projects[i].id, name: projects[i].name });
+			projects_info_arr.push({ id: project.id, name: project.name, latitude: project.latitude, longitude: project.longitude });
 		}
 	};
+
+
+
+
+	console.log(projects_info_arr);
 
 
 
@@ -262,6 +287,8 @@ export const updateUser = async (req: Request, res: Response) => {
 	user.sign = sign ? sign : user.sign;
 	user.avatar = avatar ? avatar : user.avatar;
 	user.gender = gender ? gender : user.gender;
+	user.shift_start = shift_start ? shift_start : user.shift_start;
+	user.shift_end = shift_end ? shift_end : user.shift_end;
 	user.file = file ? file : user.file;
 	// user.permissions = permissions ? permissions : user.permissions;
 	user.role = role ? role : user.role;
@@ -273,7 +300,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 
 
-	await user.save();
+		await user.save();
 	return res.json(user);
 };
 
@@ -297,7 +324,7 @@ export const getCompanyUsers = async (req: Request, res: Response) => {
 	const { companyId, userId } = req.userData!;
 	try {
 		const users = await getAllCompanyUsers(companyId);
-		let usersToReturn = users.filter((user) => user.id !== userId && user.role !== Role.SUPERUSER)
+		let usersToReturn = users.filter((user) => user.id !== userId && user.role !== Role.SUPERUSER);
 		return res.json(usersToReturn);
 	} catch (error) {
 		// Handle the error

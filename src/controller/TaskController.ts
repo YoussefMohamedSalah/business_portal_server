@@ -1,40 +1,63 @@
 import { Request, Response } from 'express';
-import { getById as getCompanyById } from '../repositories/CompanyRepository';
+import { getById as getCompanyById, getWithAllUsers } from '../repositories/CompanyRepository';
 import { getGroupByProjectId } from '../repositories/GroupRepository';
 import { CreateTaskInput } from '../types/CreateTaskInput';
 import { createTask, getAllTasksByCompanyId, getById, getAllTasksByGroupId, getAllTasksByEmployeeId } from '../repositories/TaskRepository';
 import { validateUUID } from '../utils/validateUUID';
 import { TaskPriority, TaskProgressType, taskType } from '../enums/enums';
-import { getWithGroupsById as getUserWithGroupsById } from '../repositories/UserRepository'
+import { getAllCompanyUsers, getWithGroupsById as getUserWithGroupsById } from '../repositories/UserRepository'
 
 export const addTask = async (req: Request, res: Response) => {
 	const { userId, companyId, userName } = req.userData!;
 	const { task_type, name, description, task_priority, assigned_to, projectId, start_at, end_at } = req.body;
 	if (!task_type) return res.json({ msg: "Task type is required" });
+	let isValidUUID = validateUUID(projectId);
+	if (!isValidUUID) return res.status(400).json({ msg: "Project Id is not valid" });
 
 	try {
+
 		const company = await getCompanyById(companyId);
 		if (!company) return res.json({ msg: "Company not found" });
-		let group;
+
 		if (task_type === taskType.GROUP_TASK) {
 			let groupData = await getGroupByProjectId(projectId);
 			if (!groupData) return res.json({ msg: "Project's Group not found" });
 			groupData.tasks_count = groupData.tasks_count + 1;
-			let updatedGroup = await groupData.save()
-			group = updatedGroup;
+			let group = await groupData.save()
+
+			let createData: CreateTaskInput = {
+				name,
+				description,
+				task_priority: task_priority,
+				task_progress: TaskProgressType.ToDo,
+				task_type: taskType.GROUP_TASK,
+				start_at,
+				end_at,
+				creator: { id: userId, name: userName },
+				assigned_to: group.members,
+			}
+
+			let task = await createTask(createData, company, group);
+			if (!task) return res.json({ msg: "Task not created" });
+			return res.json(task);
 		}
 
+		const users = await getAllCompanyUsers(companyId);
+		if (!users) return res.json({ msg: "Company not found" });
+
+
 		const createData: CreateTaskInput = {
-			name: 'task Name',
-			description: 'task Description',
-			task_priority: TaskPriority.LOW,
+			name,
+			description,
+			task_priority,
 			task_progress: TaskProgressType.ToDo,
 			task_type: taskType.GENERAL_TASK,
-			start_at: '',
-			end_at: '',
+			start_at,
+			end_at,
 			creator: { id: userId, name: userName },
-			assigned_to: [],
+			assigned_to: users,
 		}
+
 		if (name) createData.name = name;
 		if (description) createData.description = description;
 		if (task_priority) createData.task_priority = task_priority;
@@ -42,7 +65,7 @@ export const addTask = async (req: Request, res: Response) => {
 		if (end_at) createData.end_at = end_at;
 		if (assigned_to) createData.assigned_to = assigned_to;
 
-		let task = await createTask(createData, company, group);
+		let task = await createTask(createData, company, '');
 		if (!task) return res.json({ msg: "Task not created" });
 		return res.json(task);
 	} catch (error) {
@@ -108,7 +131,7 @@ export const getAllTasksByProjectId = async (req: Request, res: Response) => {
 		const group = await getGroupByProjectId(id);
 		if (!group) return res.json({ msg: "Project's Group not found" });
 		const tasks = await getAllTasksByGroupId(group.id);
-		if (!tasks) return res.json({ msg: "Tasks not found" });
+		if (!tasks) return res.status(404).json({ msg: "Tasks not found" });
 		return res.json(tasks);
 	} catch (error) {
 		console.error("Error Retrieving Tasks:", error);

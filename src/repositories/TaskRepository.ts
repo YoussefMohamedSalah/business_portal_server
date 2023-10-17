@@ -17,6 +17,7 @@ export const createTask = async (createInput: CreateTaskInput, company: Company,
         if (task_progress) task.task_progress = task_progress;
         if (start_at) task.start_at = start_at;
         if (end_at) task.end_at = end_at;
+        if (task_type) task.task_type = task_type;
         if (task_type === taskType.GROUP_TASK && group) task.group = group;
         if (task_type === taskType.INDIVIDUAL_TASK && assigned_to) task.users = assigned_to;
         task.creator = creator;

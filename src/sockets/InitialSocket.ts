@@ -49,8 +49,5 @@ export const initSocketServer = async (io: Server) => {
                 console.error('Error sending message:', error);
             }
         });
-
-
-
     });
 };

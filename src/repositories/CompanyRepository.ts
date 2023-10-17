@@ -50,6 +50,25 @@ export const getById = async (id: string) => {
     }
 };
 
+export const getWithAllUsers = async (companyId: string) => {
+    try {
+        const companyRepository = getRepository(Company);
+        const company = await companyRepository
+            .createQueryBuilder("company")
+            .where("company.id = :companyId", { id: companyId })
+            .leftJoinAndSelect(
+                "company.users",
+                "user"
+            )
+            .getOne();
+        return company;
+    } catch (error) {
+        // Handle the error
+        console.error("Error retrieving contracts:", error);
+        return;
+    }
+}
+
 export const getCompanyWithWorkflow = async (id: string) => {
     try {
         const companyRepository = getRepository(Company);

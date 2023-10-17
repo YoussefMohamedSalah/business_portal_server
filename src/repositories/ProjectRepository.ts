@@ -71,7 +71,24 @@ export const getById = async (id: string) => {
         return project;
     } catch (error) {
         // Handle the error
-        console.error("Error Adding Project:", error);
+        console.error("Error Getting Project:", error);
+        return;
+    }
+};
+
+
+export const getProjectWithGroupById = async (id: string) => {
+    try {
+        const projectRepository = getRepository(Project);
+        const project = await projectRepository
+            .createQueryBuilder("project")
+            .where("project.id = :id", { id: id })
+            .leftJoinAndSelect('project.group', 'group')
+            .getOne();
+        return project;
+    } catch (error) {
+        // Handle the error
+        console.error("Error Getting Project:", error);
         return;
     }
 };
@@ -88,7 +105,7 @@ export const getAllByCompanyId = async (companyId: string) => {
         return project;
     } catch (error) {
         // Handle the error
-        console.error("Error Adding Project:", error);
+        console.error("Error Getting All Company Project:", error);
         return;
     }
 };

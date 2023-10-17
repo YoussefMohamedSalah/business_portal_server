@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { getAllUsers, getById, getUserAndCompanyById } from '../repositories/UserRepository';
 import { handleStartWork, handleEndWork, parseTime } from '../utils/handleAttendance';
 import { createStartAttendance, getAllToReset, getByUserId } from '../repositories/AttendanceRepository';
+import { Project } from '../entities/Project';
+import { CheckLocationInputType, isNearToProject } from '../utils/Location';
 // 
 
 // DONE
@@ -44,10 +46,41 @@ export const getAttendanceStatus = async (req: Request, res: Response) => {
 
 // DONE
 export const addStartAttendance = async (req: Request, res: Response) => {
-    const { lateReason } = req.body;
+    const { latitude, longitude, lateReason } = req.body;
     const { userId } = req.userData!;
     const date = new Date();
     const stringDate = new Date().toISOString().slice(0, 10) // 2021-08-01
+
+    // check if user exist
+    const user = await getUserAndCompanyById(userId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    // Check If User is In any Project,
+    // if user has Projects, check Location.
+    // if location is near by 3 km, continue;
+    // if user if far, send msg, 'you are so far from project's Location.
+    let projects: Project[] = user.projects || [];
+    console.log(projects)
+    let isUserNearToWork: boolean = false;
+    for (let i = 0; i < projects.length; i++) {
+        let project = projects[i];
+        let projectLatitude: number = project.latitude || 0;
+        let projectLongitude: number = project.longitude || 0;
+        let checkLocationInput: CheckLocationInputType = {
+            userLatitude: latitude,
+            userLongitude: longitude,
+            projectLatitude,
+            projectLongitude
+        }
+        console.log(checkLocationInput)
+        const isNear: boolean = isNearToProject(checkLocationInput);
+        if (isNear) {
+            isUserNearToWork = true;
+            break;
+        }
+    }
+
+    if (!isUserNearToWork) return res.status(404).json({ msg: "You'r Too Far From Work Location" });
+
 
     // format login time
     let loginHour: string = date.getHours().toString();
@@ -55,9 +88,6 @@ export const addStartAttendance = async (req: Request, res: Response) => {
     if (date.getHours() < 10) loginHour = `0${loginHour}`;
     if (date.getMinutes() < 10) loginMinute = `0${loginMinute}`;
     const userLogInTime = loginHour + ':' + loginMinute; //16:15
-    // check if user exist
-    const user = await getUserAndCompanyById(userId);
-    if (!user) return res.status(404).json({ msg: "User not found" });
     // check if user has shift and What is it
     const { shift_start, shift_end } = user
     if (!shift_start || !shift_end) return res.status(404).json({ msg: "You'r Shift not found" });

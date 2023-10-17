@@ -103,12 +103,12 @@ export const getDualChats = async (req: Request, res: Response) => {
 // Groups Chat
 export const getGroupChats = async (req: Request, res: Response) => {
 	const { userId } = req.userData!;
-
 	try {
 		const groups = await getGroupUserChats(userId);
+		if (!groups) return ({ msg: 'Groups Is Not Found' })
 
 		let chats = []
-		if (groups && groups[0].id) {
+		if (groups && groups.length > 0 && groups[0]?.id!) {
 			for (let i = 0; i < groups?.length; i++) {
 				let chat = await getChatByGroupId(groups[i].id);
 				let data = { name: groups[i].name, chat }

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getById as getCompanyById } from '../repositories/CompanyRepository';
 import { createProject, getAllByCompanyId, getById } from '../repositories/ProjectRepository';
-import { getById as getGroupById } from '../repositories/GroupRepository';
+import { getById as getGroupById, getWithMembersById } from '../repositories/GroupRepository';
 import { getAllProject_MaterialReq, getAllProject_PcReq, getAllProject_PoReq, getAllProject_SiteReq } from '../repositories/RequestsRepository';
 import { addGroup, getGroupByProjectId } from '../repositories/GroupRepository';
 import { validateUUID } from '../utils/validateUUID';
@@ -256,12 +256,17 @@ export const deleteProject = async (req: Request, res: Response) => {
 
 export const getAllEmployeesByProjectId = async (req: Request, res: Response) => {
     const { id } = req.params;
+
     let isValidUUID = validateUUID(id);
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
+
     try {
         const group = await getGroupByProjectId(id);
         if (!group) return res.status(404).json({ msg: "Group Is Not Found" });
-        return res.json(group.members);
+
+        // const members = await getWithMembersById(group.id);
+        // if (!members) return res.status(404).json({ msg: "Group Members Is Not Found" });
+        return res.json(group);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Project's Members:", error);

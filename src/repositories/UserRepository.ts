@@ -62,7 +62,7 @@ export const createUser = async (paramsData: CreateUserInfo, avatar: any) => {
 		let projects_info_arr = [];
 		if (projects && projects.length > 0) {
 			for (let i = 0; i < projects?.length; i++) {
-				projects_info_arr.push({ id: projects[i].id, name: projects[i].name });
+				projects_info_arr.push({ id: projects[i].id, name: projects[i].name, latitude: projects[i].latitude, longitude: projects[i].longitude });
 			}
 		}
 
@@ -183,6 +183,10 @@ export const getUserAndCompanyById = async (id: string) => {
 		.leftJoinAndSelect(
 			"user.company",
 			"company"
+		)
+		.leftJoinAndSelect(
+			"user.projects",
+			"project"
 		)
 		.getOne();
 	return user;
