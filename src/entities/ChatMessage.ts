@@ -9,7 +9,7 @@ export class ChatMessage extends BaseEntity {
     @Column({
         default: null
     })
-    message: string;
+    content: string;
 
     @ManyToOne(() => Chat, chat => chat.messages)
     chat: Chat;

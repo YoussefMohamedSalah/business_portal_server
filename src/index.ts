@@ -2,7 +2,8 @@ import 'reflect-metadata';
 import express from 'express';
 import Cors from 'cors';
 import dotenv from 'dotenv';
-import http from 'http';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 // ************************************************
 import { entities } from './entities';
 import { subscribers } from './subscribers';
@@ -32,14 +33,12 @@ import { SubcontractorRouter } from './routes/subcontractor';
 import { ContractRouter } from './routes/contract';
 import { InvoiceRouter } from './routes/invoice';
 import { ChatAppRouter } from './routes/chatApp';
-
-
+import { initSocketServer } from './sockets/InitialSocket';
 
 // constants
 dotenv.config();
 const app = express();
-const server = http.createServer(app);
-
+const server = createServer(app);
 
 // Middleware
 app.use(Cors());
@@ -48,9 +47,16 @@ app.use(express.urlencoded({ extended: true }));
 
 
 try {
-  server.listen(process.env.SERVER_PORT, () =>
+  app.listen(process.env.SERVER_PORT, () =>
     console.log(`Server Running on port : ${process.env.SERVER_PORT}`)
   );
+  const io = new Server({
+    cors: {
+      origin: "http://localhost:3000"
+    }
+  });
+  io.listen(8081)
+  initSocketServer(io);
   connectToDataBase(entities, subscribers);
 
   // ROUTES
@@ -82,11 +88,6 @@ try {
   app.use('/chat', ChatAppRouter);
 
 
-
-
-
-
-
   // ************************************************
   const sleep = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -104,6 +105,7 @@ try {
   };
   handleRunAtMidnight();
   // ************************************************
+
 } catch (error) {
   console.error(error);
   throw new Error('Unable To Connect To Database');

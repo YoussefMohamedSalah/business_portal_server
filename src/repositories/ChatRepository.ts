@@ -10,6 +10,7 @@ export const getChatById = async (id: string) => {
         const chat = await chatRepository
             .createQueryBuilder("chat")
             .where("chat.id = :id", { id: id })
+            .leftJoinAndSelect('chat.users', 'user')
             .getOne();
         return chat;
     } catch (error) {
@@ -19,12 +20,13 @@ export const getChatById = async (id: string) => {
     }
 };
 
-export const createMessage = async (createMessageInput: any) => {
+export const createMessage = async (createMessageInput: { content: string, chat: Chat, senderId: string, recipientId: string }) => {
     const { content, chat, senderId, recipientId } = createMessageInput;
     try {
+
         const chatMessageRepository = getRepository(ChatMessage);
         const chatMessage = new ChatMessage();
-        chatMessage.message = content ? content : '';
+        chatMessage.content = content ? content : '';
         chatMessage.chat = chat;
         chatMessage.senderId = senderId;
         chatMessage.recipientId = recipientId;
@@ -43,7 +45,6 @@ export const getChatMessagesById = async (id: string) => {
         const chat = await chatRepository
             .createQueryBuilder("chat")
             .where("chat.id = :id", { id: id })
-            // .leftJoinAndSelect('chat.users', 'user')
             .leftJoinAndSelect('chat.messages', 'chat_message')
             .getOne();
         return chat;
