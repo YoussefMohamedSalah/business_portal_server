@@ -44,6 +44,7 @@ export const getWithMembersById = async (id: string) => {
             .createQueryBuilder("group")
             .where("group.id = :id", { id: id })
             .leftJoinAndSelect('group.members', 'user')
+            .leftJoinAndSelect('group.project', 'project')
             .getOne();
         return group;
     } catch (error) {
@@ -107,6 +108,7 @@ export const removeMember = async (removeInput: { member: User, group: Group }) 
         let memberToBeRemoved = groupMembers.find(selectedMember => selectedMember.id === member.id)
         let newMembersArray = groupMembers.filter((member) => member !== memberToBeRemoved)
         group.members = [...newMembersArray];
+        group.members_count--;
         await group.save();
     } catch (error) {
         // Handle the error

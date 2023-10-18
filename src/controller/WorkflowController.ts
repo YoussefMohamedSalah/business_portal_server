@@ -17,10 +17,10 @@ export const getAllWorkFlow = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
     const companyWithWorkFlow = await getByCompanyId(companyId)
     if (!companyWithWorkFlow || !companyWithWorkFlow.workFlow) {
-        return res.json({ msg: "WorkFlow Is not found" });
+        return res.status(404).json({ msg: "WorkFlow Is not found" });
     }
     let workFlow = companyWithWorkFlow.workFlow;
-    return res.json(workFlow);
+    return res.status(200).json(workFlow);
 };
 
 
@@ -29,10 +29,10 @@ export const updateWorkFlow = async (req: Request, res: Response) => {
     const { site_request_flow, petty_cash_request_flow, material_request_flow, purchase_order_flow } = req.body;
     console.log(req.body)
     const company = await getByCompanyId(companyId)
-    if (!company || !company.workFlow) return res.json({ msg: "Company Is not found" });
+    if (!company || !company.workFlow) return res.status(404).json({ msg: "Company Is not found" });
 
     const workflow = await getById(company.workFlow.id)
-    if (!workflow) return res.json({ msg: "Workflow Is not found" });
+    if (!workflow) return res.status(404).json({ msg: "Workflow Is not found" });
 
 
     let pendingRequestsArray: any[] = [];
@@ -77,7 +77,7 @@ export const updateWorkFlow = async (req: Request, res: Response) => {
         }
     }
     await workflow.save()
-    return res.json(workflow);
+    return res.status(200).json(workflow);
 };
 
 

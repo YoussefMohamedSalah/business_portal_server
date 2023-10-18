@@ -27,7 +27,7 @@ export const addInventory = async (req: Request, res: Response) => {
         }
         const inventory = await createInventory(createInput, company);
         if (!inventory) return res.status(409).json({ msg: "Field To Create Inventory" });
-        else return res.json(inventory);
+        else return res.status(200).json(inventory);
     } catch (error) {
         console.error("Error Adding Inventory:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -41,7 +41,7 @@ export const getInventoryById = async (req: Request, res: Response) => {
     try {
         const inventory = await getById(id);
         if (!inventory) return res.status(404).json({ msg: "Inventory not found" });
-        return res.json(inventory);
+        return res.status(200).json(inventory);
     } catch (error) {
         console.error("Error Retrieving Inventory:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -55,7 +55,7 @@ export const allInventoryItems = async (req: Request, res: Response) => {
     try {
         const inventory = await getWithItemsById(inventoryId);
         if (!inventory) return res.status(404).json({ msg: "Inventory not found" });
-        return res.json(inventory);
+        return res.status(200).json(inventory);
     } catch (error) {
         console.error("Error Retrieving Inventory Items:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -72,7 +72,7 @@ export const allInventoryItems = async (req: Request, res: Response) => {
 //     const { name, supplier_type, company_name, vat_on, representative, phone_number, email, country, city, area, street, building_number, postal_code } = req.body;
 //     customer.name = name ? name : customer.name;
 //     await customer.save();
-//     return res.json(customer);
+//     return  res.status(200).json(customer);
 // };
 
 export const deleteInventory = async (req: Request, res: Response) => {
@@ -84,7 +84,7 @@ export const deleteInventory = async (req: Request, res: Response) => {
         if (!inventory) return res.status(404).json({ msg: "Inventory not found" });
 
         await inventory.remove();
-        return res.json({ msg: "Inventory deleted" });
+        return res.status(404).json({ msg: "Inventory deleted" });
     } catch (error) {
         console.error("Error Deleting Inventory:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -96,7 +96,7 @@ export const allCompanyInventories = async (req: Request, res: Response) => {
     try {
         const inventories = await getAllByCompanyId(companyId);
         if (!inventories) return res.status(404).json({ msg: "Inventories not found" });
-        return res.json(inventories);
+        return res.status(200).json(inventories);
     } catch (error) {
         console.error("Error Retrieving Inventories:", error);
         return res.status(500).json({ msg: "Internal server error" });

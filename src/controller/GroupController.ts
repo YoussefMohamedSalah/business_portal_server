@@ -22,7 +22,7 @@ export const createGroup = async (req: Request, res: Response) => {
 			company
 		}
 		const group = await addGroup(createData);
-		return res.json(group);
+		return res.status(200).json(group);
 	} catch (error) {
 		console.error("Error Adding Group:", error);
 		return res.status(500).json({ msg: "Internal server error" });
@@ -42,7 +42,7 @@ export const updateGroup = async (req: Request, res: Response) => {
 		if (members) group.members = members;
 		if (managers) group.managers = managers;
 		let updatedGroup = await group.save();
-		return res.json(updatedGroup);
+		return res.status(200).json(updatedGroup);
 	} catch (error) {
 		console.error("Error Adding Group:", error);
 		return res.status(500).json({ msg: "Internal server error" });
@@ -57,7 +57,7 @@ export const getGroupById = async (req: Request, res: Response) => {
 		// this id is Project Id
 		const group = await getWithMembersById(id);
 		if (!group) return res.status(404).json({ msg: "Group not found" });
-		return res.json(group);
+		return res.status(200).json(group);
 	} catch (error) {
 		console.error("Error Retrieving Group:", error);
 		return res.status(500).json({ msg: "Internal server error" });
@@ -74,7 +74,7 @@ export const deleteGroup = async (req: Request, res: Response) => {
 			return res.status(404).json({ msg: "Group not found" });
 		}
 		await group.remove();
-		return res.json({ msg: "Group deleted" });
+		return res.status(404).json({ msg: "Group deleted" });
 	} catch (error) {
 		console.error("Error Deleting Group:", error);
 		return res.status(500).json({ msg: "Internal server error" });
@@ -86,7 +86,7 @@ export const allCompanyGroups = async (req: Request, res: Response) => {
 	try {
 		const groups = await getAllByCompanyId(companyId);
 		if (!groups) return res.status(404).json({ msg: "Groups not found" });
-		return res.json(groups);
+		return res.status(200).json(groups);
 	} catch (error) {
 		console.error("Error Retrieving Groups:", error);
 		return res.status(500).json({ msg: "Internal server error" });
@@ -118,14 +118,22 @@ export const removeUserFromGroup = async (req: Request, res: Response) => {
 	try {
 		const group = await getWithMembersById(id);
 		if (!group) return res.status(404).json({ msg: "Group not found" });
+
+		let project = group.project;
+
 		const member = await getMemberById(id);
 		if (!member) return res.status(404).json({ msg: "Member not found" });
+
 		let removeInput = {
 			member,
 			group
 		}
-		await removeMember(removeInput);
-		return res.json({ msg: "User removed from group" });
+		let updatedGroup = await removeMember(removeInput);
+
+		project.members_count--;
+		await project.save();
+
+		return res.status(200).json(updatedGroup);
 	} catch (error) {
 		console.error("Error Retrieving Groups:", error);
 		return res.status(500).json({ msg: "Internal server error" });
@@ -152,8 +160,9 @@ export const addUserToGroup = async (req: Request, res: Response) => {
 			member: user,
 			group
 		}
-		await addMember(addInput);
-		return res.json({ msg: "User added to group" });
+		let updatedGroup = await addMember(addInput);
+		if (!updatedGroup) res.status(400).json({ msg: "Filed To Add User To Group" });
+		return res.status(200).json(updatedGroup);
 	} catch (error) {
 		console.error("Error Adding User To Group:", error);
 		return res.status(500).json({ msg: "Internal server error" });
@@ -201,7 +210,7 @@ export const removeUserFromGroupByProjectId = async (req: Request, res: Response
 
 		await member.save();
 
-		return res.json({ msg: "User removed from group" });
+		return res.status(404).json({ msg: "User removed from group" });
 	} catch (error) {
 		console.error("Error Adding User To Group:", error);
 		return res.status(500).json({ msg: "Internal server error" });
@@ -234,7 +243,7 @@ export const addUserToGroupByProjectId = async (req: Request, res: Response) => 
 			group
 		};
 
-		await addMember(addInput);
+		let updatedGroup = await addMember(addInput);
 		project.members_count = project.members_count + 1;
 		await project.save();
 
@@ -242,7 +251,8 @@ export const addUserToGroupByProjectId = async (req: Request, res: Response) => 
 		userData.projects_info = [...userData.projects_info, projectToBeAdded];
 		await userData.save();
 
-		return res.json({ msg: "User added to group" });
+		if (!updatedGroup) res.status(400).json({ msg: "Filed To Add User To Group" });
+		return res.status(200).json(updatedGroup);
 	} catch (error) {
 		console.error("Error Adding User To Group:", error);
 		return res.status(500).json({ msg: "Internal server error" });

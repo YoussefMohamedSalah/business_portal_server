@@ -40,7 +40,7 @@ export const addSubcontractor = async (req: Request, res: Response) => {
 
         const subcontractor = await createSubcontractor(createData, company);
         if (!subcontractor) return res.status(409).json({ msg: "Subcontractor already exists" });
-        else return res.json(subcontractor);
+        else return res.status(200).json(subcontractor);
     } catch (error) {
         // Handle the error
         console.error("Error Creating Subcontractor:", error);
@@ -55,7 +55,7 @@ export const getSubcontractorById = async (req: Request, res: Response) => {
     try {
         const subcontractor = await getById(id);
         if (subcontractor) {
-            return res.json(subcontractor);
+            return res.status(200).json(subcontractor);
         }
         return res.status(404).json({ msg: "Subcontractor not found" });
     } catch (error) {
@@ -95,7 +95,7 @@ export const updateSubcontractor = async (req: Request, res: Response) => {
         subcontractor.street = street ? street : subcontractor.street;
         subcontractor.building_number = building_number ? building_number : subcontractor.building_number;
         await subcontractor.save();
-        return res.json(subcontractor);
+        return res.status(200).json(subcontractor);
     } catch (error) {
         // Handle the error
         console.error("Error Updating Subcontractor:", error);
@@ -113,7 +113,7 @@ export const deleteSubcontractor = async (req: Request, res: Response) => {
             return res.status(404).json({ msg: "Subcontractor not found" });
         }
         await subcontractor.remove();
-        return res.json({ msg: "Subcontractor deleted" });
+        return res.status(404).json({ msg: "Subcontractor deleted" });
     } catch (error) {
         // Handle the error
         console.error("Error Deleting Subcontractor:", error);
@@ -125,7 +125,7 @@ export const getAllCompanySubcontractors = async (req: Request, res: Response) =
     const { companyId } = req.userData!;
     try {
         const subcontractors = await getAllByCompanyId(companyId);
-        return res.json(subcontractors);
+        return res.status(200).json(subcontractors);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Subcontractors:", error);

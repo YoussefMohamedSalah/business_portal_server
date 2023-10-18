@@ -24,7 +24,7 @@ export const addInventoryItem = async (req: Request, res: Response) => {
         inventory.items_count = updatedInventory.items_count;
         inventory.items_value = updatedInventory.items_value;
         await inventory.save();
-        return res.json(inventoryItem)
+        return res.status(200).json(inventoryItem)
     }
     else return res.status(409).json({ msg: "Field To Create Inventory Item" });
 };
@@ -36,7 +36,7 @@ export const getInventoryItemById = async (req: Request, res: Response) => {
     if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
     const inventoryItem = await getById(id);
     if (inventoryItem) {
-        return res.json(inventoryItem);
+        return res.status(200).json(inventoryItem);
     }
     return res.status(404).json({ msg: "Inventory Item Is not found" });
 };
@@ -76,7 +76,7 @@ export const updateInventoryItem = async (req: Request, res: Response) => {
     inventoryItem.total_value = itemTotalValue ? itemTotalValue : inventoryItem.total_value;
     await inventoryItem.save();
 
-    return res.json(inventoryItem);
+    return res.status(200).json(inventoryItem);
 };
 
 // DONE
@@ -98,7 +98,7 @@ export const deleteInventoryItem = async (req: Request, res: Response) => {
     await inventory.save();
 
     await inventoryItem.remove();
-    return res.json({ msg: "Inventory Item deleted" });
+    return res.status(404).json({ msg: "Inventory Item deleted" });
 }
 
 // DONE
@@ -108,5 +108,5 @@ export const allInventoryItems = async (req: Request, res: Response) => {
     if (!inventoryItems) {
         return res.status(404).json({ msg: "Inventory Items not found" });
     }
-    return res.json(inventoryItems);
+    return res.status(200).json(inventoryItems);
 };

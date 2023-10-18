@@ -44,7 +44,7 @@ export const addContract = async (req: Request, res: Response) => {
 		if (!project) return res.status(404).json({ msg: "Project not found" });
 		const contract = await createContract(createInput, company, project, user)
 		if (!contract) return res.status(404).json({ msg: "Field To Create Contract" });
-		return res.json(contract);
+		return res.status(200).json(contract);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Adding Contract:", error);
@@ -57,7 +57,7 @@ export const getAllContractsByCompany = async (req: Request, res: Response) => {
 	try {
 		const contracts = await getAllCompanyContracts(companyId);
 		if (!contracts) return res.status(404).json({ msg: "Contracts not found" });
-		return res.json(contracts);
+		return res.status(200).json(contracts);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Retrieving Contracts:", error);
@@ -72,7 +72,7 @@ export const getAllContractsByProject = async (req: Request, res: Response) => {
 	try {
 		const contracts = await getAllProjectContracts(projectId);
 		if (!contracts) return res.status(404).json({ msg: "Contracts not found" });
-		return res.json(contracts);
+		return res.status(200).json(contracts);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Retrieving Contracts:", error);
@@ -87,7 +87,7 @@ export const getContractById = async (req: Request, res: Response) => {
 	try {
 		const contract = await getById(id);
 		if (!contract) return res.status(404).json({ msg: "Contract not found" });
-		return res.json(contract);
+		return res.status(200).json(contract);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Retrieving Contract:", error);
@@ -104,7 +104,7 @@ export const deleteContract = async (req: Request, res: Response) => {
 		const contract = await getById(id);
 		if (!contract) return res.status(404).json({ msg: "Contract not found" });
 		await contract.remove();
-		return res.json({ msg: "Contract deleted" });
+		return res.status(404).json({ msg: "Contract deleted" });
 	} catch (error) {
 		// Handle the error
 		console.error("Error Deleting Contract:", error);
@@ -133,14 +133,14 @@ export const updateContract = async (req: Request, res: Response) => {
 		if (!contract) return res.status(404).json({ msg: "Contract not found" });
 		if (toCheckType.total_amount) contract.total_amount = toCheckType.total_amount as number;
 		if (toCheckType.vat) contract.vat = toCheckType.vat as number;
-		if(checkAndParse(items!)) contract.items = checkAndParse(items!);
-		if(checkAndParse(conditions!)) contract.conditions = checkAndParse(conditions!);
+		if (checkAndParse(items!)) contract.items = checkAndParse(items!);
+		if (checkAndParse(conditions!)) contract.conditions = checkAndParse(conditions!);
 		contract.date = date ? date : contract.date;
 		contract.status = status ? status : contract.status;
 		contract.status = status ? status : contract.status;
 		contract.work_flow = work_flow ? work_flow : contract.work_flow;
 		await contract.save();
-		return res.json(contract);
+		return res.status(200).json(contract);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Deleting Contract:", error);

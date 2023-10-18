@@ -11,7 +11,7 @@ export const updatePosition = async (req: Request, res: Response) => {
         }
         user.business_title = business_title ? business_title : user.business_title;
         await user.save();
-        return res.json(user);
+        return res.status(200).json(user);
     } catch (error) {
         console.error("Error Updating Position:", error);
         return res.status(500).json({ msg: "Internal server error" });

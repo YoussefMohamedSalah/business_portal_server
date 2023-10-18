@@ -16,7 +16,7 @@ export const allCompanyProjects = async (req: Request, res: Response) => {
     try {
         const projects = await getAllByCompanyId(companyId);
         if (!projects) return res.status(404).json({ msg: "Projects not found" });
-        return res.json(projects);
+        return  res.status(200).json(projects);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Projects:", error);
@@ -98,7 +98,7 @@ export const addProject = async (req: Request, res: Response) => {
             await selectedGroup.save();
         }
 
-        return res.json(project);
+        return  res.status(200).json(project);
     } catch (error) {
         // Handle the error
         console.error("Error Adding Project:", error);
@@ -113,7 +113,7 @@ export const getProjectById = async (req: Request, res: Response) => {
     try {
         const project = await getById(id);
         if (!project) return res.status(404).json({ msg: "Project not found" });
-        return res.json(project);
+        return  res.status(200).json(project);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Project:", error);
@@ -183,7 +183,7 @@ export const updateProject = async (req: Request, res: Response) => {
         project.project_managers = project_managers ? project_managers : project.project_managers;
         project.thumbnail = projectThumbnail ? projectThumbnail.path : project.thumbnail;
         await project.save();
-        return res.json(project);
+        return  res.status(200).json(project);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Project:", error);
@@ -210,7 +210,7 @@ export const addProjectComment = async (req: Request, res: Response) => {
         project.comments.unshift(newCommentObj)
         project.comments_count = project.comments_count + 1;
         await project.save();
-        return res.json(project);
+        return  res.status(200).json(project);
     } catch (error) {
         // Handle the error
         console.error("Error Adding Comment:", error);
@@ -230,7 +230,7 @@ export const removeProjectComment = async (req: Request, res: Response) => {
         project.comments = filteredComments;
         project.comments_count = project.comments_count - 1;
         await project.save();
-        return res.json(project);
+        return  res.status(200).json(project);
     } catch (error) {
         // Handle the error
         console.error("Error Removing Comment:", error);
@@ -246,7 +246,7 @@ export const deleteProject = async (req: Request, res: Response) => {
         if (!project) return res.status(404).json({ msg: "Project not found" });
 
         await project.remove();
-        return res.json({ msg: "Project deleted" });
+        return res.status(404).json({ msg: "Project deleted" });
     } catch (error) {
         // Handle the error
         console.error("Error deleted Project:", error);
@@ -266,7 +266,7 @@ export const getAllEmployeesByProjectId = async (req: Request, res: Response) =>
 
         // const members = await getWithMembersById(group.id);
         // if (!members) return res.status(404).json({ msg: "Group Members Is Not Found" });
-        return res.json(group);
+        return  res.status(200).json(group);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Project's Members:", error);
@@ -280,7 +280,7 @@ export const getAllProjectPoRequests = async (req: Request, res: Response) => {
     try {
         const requests = await getAllProject_PoReq(projectId);
         if (!requests) return res.status(404).json({ msg: "Requests not found" });
-        return res.json(requests);
+        return  res.status(200).json(requests);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Project's Po Requests:", error);
@@ -295,7 +295,7 @@ export const getAllProjectPcRequests = async (req: Request, res: Response) => {
     try {
         const company = await getAllProject_PcReq(projectId);
         if (company) {
-            return res.json(company);
+            return  res.status(200).json(company);
         }
         return res.status(404).json({ msg: "Requests not found" });
     } catch (error) {
@@ -312,7 +312,7 @@ export const getAllProjectMaterialRequests = async (req: Request, res: Response)
     try {
         const requests = await getAllProject_SiteReq(projectId);
         if (!requests) return res.status(404).json({ msg: "Requests not found" });
-        return res.json(requests);
+        return  res.status(200).json(requests);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Project's Material Requests:", error);
@@ -328,7 +328,7 @@ export const getAllProjectSiteRequests = async (req: Request, res: Response) => 
     try {
         const requests = await getAllProject_MaterialReq(projectId);
         if (!requests) return res.status(404).json({ msg: "Requests not found" });
-        return res.json(requests);
+        return  res.status(200).json(requests);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Project's Site Requests:", error);

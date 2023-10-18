@@ -13,7 +13,7 @@ export const getAllPoRequests = async (req: Request, res: Response) => {
     try {
         const requests = await getAllCompany_PoReq(companyId);
         if (!requests) return res.status(404).json({ msg: "Requests not found" });
-        return res.json(requests);
+        return res.status(200).json(requests);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Requests:", error);
@@ -26,7 +26,7 @@ export const getAllPcRequests = async (req: Request, res: Response) => {
     try {
         const requests = await getAllCompany_PcReq(companyId);
         if (!requests) return res.status(404).json({ msg: "Requests not found" });
-        return res.json(requests);
+        return res.status(200).json(requests);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Requests:", error);
@@ -39,7 +39,7 @@ export const getAllMaterialRequests = async (req: Request, res: Response) => {
     try {
         const requests = await getAllCompany_MaterialReq(companyId);
         if (!requests) return res.status(404).json({ msg: "Requests not found" });
-        return res.json(requests);
+        return res.status(200).json(requests);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Requests:", error);
@@ -52,7 +52,7 @@ export const getAllSiteRequests = async (req: Request, res: Response) => {
     try {
         const requests = await getAllCompany_SiteReq(companyId);
         if (!requests) return res.status(404).json({ msg: "Requests not found" });
-        return res.json(requests);
+        return res.status(200).json(requests);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Requests:", error);
@@ -69,7 +69,7 @@ export const getRequestById = async (req: Request, res: Response) => {
         const { companyId } = req.userData!;
         const request = await getById(companyId, id);
         if (!request) return res.status(404).json({ msg: "Request not found" });
-        return res.json(request);
+        return res.status(200).json(request);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Request:", error);
@@ -87,7 +87,7 @@ export const deleteRequest = async (req: Request, res: Response) => {
         const request = await getById(companyId, id);
         if (!request) return res.status(404).json({ msg: "Request not found" });
         await request.remove();
-        return res.json({ msg: "Request deleted" });
+        return res.status(404).json({ msg: "Request deleted" });
     } catch (error) {
         // Handle the error
         console.error("Error Deleting Request:", error);
@@ -128,7 +128,7 @@ export const updatePcRequest = async (req: Request, res: Response) => {
         request.status = status || request.status;
 
         await request.save();
-        return res.json(request);
+        return res.status(200).json(request);
     } catch (error) {
         // Handle the error
         console.error("Error Updating Request:", error);
@@ -161,7 +161,7 @@ export const updatePoRequest = async (req: Request, res: Response) => {
         request.description = description || request.description;
         request.status = status || request.status;
         await request.save();
-        return res.json(request);
+        return res.status(200).json(request);
     } catch (error) {
         // Handle the error
         console.error("Error Updating Request:", error);
@@ -183,7 +183,7 @@ export const updateMaterialRequest = async (req: Request, res: Response) => {
         request.description = description || request.description;
         request.status = status || request.status;
         await request.save();
-        return res.json(request);
+        return res.status(200).json(request);
     } catch (error) {
         // Handle the error
         console.error("Error Updating Request:", error);
@@ -205,7 +205,7 @@ export const updateSiteRequest = async (req: Request, res: Response) => {
         request.description = description || request.description;
         request.status = status || request.status;
         await request.save();
-        return res.json(request);
+        return res.status(200).json(request);
     } catch (error) {
         // Handle the error
         console.error("Error Updating Request:", error);
@@ -266,7 +266,7 @@ export const createRequest = async (req: Request, res: Response) => {
             if (!createdRequest) return res.status(404).json({ msg: "Field To Create Request" });
             request = createdRequest;
         }
-        return res.json(request);
+        return res.status(200).json(request);
     } catch (error) {
         // Handle the error
         console.error("Error Creating Request:", error);

@@ -93,7 +93,7 @@ export const getDualChats = async (req: Request, res: Response) => {
 
 	try {
 		const chats = await getDualUserChats(userId);
-		return res.json(chats);
+		return res.status(200).json(chats);
 	} catch (error) {
 		console.error('Error retrieving chat Messages:', error);
 		return res.status(500).json({ message: 'Internal server error' });
@@ -116,7 +116,7 @@ export const getGroupChats = async (req: Request, res: Response) => {
 			}
 		}
 
-		return res.json(chats);
+		return res.status(200).json(chats);
 	} catch (error) {
 		console.error('Error Retrieving Groups Chats:', error);
 		return res.status(500).json({ message: 'Internal server error' });
@@ -129,7 +129,7 @@ export const getChatMessages = async (req: Request, res: Response) => {
 	const { id } = req.params!;
 	try {
 		const messages = await getChatMessagesById(id);
-		return res.json(messages);
+		return res.status(200).json(messages);
 	} catch (error) {
 		console.error('Error Retrieving Chat Messages:', error);
 		return res.status(500).json({ message: 'Internal server error' });

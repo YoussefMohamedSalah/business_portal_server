@@ -18,11 +18,11 @@ export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	// Check if the owner exists
 	const user = await getByEmail(email)
-	if (!user) return res.status(401).json({ mag: "Invalid email or password" });
+	if (!user) return res.status(401).json({ msg: "Invalid email or password" });
 
 	// Check if the password is correct
 	const isPasswordCorrect = await bcrypt.compare(password, user.password);
-	if (!isPasswordCorrect) return res.status(401).json({ mag: "Invalid email or password" });
+	if (!isPasswordCorrect) return res.status(401).json({ msg: "Invalid email or password" });
 
 	// Generate an access token with user data
 	const accessToken = jwt.sign(
@@ -48,8 +48,8 @@ export const login = async (req: Request, res: Response) => {
 		{ expiresIn: "60d" }
 	);
 	// Return the access token and user data in the response
-	// return res.json({ accessToken, userInfo: user });
-	return res.json({
+	// return res.status(404).json({ accessToken, userInfo: user });
+	return res.status(200).json({
 		access: accessToken,
 		refresh: refreshToken,
 		userInfo: {
@@ -84,7 +84,7 @@ export const register = async (req: Request, res: Response) => {
 		// Check if the user already exists
 		const existingUser = await User.findOne({ where: { email } });
 		if (existingUser) {
-			return res.status(400).json({ mag: "User already exists" });
+			return res.status(400).json({ msg: "User already exists" });
 		}
 
 		// Input Data
@@ -131,7 +131,7 @@ export const register = async (req: Request, res: Response) => {
 			{ expiresIn: "60d" }
 		);
 
-		return res.json({
+		return res.status(200).json({
 			access: accessToken,
 			refresh: refreshToken,
 			userInfo: {
@@ -150,7 +150,7 @@ export const register = async (req: Request, res: Response) => {
 		});
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({ mag: "Server error" });
+		return res.status(500).json({ msg: "Server error" });
 	}
 };
 
@@ -167,7 +167,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 			.getOne();
 
 		if (!user) {
-			return res.status(401).json({ mag: "Invalid refresh token" });
+			return res.status(401).json({ msg: "Invalid refresh token" });
 		}
 
 		// Generate a new access token
@@ -183,9 +183,9 @@ export const refreshToken = async (req: Request, res: Response) => {
 		);
 
 		// Return the new access token
-		return res.json(access);
+		return res.status(200).json(access);
 	} catch (err) {
-		return res.status(401).json({ mag: "Invalid refresh token" });
+		return res.status(401).json({ msg: "Invalid refresh token" });
 	}
 };
 
@@ -194,11 +194,11 @@ export const changePassword = async (req: Request, res: Response) => {
 	const { userId } = req.userData!;
 
 	const user = await getWithPasswordById(userId)
-	if (!user) return res.status(401).json({ mag: "Invalid user Id" });
+	if (!user) return res.status(401).json({ msg: "Invalid user Id" });
 
 	// Check if the password is correct
 	const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
-	if (!isPasswordCorrect) return res.status(401).json({ mag: "Invalid email or password" });
+	if (!isPasswordCorrect) return res.status(401).json({ msg: "Invalid email or password" });
 
 	// Update Password.
 	user.password = newPassword ? await bcrypt.hash(newPassword, 10) : user.password;
@@ -228,8 +228,8 @@ export const changePassword = async (req: Request, res: Response) => {
 		{ expiresIn: "60d" }
 	);
 	// Return the access token and user data in the response
-	// return res.json({ accessToken, userInfo: user });
-	return res.json({
+	// return res.status(404).json({ accessToken, userInfo: user });
+	return res.status(200).json({
 		access: accessToken,
 		refresh: refreshToken,
 		userInfo: {

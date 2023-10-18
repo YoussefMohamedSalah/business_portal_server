@@ -31,7 +31,7 @@ export const addCustomer = async (req: Request, res: Response) => {
         if (!company) return res.status(404).json({ msg: "Company not found" });
         const customer = await createCustomer(createData, company);
         if (!customer) return res.status(409).json({ msg: "Customer already exists" });
-        return res.json(customer);
+        return res.status(200).json(customer);
     } catch (error) {
         console.error("Error Adding Customer:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -45,7 +45,7 @@ export const getCustomerById = async (req: Request, res: Response) => {
     try {
         const customer = await getById(id);
         if (!customer) return res.status(404).json({ msg: "Customer not found" });
-        return res.json(customer);
+        return res.status(200).json(customer);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Customer:", error);
@@ -87,7 +87,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
         customer.street = street ? street : customer.street;
         customer.building_number = building_number ? building_number : customer.building_number;
         await customer.save();
-        return res.json(customer);
+        return res.status(200).json(customer);
     } catch (error) {
         // Handle the error
         console.error("Error Updating Customer:", error);
@@ -103,7 +103,7 @@ export const deleteCustomer = async (req: Request, res: Response) => {
         const customer = await getById(id);
         if (!customer) return res.status(404).json({ msg: "Customer not found" });
         await customer.remove();
-        return res.json({ msg: "Customer deleted" });
+        return res.status(404).json({ msg: "Customer deleted" });
     } catch (error) {
         console.error("Error Deleting Customer:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -115,7 +115,7 @@ export const getAllCompanyCustomers = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
     try {
         const customers = await getAllByCompanyId(companyId);
-        return res.json(customers);
+        return res.status(200).json(customers);
     } catch (error) {
         console.error("Error Retrieving Customers:", error);
         return res.status(500).json({ msg: "Internal server error" });

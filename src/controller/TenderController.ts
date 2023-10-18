@@ -27,7 +27,7 @@ export const addTender = async (req: Request, res: Response) => {
         if (comments) createData.comments = checkAndParse(comments!);
         const tender = await createTender(createData, company, user);
         if (!tender) return res.status(409).json({ msg: "Field To Create Tender" });
-        else return res.json(tender);
+        else return res.status(200).json(tender);
     } catch (error) {
         // Handle the error
         console.error("Error Adding Tender:", error);
@@ -42,7 +42,7 @@ export const getTenderById = async (req: Request, res: Response) => {
     try {
         const tender = await getById(id);
         if (tender) {
-            return res.json(tender);
+            return res.status(200).json(tender);
         }
         return res.status(404).json({ msg: "Tender not found" });
     } catch (error) {
@@ -68,7 +68,7 @@ export const updateTender = async (req: Request, res: Response) => {
         tender.status = status ? status : tender.status;
         tender.date = date ? date : tender.date;
         await tender.save();
-        return res.json(tender);
+        return res.status(200).json(tender);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Tender:", error);
@@ -84,7 +84,7 @@ export const deleteTender = async (req: Request, res: Response) => {
         const tender = await getById(id);
         if (!tender) return res.status(404).json({ msg: "Tender not found" });
         await tender.remove();
-        return res.json({ msg: "Tender deleted" });
+        return res.status(404).json({ msg: "Tender deleted" });
     } catch (error) {
         // Handle the error
         console.error("Error Deleting Tender:", error);
@@ -96,7 +96,7 @@ export const getCompanyTenders = async (req: Request, res: Response) => {
     const { companyId } = req.userData!;
     try {
         const tenders = await getAllByCompanyId(companyId);
-        return res.json(tenders);
+        return res.status(200).json(tenders);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Tenders:", error);

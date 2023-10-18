@@ -6,7 +6,7 @@ export const addCompany = async (req: Request, res: Response) => {
 	try {
 		const company = await createCompany(name);
 		if (!company) return res.status(409).json({ msg: "User with same email already exists" });
-		else return res.json(company);
+		else return res.status(200).json(company);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Adding company:", error);
@@ -19,7 +19,7 @@ export const getCompanyById = async (req: Request, res: Response) => {
 	try {
 		const company = await getById(companyId);
 		if (!company) res.status(404).json({ msg: "Company not found" })
-		return res.json(company);
+		return res.status(200).json(company);
 	} catch (error) {
 		// Handle the error
 		console.error("Error retrieving company:", error);
@@ -41,7 +41,7 @@ export const updateCompany = async (req: Request, res: Response) => {
 		company.stepper_state = stepper_state ? stepper_state : company.stepper_state;
 		company.stepper_step = stepper_step ? stepper_step : company.stepper_step;
 		await company.save();
-		return res.json(company);
+		return res.status(200).json(company);
 	} catch (error) {
 		// Handle the error
 		console.error("Error updating company:", error);
@@ -57,7 +57,7 @@ export const deleteCompany = async (req: Request, res: Response) => {
 			return res.status(404).json({ msg: "Company not found" });
 		}
 		await company.remove();
-		return res.json({ msg: "Company deleted" });
+		return res.status(404).json({ msg: "Company deleted" });
 	} catch (error) {
 		// Handle the error
 		console.error("Error Deleting company:", error);

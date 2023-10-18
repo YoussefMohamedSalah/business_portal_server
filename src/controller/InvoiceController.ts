@@ -42,7 +42,7 @@ export const addInvoice = async (req: Request, res: Response) => {
         if (!contract) return res.status(404).json({ msg: "Contract not found" });
         const invoice = await createInvoice(createInput, contract)
         if (!invoice) return res.status(404).json({ msg: "Field To Create Invoice" });
-        return res.json(invoice);
+        return res.status(200).json(invoice);
     } catch (error) {
         console.error("Error Adding Invoice:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -54,7 +54,7 @@ export const getAllInvoicesByContract = async (req: Request, res: Response) => {
     try {
         const invoices = await getAllContractInvoices(id);
         if (!invoices) return res.status(404).json({ msg: "Invoices not found" });
-        return res.json(invoices);
+        return res.status(200).json(invoices);
     } catch (error) {
         console.error("Error Retrieving Invoice:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -70,7 +70,7 @@ export const getInvoiceById = async (req: Request, res: Response) => {
         if (!invoice) {
             return res.status(404).json({ msg: "Invoice not found" });
         }
-        return res.json(invoice);
+        return res.status(200).json(invoice);
     } catch (error) {
         console.error("Error Retrieving Invoice:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -118,7 +118,7 @@ export const updateInvoice = async (req: Request, res: Response) => {
         invoice.items = items ? items : invoice.items;
 
         await invoice.save();
-        return res.json(invoice);
+        return res.status(200).json(invoice);
     } catch (error) {
         console.error("Error Update Invoice:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -133,7 +133,7 @@ export const deleteInvoice = async (req: Request, res: Response) => {
         const invoice = await getById(id);
         if (!invoice) return res.status(404).json({ msg: "Invoice not found" });
         await invoice.remove();
-        return res.json({ msg: "Invoice deleted" });
+        return res.status(404).json({ msg: "Invoice deleted" });
     } catch (error) {
         console.error("Error Deleting Invoice:", error);
         return res.status(500).json({ msg: "Internal server error" });

@@ -60,7 +60,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
         company.stepper_step = 2;
         await company.save();
 
-        return res.json(company);
+        return res.status(200).json(company);
     } catch (error) {
         console.error("Error Verifying User:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -85,7 +85,7 @@ export const updateUserPosition = async (req: Request, res: Response) => {
         company.stepper_step = 1;
         await company.save();
 
-        return res.json({
+        return res.status(404).json({
             msg: 'success'
         });
     } catch (error) {
@@ -116,7 +116,7 @@ export const updateCompany = async (req: Request, res: Response) => {
         company.is_verified = true;
         await company.save();
 
-        return res.json(company);
+        return res.status(200).json(company);
     } catch (error) {
         console.error("Error Updating Company:", error);
         return res.status(500).json({ msg: "Internal server error" });

@@ -108,7 +108,7 @@ Your Portal-CP Team.`
 		if (!user) return res.status(409).json({
 			msg: "Field to Create Employee"
 		});
-		return res.json(user);
+		return res.status(200).json(user);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Creating User:", error);
@@ -122,7 +122,7 @@ export const getUserById = async (req: Request, res: Response) => {
 	if (!isValidUUID) return res.status(400).json({ msg: "id is not valid" });
 	try {
 		const user = await getById(id);
-		if (user) return res.json(user);
+		if (user) return res.status(200).json(user);
 		return res.status(404).json({ msg: "User not found" });
 	} catch (error) {
 		// Handle the error
@@ -135,7 +135,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 	const { userId } = req.userData!;
 	try {
 		const user = await getById(userId);
-		if (user) return res.json(user);
+		if (user) return res.status(200).json(user);
 		return res.status(404).json({ msg: "User not found" });
 	} catch (error) {
 		// Handle the error
@@ -301,7 +301,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 
 		await user.save();
-	return res.json(user);
+	return res.status(200).json(user);
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
@@ -312,7 +312,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 		const user = await getById(id);
 		if (!user) return res.status(404).json({ msg: "User not found" });
 		await user.remove();
-		return res.json({ msg: "User deleted" });
+		return res.status(404).json({ msg: "User deleted" });
 	} catch (error) {
 		// Handle the error
 		console.error("Error Deleting User:", error);
@@ -325,7 +325,7 @@ export const getCompanyUsers = async (req: Request, res: Response) => {
 	try {
 		const users = await getAllCompanyUsers(companyId);
 		let usersToReturn = users.filter((user) => user.id !== userId && user.role !== Role.SUPERUSER);
-		return res.json(usersToReturn);
+		return res.status(200).json(usersToReturn);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Retrieving Users:", error);
@@ -339,7 +339,7 @@ export const getDepartmentUsers = async (req: Request, res: Response) => {
 	if (!isValidUUID) return res.status(400).json({ msg: "Department Id is not valid" });
 	try {
 		const users = await getAllDepartmentUsers(departmentId);
-		return res.json(users);
+		return res.status(200).json(users);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Retrieving Users:", error);
@@ -351,7 +351,7 @@ export const getManagers = async (req: Request, res: Response) => {
 	const { companyId } = req.userData!;
 	try {
 		const users = await getAllManagers(companyId);
-		return res.json(users);
+		return res.status(200).json(users);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Retrieving Managers:", error);
@@ -363,7 +363,7 @@ export const getAllWithGroups = async (req: Request, res: Response) => {
 	const { companyId } = req.userData!;
 	try {
 		const users = await getAllEmployeesWithGroups(companyId);
-		return res.json(users);
+		return res.status(200).json(users);
 	} catch (error) {
 		// Handle the error
 		console.error("Error Retrieving Users:", error);

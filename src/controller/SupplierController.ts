@@ -52,7 +52,7 @@ export const addSupplier = async (req: Request, res: Response) => {
 
         const supplier = await createSupplier(createData, company);
         if (!supplier) return res.status(409).json({ msg: "Field To Create Supplier" });
-        else return res.json(supplier);
+        else return res.status(200).json(supplier);
     } catch (error) {
         // Handle the error
         console.error("Error Updating Request:", error);
@@ -67,7 +67,7 @@ export const getSupplierById = async (req: Request, res: Response) => {
     try {
         const supplier = await getById(id);
         if (!supplier) return res.status(404).json({ msg: "Supplier not found" });
-        return res.json(supplier);
+        return res.status(200).json(supplier);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Supplier:", error);
@@ -122,7 +122,7 @@ export const updateSupplier = async (req: Request, res: Response) => {
         supplier.street = street ? street : supplier.street;
         supplier.building_number = building_number ? building_number : supplier.building_number;
         await supplier.save();
-        return res.json(supplier);
+        return res.status(200).json(supplier);
     } catch (error) {
         // Handle the error
         console.error("Error Updating Supplier:", error);
@@ -138,7 +138,7 @@ export const deleteSupplier = async (req: Request, res: Response) => {
         const supplier = await getById(id);
         if (!supplier) return res.status(404).json({ msg: "Supplier not found" });
         await supplier.remove();
-        return res.json({ msg: "Supplier deleted" });
+        return res.status(404).json({ msg: "Supplier deleted" });
     } catch (error) {
         // Handle the error
         console.error("Error Deleting Supplier:", error);
@@ -151,7 +151,7 @@ export const allCompanySuppliers = async (req: Request, res: Response) => {
     try {
         const suppliers = await getAllByCompanyId(companyId);
         if (!suppliers) return res.status(404).json({ msg: "No suppliers Exists" });
-        return res.json(suppliers);
+        return res.status(200).json(suppliers);
     } catch (error) {
         // Handle the error
         console.error("Error Retrieving Suppliers:", error);

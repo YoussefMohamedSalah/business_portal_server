@@ -69,23 +69,23 @@ export class Project extends BaseEntity {
 	@Column({ default: 0, nullable: true })
 	total_budget: number;
 
-	@Column({ default: 0, nullable: true })
-	po_budget: number;
+							@Column({ default: 0, nullable: true })
+							po_budget: number;
 
-	@Column({ default: 0, nullable: true })
-	po_expenses: number;
+							@Column({ default: 0, nullable: true })
+							po_expenses: number;
 
-	@Column({ default: 0, nullable: true })
-	pc_budget: number;
+									@Column({ default: 0, nullable: true })
+									pc_budget: number;
 
-	@Column({ default: 0, nullable: true })
-	pc_expenses: number;
+									@Column({ default: 0, nullable: true })
+									pc_expenses: number;
 
-	@Column({ default: 0, nullable: true })
-	staff_budget: number;
+											@Column({ default: 0, nullable: true })
+											staff_budget: number;
 
-	@Column({ default: 0, nullable: true })
-	staff_expenses: number;
+											@Column({ default: 0, nullable: true })
+											staff_expenses: number;
 
 	@Column({ default: 0, nullable: true })
 	subcontractor_budget: number;

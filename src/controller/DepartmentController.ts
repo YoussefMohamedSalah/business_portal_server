@@ -10,7 +10,7 @@ export const getDepartmentById = async (req: Request, res: Response) => {
     try {
         const department = await getById(id);
         if (!department) return res.status(404).json({ msg: "Department not found" });
-        return res.json(department);
+        return res.status(200).json(department);
     } catch (error) {
         console.error("Error Retrieving Department:", error);
         return res.status(500).json({ msg: "Internal server error" });
@@ -22,7 +22,7 @@ export const getCompanyDepartments = async (req: Request, res: Response) => {
     try {
         const departments = await getAllDepartments(companyId);
         if (departments) {
-            return res.json(departments);
+            return res.status(200).json(departments);
         }
         return res.status(404).json({ msg: "Departments not found" });
     } catch (error) {

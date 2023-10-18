@@ -52,5 +52,5 @@ export const dashboardAttendance = async (req: Request, res: Response) => {
     early_count = todayAttendanceList.filter((attendance) => attendance.early === true).length;
 
     const dashboardData = { employee_count, present, absent, late_count, early_count, male_count, female_count }
-    return res.json(dashboardData);
+    return res.status(200).json(dashboardData);
 };
