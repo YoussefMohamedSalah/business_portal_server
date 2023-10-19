@@ -4,8 +4,8 @@
   "description": "test project",
   "main": "server.js",
   "scripts": {
-    "start": "node src/index.ts",
-    "server": "nodemon src/index.ts"
+    "start": "node src/server.ts",
+    "server": "nodemon src/server.ts"
   },
   "author": "",
   "license": "ISC",
