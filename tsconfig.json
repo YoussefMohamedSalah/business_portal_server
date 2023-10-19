@@ -34,7 +34,6 @@
 	],
 	"include": [
 		"./src/**/*.js",
-		"./src/**/*.ts",
-		"src/server.ts"
+		"./src/**/*.ts"
 	]
 }

@@ -4,7 +4,7 @@
   "description": "test project",
   "main": "server.js",
   "scripts": {
-    "start": "node ./dist/server.ts",
+    "start": "node ./dist/server.js",
     "server": "nodemon src/server.ts",
     "build": "tsc",
     "prestart": "npm run build"
