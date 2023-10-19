@@ -4,9 +4,10 @@
   "description": "test project",
   "main": "server.js",
   "scripts": {
-    "start": "node ./dist//server.ts",
+    "start": "node ./dist/server.ts",
     "server": "nodemon src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prestart": "npm run build"
   },
   "author": "",
   "license": "ISC",
