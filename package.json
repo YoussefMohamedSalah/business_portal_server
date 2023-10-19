@@ -2,11 +2,11 @@
   "name": "server",
   "version": "1.0.0",
   "description": "test project",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
     "server": "nodemon src/server.ts",
-    "build": "tsc"
+    "build": "npx tsc"
   },
   "author": "",
   "license": "ISC",
