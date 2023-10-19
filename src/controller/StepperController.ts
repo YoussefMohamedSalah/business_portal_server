@@ -85,9 +85,7 @@ export const updateUserPosition = async (req: Request, res: Response) => {
         company.stepper_step = 1;
         await company.save();
 
-        return res.status(404).json({
-            msg: 'success'
-        });
+        return res.status(200).json({msg: 'success'});
     } catch (error) {
         console.error("Error Updating Position:", error);
         return res.status(500).json({ msg: "Internal server error" });
