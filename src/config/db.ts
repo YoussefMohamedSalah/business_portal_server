@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { createConnection, getConnectionOptions } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 // constants
 dotenv.config();
@@ -12,14 +12,12 @@ export const connectToDataBase = async (entities: any[], subscribers: any[]) => 
 	const databaseUsername = process.env.DATABASE_USERNAME;
 	const databasePassword = process.env.DATABASE_PASSWORD;
 	const databaseName = process.env.DATABASE_NAME;
-	let connectionOptions;
 
 
-	if (process.env.NODE_ENV === 'production') {
+	if (process.env.NODE_ENV === 'production' && databaseUrl) {
 		// Use databaseUrl provided by Render's database in production
-		connectionOptions = await getConnectionOptions(connectionOptions);
 		try {
-			await createConnection(connectionOptions);
+			await createConnection(databaseUrl);
 			console.log(`You Are Now Connected to Port ${process.env.SERVER_PORT} With Database At Port: ${process.env.DATABASE_PORT}`)
 		} catch (error) {
 			console.log(error);
