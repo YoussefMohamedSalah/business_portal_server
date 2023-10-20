@@ -19,14 +19,7 @@ export const connectToDataBase = async (entities: any[], subscribers: any[]) => 
 		// Use databaseUrl provided by Render's database in production
 		connectionOptions = await getConnectionOptions();
 		try {
-			await createConnection({
-				type: databaseType as any,
-				url: databaseUrl,
-				entities: entities,
-				synchronize: true,
-				subscribers: subscribers,
-				ssl: true
-			});
+			await createConnection(connectionOptions);
 			console.log(`You Are Now Connected to Port ${process.env.SERVER_PORT} With Database At Port: ${process.env.DATABASE_PORT}`)
 		} catch (error) {
 			console.log(error);
