@@ -2,9 +2,9 @@
   "name": "server",
   "version": "1.0.0",
   "description": "test project",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "node dist/index.js",
     "server": "nodemon src/index.ts",
     "build": "tsc"
   },
