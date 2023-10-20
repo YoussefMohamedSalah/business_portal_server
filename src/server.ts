@@ -52,7 +52,7 @@ try {
   );
   const io = new Server({
     cors: {
-      origin: "http://localhost:3000"
+      origin: ['http://localhost:3000', 'https://business-portal-client.vercel.app/']
     }
   });
   io.listen(8081)
