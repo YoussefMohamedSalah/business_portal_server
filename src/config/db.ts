@@ -27,6 +27,7 @@ export const connectToDataBase = async (entities: any[], subscribers: any[]) => 
 				entities: entities,
 				synchronize: true,
 				subscribers: subscribers,
+				ssl: true
 			});
 			console.log(`You Are Now Connected to Port ${process.env.SERVER_PORT} With Database At Port: ${process.env.DATABASE_PORT}`)
 		} catch (error) {
