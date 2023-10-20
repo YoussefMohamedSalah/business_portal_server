@@ -3,7 +3,7 @@ import { getRepository } from "typeorm";
 import { User } from "../../entities/User";
 import jwt, { JwtPayload } from "jsonwebtoken";
 // import { verify, JwtPayload } from 'jsonwebtoken';
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import { createCompany } from "../../repositories/CompanyRepository";
 import { RegisterUserInfo } from "../../types/CreateUserInfo";

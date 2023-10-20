@@ -8,7 +8,7 @@ import {
 	getAllEmployeesWithGroups,
 	getByEmail
 } from "../repositories/UserRepository";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { getById as getCompanyById } from "../repositories/CompanyRepository";
 import { CreateUserInfo } from "../types/CreateUserInfo";
 import { getById as getDepartmentById } from "../repositories/DepartmentRepository";
